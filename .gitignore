@@ -211,9 +211,9 @@ screenshots/*.*
 reports/*.*
 
 # application apk
-app/*.*
-app_code_ver2/*.*
-src/*.*
+app/
+app_code_ver2/
+src/
 
 # config
 config/.env
