@@ -205,3 +205,15 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# reports
+screenshots/*.*
+reports/*.*
+
+# application apk
+app/*.*
+app_code_ver2/*.*
+src/*.*
+
+# config
+config/.env
