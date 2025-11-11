@@ -211,9 +211,10 @@ screenshots/*.*
 reports/*.*
 
 # application apk
-app/
+src/app/
 app_code_ver2/
 src/
 
 # config
 config/.env
+.idea
