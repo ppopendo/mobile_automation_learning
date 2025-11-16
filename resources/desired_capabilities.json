@@ -1,0 +1,26 @@
+{
+    "android": {
+        "platformName": "Android",
+        "platformVersion": "13",
+        "deviceName": "{device_name}",
+        "appPackage": "com.saucelabs.mydemoapp.android",
+        "appActivity": "com.saucelabs.mydemoapp.android.view.activities.SplashActivity",
+        "automationName": "UiAutomator2",
+        "noReset": true,
+        "fullReset": false,
+        "appWaitForLaunch": true,
+        "deviceReadyTimeout": 120,
+        "newCommandTimeout": 90,
+        "appWaitDuration": 30000,
+        "appWaitActivity":  "*"
+    },
+    "ios": {
+        "platformName": "iOS",
+        "appium:platformVersion": "15.5",
+        "appium:deviceName": "{device_name}",
+        "appium:app": "/path/to/your/app/app.ipa",
+        "appPackage": "com.saucelabs.mydemoapp.android",
+        "appActivity": "com.saucelabs.mydemoapp.android.view.activities.SplashActivity",
+        "appium:automationName": "XCUITest"
+    }
+}

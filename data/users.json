@@ -1,0 +1,7 @@
+{
+ "valid_users": [
+   {"username": "bob@example.com", "password": "10203040"},
+   {"username": "visual@example.com", "password": "10203040"}
+ ],
+  "invalid_users": [{"username": "alice@example.com", "password": "10203040"}]
+}
