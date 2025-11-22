@@ -14,7 +14,6 @@ def test_json_reader_reads_file(tmp_path: Path):
 
 
 def test_load_user_data_uses_default(tmp_path: Path, monkeypatch):
-    # monkeypatch cwd to tmp_path so load_user_data reads our fake data
     monkeypatch.chdir(tmp_path)
     data_dir = tmp_path / "data"
     data_dir.mkdir()

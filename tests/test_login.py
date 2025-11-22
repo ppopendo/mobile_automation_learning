@@ -1,10 +1,10 @@
 """Tests for login functionality."""
 import allure
 import pytest
+from libs.common import load_user_data
 from pages.login_page import LoginPage
 from pages.menu_page import MenuPage
-from pages.product_page import ProductPage
-from libs.common import load_user_data
+from pages.product_page import ProductsPage
 
 
 @pytest.fixture
@@ -18,7 +18,7 @@ def logout_after_test(driver):
 	"""Test-level teardown: ensure we're logged out after every test."""
 	yield
 	try:
-		product_page = ProductPage(driver)
+		product_page = ProductsPage(driver)
 		menu_page = MenuPage(driver)
 		product_page.open_side_menu()
 		menu_page.wait_until_page_is_loaded()
@@ -33,7 +33,7 @@ def logout_after_test(driver):
 def open_login_form(driver):
 	"""Open the side menu and navigate to the login form before the test."""
 	try:
-		product_page = ProductPage(driver)
+		product_page = ProductsPage(driver)
 		menu_page = MenuPage(driver)
 		product_page.open_side_menu()
 		menu_page.wait_until_page_is_loaded()
@@ -72,17 +72,10 @@ class TestLogin:
 	@allure.severity(allure.severity_level.CRITICAL)
 	def test_successful_login(self, driver, user_data, logout_after_test, login_page):
 		"""Successful login with valid credentials."""
-		product_page = ProductPage(driver)
-		# login_page fixture provided
-		with allure.step("Step 1: Perform login with valid credentials"):
-			login_page.login(username=user_data["username"], password=user_data["password"])
-		allure.attach("Wprowadzono dane: Użytkownik: poprawny_user",
-					  name="Weryfikacja Danych",
-					  attachment_type=allure.attachment_type.TEXT)
-		with allure.step("Step 2: Verify product page is displayed after login"):
-			product_page.wait_until_page_is_loaded()
-		with allure.step("Step 3: Assert that products title is displayed"):
-			assert product_page.is_products_title_displayed(), "❌ the product screen is not displayed."
+		product_page = ProductsPage(driver)
+		login_page.login(username=user_data["username"], password=user_data["password"])
+		product_page.wait_until_page_is_loaded()
+		assert product_page.is_products_title_displayed(), "❌ the product screen is not displayed."
 
 	@pytest.mark.tcid("TC-00002")
 	@pytest.mark.regression
@@ -90,17 +83,13 @@ class TestLogin:
 		"""Attempt login with empty password should show error."""
 		# login_page_opened fixture ensures login form is opened
 		login_page = login_page_opened
-		with allure.step("Step 1: Perform login with valid credentials"):
-			login_page.login(username="bod@example.com", password="")
-		with allure.step("Step 2: Verify error message for empty password is displayed"):
-			assert login_page.password_error_message, "❌No error message for empty password."
+		login_page.login(username="bod@example.com", password="")
+		assert login_page.password_error_message, "❌No error message for empty password."
 
 	@pytest.mark.tcid("TC-00003")
 	@pytest.mark.regression
 	def test_empty_username_login(self, driver, open_login_form, login_page_opened):
 		"""Attempt login with empty username should show error."""
 		login_page = login_page_opened
-		with allure.step("Step 1: Perform login with valid credentials"):
-			login_page.login(username="", password="1020340")
-		with allure.step("Step 2: Verify error message for empty password is displayed"):
-			assert login_page.username_error_message, "❌No error message for empty username."
+		login_page.login(username="", password="1020340")
+		assert login_page.username_error_message, "❌No error message for empty username."
