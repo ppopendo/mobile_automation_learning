@@ -25,9 +25,20 @@ def pytest_addoption(parser):
         help="Device platform to run tests against (android|ios). Default: android",
     )
 
+@pytest.fixture(scope="session")
+def platform(request: pytest.FixtureRequest):
+    """Get the platform specified via --platform option."""
+    return request.config.getoption("--platform")
+
 
 @pytest.fixture(scope="session")
-def appium_service(request) -> AppiumDriverService:
+def tcid(request: pytest.FixtureRequest):
+    """Get the test case ID specified via --tcid option."""
+    return request.config.getoption("--tcid")
+
+
+@pytest.fixture(scope="session")
+def appium_service(request: pytest.FixtureRequest, platform) -> AppiumDriverService:
     """Create AppiumDriverService for the whole test session.
 
     Platform is read from --platform pytest option (default: android).
@@ -38,7 +49,7 @@ def appium_service(request) -> AppiumDriverService:
 
 
 @pytest.fixture(scope="session")
-def device_capabilities(request) -> Dict[str, Any]:
+def device_capabilities(request: pytest.FixtureRequest, platform: pytest.FixtureRequest) -> Dict[str, Any]:
     """Load device capabilities for the requested platform.
 
     Uses the same --platform option as `appium_service`.
@@ -98,7 +109,6 @@ def suite_setup(driver) -> None:
             "[SETUP - session]: could not navigate to login screen at session setup, details: %s",
             exception,
         )
-
 
 
 def pytest_collection_modifyitems(config, items):
