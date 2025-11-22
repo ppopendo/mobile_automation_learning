@@ -5,7 +5,7 @@ from config.config_vars import TIMEOUT
 from drivers.appium_driver import AppiumDriverService
 from libs.common import load_device_config
 from pages.menu_page import MenuPage
-from pages.product_page import ProductPage
+from pages.product_page import ProductsPage
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s [%(name)s] %(message)s")
@@ -99,7 +99,7 @@ def suite_setup(driver) -> None:
     This is executed once per test session (autouse). It will log errors but not fail the session setup.
     """
     try:
-        product_page = ProductPage(driver)
+        product_page = ProductsPage(driver)
         menu_page = MenuPage(driver)
         product_page.open_side_menu()
         menu_page.wait_until_page_is_loaded()

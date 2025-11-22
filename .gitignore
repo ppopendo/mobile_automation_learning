@@ -208,9 +208,10 @@ __marimo__/
 
 # reports
 screenshots/*.*
-reports/*.*
-allure-reports/*.*
-report/*.*
+reports/
+allure-reports/
+allure-results/
+report/
 
 # application apk
 src/app/
