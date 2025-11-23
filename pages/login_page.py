@@ -1,16 +1,13 @@
-from appium.webdriver.common.appiumby import AppiumBy
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
-from pages.base_page import BasePage
-import allure
 import allure
 from dataclasses import dataclass, field
 from appium.webdriver.common.appiumby import AppiumBy
 from typing import Tuple
 from .base_page import BasePage
-from appium.webdriver.webdriver import WebDriver
 
-@dataclass(frozen=True) # 🚀 KLASA DANYCH Z NIEMUTOWALNOŚCIĄ
+
+@dataclass(frozen=True)
 class LoginPageLocators:
 	"""
 	contains all static locators for the login page.

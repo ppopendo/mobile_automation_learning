@@ -141,6 +141,17 @@ pytest -q tests/
 11) Download sample apps for testing
 Sauce Labs - > https://github.com/saucelabs/my-demo-app-android/releases
 
+12) Allure report
+- Install Allure commandline (requires Java):
+- download openJdk from https://adoptium.net/ or https://openjdk.org/
+- install Allure from https://docs.qameta.io/allure/#_installing_a_commandline
+- generate report after test run:
+
+```powershell
+allure serve allure-results
+```
+
+
 ## Resources
 - [Appium Documentation](https://appium.io/docs/en/about-appium/intro/)
 - [Android Developer Guide](https://developer.android.com/guide)
