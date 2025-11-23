@@ -71,6 +71,7 @@ class AppiumDriverService:
         else:
             raise ValueError(f"Unsupported platform: {self.platform}")
         options.device_name = os.getenv("DEVICE_NAME")
+        options.platform_version = os.getenv("PLATFORM_VERSION")
         return options
 
     def quit_driver(self) -> None:
