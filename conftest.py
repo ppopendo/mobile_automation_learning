@@ -3,8 +3,8 @@ from typing import Any, Dict, Generator
 import pytest
 from config.config_vars import TIMEOUT
 from drivers.appium_driver import AppiumDriverService
-from libs.common import load_device_config
-from pages.menu_page import MenuPage
+from libs.common import load_device_capabilities
+from pages.menu_component import MenuComponent
 from pages.product_page import ProductsPage
 
 logger = logging.getLogger(__name__)
@@ -55,7 +55,7 @@ def device_capabilities(request: pytest.FixtureRequest, platform: pytest.Fixture
     Uses the same --platform option as `appium_service`.
     """
     platform = request.config.getoption("--platform")
-    caps = load_device_config(platform=platform)
+    caps = load_device_capabilities(platform=platform)
     return caps
 
 
@@ -100,10 +100,10 @@ def suite_setup(driver) -> None:
     """
     try:
         product_page = ProductsPage(driver)
-        menu_page = MenuPage(driver)
+        menu_component = MenuComponent(driver)
         product_page.open_side_menu()
-        menu_page.wait_until_page_is_loaded()
-        menu_page.click_login_button()
+        menu_component.wait_until_page_is_loaded()
+        menu_component.click_login_button()
     except Exception as exception:  # do not raise to allow tests to run; log details for debugging
         logger.exception(
             "[SETUP - session]: could not navigate to login screen at session setup, details: %s",

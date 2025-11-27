@@ -9,7 +9,7 @@ from appium.options.common import AppiumOptions
 from appium.options.ios import XCUITestOptions
 from dotenv import load_dotenv
 from config.config_vars import APPIUM_CONNECT_DELAY, APPIUM_CONNECT_RETRIES
-from libs.common import load_device_config
+from libs.common import load_device_capabilities
 
 logger = logging.getLogger(__name__)
 
@@ -65,9 +65,9 @@ class AppiumDriverService:
 
     def _get_driver_options(self) -> AppiumOptions:
         if self.platform == "android":
-            options = UiAutomator2Options().load_capabilities(caps=load_device_config(platform="android"))
+            options = UiAutomator2Options().load_capabilities(caps=load_device_capabilities(platform="android"))
         elif self.platform == "ios":
-            options = XCUITestOptions().load_capabilities(caps=load_device_config(platform="ios"))
+            options = XCUITestOptions().load_capabilities(caps=load_device_capabilities(platform="ios"))
         else:
             raise ValueError(f"Unsupported platform: {self.platform}")
         options.device_name = os.getenv("DEVICE_NAME")

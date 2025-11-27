@@ -5,6 +5,7 @@ from dataclasses import dataclass, field
 from appium.webdriver.common.appiumby import AppiumBy
 from typing import Tuple
 from .base_page import BasePage
+from appium import webdriver
 
 
 @dataclass(frozen=True)
@@ -47,9 +48,6 @@ class LoginPageLocators:
 
 
 class LoginPage(BasePage):
-
-	def __init__(self, driver):
-		super().__init__(driver)
 
 	def wait_until_page_is_loaded(self, timeout: int = 10) -> None:
 		expected_locators = [
@@ -98,7 +96,7 @@ class LoginPage(BasePage):
 
 	@allure.step("the user clicks the login button")
 	def click_login(self) -> None:
-		self.wait_and_click(LoginPageLocators.LOGIN_BUTTON)
+		self.tap_element(LoginPageLocators.LOGIN_BUTTON)
 
 	@allure.step("the user attempts to log in with username: {username} and password: {password}")
 	def login(self, username: str, password: str) -> None:

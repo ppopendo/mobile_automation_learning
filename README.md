@@ -145,12 +145,22 @@ Sauce Labs - > https://github.com/saucelabs/my-demo-app-android/releases
 - Install Allure commandline (requires Java):
 - download openJdk from https://adoptium.net/ or https://openjdk.org/
 - install Allure from https://docs.qameta.io/allure/#_installing_a_commandline
-- generate report after test run:
+- add environment variable ALLURE_HOME pointing to Allure installation folder
+- generate test case with allure report:
 
 ```powershell
-allure serve allure-results
+pytest  --alluredir=allure-results
 ```
+- generate report from results:
 
+```powershell
+allure generate allure-results --clean -o reports
+```
+- open report in browser:
+
+```powershell
+allure open ./reports/
+```
 
 ## Resources
 - [Appium Documentation](https://appium.io/docs/en/about-appium/intro/)

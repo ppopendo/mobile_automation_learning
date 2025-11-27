@@ -6,4 +6,4 @@ appium-python-client==5.2.4
 selenium==4.38.0
 mypy==1.18.2
 allure-pytest==2.15.0
-
+iniconfig==2.3.0
