@@ -24,12 +24,12 @@ def json_reader(file_name: str, file_path: Path) -> Dict[str, Any]:
         raise FileNotFoundError(f"File not found: {full_path}") from exc
 
 
-def load_device_config(platform: str, base_path: Path = Path.cwd()) -> Dict[str, Any]:
+def load_device_capabilities(platform: str, base_path: Path = Path.cwd()) -> Dict[str, Any]:
     resources = base_path / "resources"
-    config_data = json_reader(file_name="desired_capabilities.json", file_path=resources)
+    config_data = json_reader(file_name=f"{platform}_capabilities.json", file_path=resources)
     if platform.lower() not in ("android", "ios"):
         raise ValueError(f"No such platform: {platform}")
-    return config_data[platform]
+    return config_data
 
 
 def load_user_data(base_path: Path = Path.cwd()) -> Dict[str, Any]:

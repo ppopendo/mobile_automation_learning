@@ -3,7 +3,7 @@ import allure
 import pytest
 from libs.common import load_user_data
 from pages.login_page import LoginPage
-from pages.menu_page import MenuPage
+from pages.menu_component import MenuComponent
 from pages.product_page import ProductsPage
 
 
@@ -19,13 +19,13 @@ def logout_after_test(driver):
 	yield
 	try:
 		product_page = ProductsPage(driver)
-		menu_page = MenuPage(driver)
+		menu_component = MenuComponent(driver)
 		product_page.open_side_menu()
-		menu_page.wait_until_page_is_loaded()
-		if menu_page.is_logout_option_displayed():
-			menu_page.click_logout()
-			menu_page.confirm_logout()
-	except Exception as exc:  # broad-exception-caught: acceptable for teardown
+		menu_component.wait_until_page_is_loaded()
+		if menu_component.is_logout_option_displayed():
+			menu_component.click_logout()
+			menu_component.confirm_logout()
+	except Exception as exc:
 		print(f"[TEARDOWN - test]: error during logout_after_test: {exc}")
 
 
@@ -34,11 +34,11 @@ def open_login_form(driver):
 	"""Open the side menu and navigate to the login form before the test."""
 	try:
 		product_page = ProductsPage(driver)
-		menu_page = MenuPage(driver)
+		menu_page = MenuComponent(driver)
 		product_page.open_side_menu()
 		menu_page.wait_until_page_is_loaded()
 		menu_page.click_login_button()
-	except Exception as exc:  # broad-exception-caught: acceptable for setup
+	except Exception as exc:
 		print(f"[SETUP - test]: error during open_login_form: {exc}")
 	# yield to the test; no teardown required here
 	yield
@@ -68,7 +68,8 @@ class TestLogin:
 	"""Group for login tests."""
 
 	@pytest.mark.tcid("TC-00001")
-	@allure.story("Successful Login")
+	@pytest.mark.regression
+	@allure.story("as user I want to log in with valid credentials to access the products page")
 	@allure.severity(allure.severity_level.CRITICAL)
 	def test_successful_login(self, driver, user_data, logout_after_test, login_page):
 		"""Successful login with valid credentials."""
@@ -79,6 +80,8 @@ class TestLogin:
 
 	@pytest.mark.tcid("TC-00002")
 	@pytest.mark.regression
+	@allure.severity(allure.severity_level.BLOCKER)
+	@allure.story("as user I want to see an error message when I try to log in with an empty password")
 	def test_empty_password_login(self, driver, open_login_form, login_page_opened):
 		"""Attempt login with empty password should show error."""
 		# login_page_opened fixture ensures login form is opened
@@ -88,6 +91,8 @@ class TestLogin:
 
 	@pytest.mark.tcid("TC-00003")
 	@pytest.mark.regression
+	@allure.severity(allure.severity_level.BLOCKER)
+	@allure.story("as user I want to see an error message when I try to log in with an empty username")
 	def test_empty_username_login(self, driver, open_login_form, login_page_opened):
 		"""Attempt login with empty username should show error."""
 		login_page = login_page_opened
