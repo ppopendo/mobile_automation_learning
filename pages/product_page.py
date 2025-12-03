@@ -11,28 +11,29 @@ class ProductsPageLocators:
 	"""
 	contains all static locators for the products page.
 	"""
+	PRODUCT_NAME_XPATH_PATTERN: str = "//android.widget.TextView[@content-desc='Product Title' and @text='{product_name}']"
 	PRODUCTS_HEADER: Tuple[str, str] = field(
 		default=(AppiumBy.ID, "com.saucelabs.mydemoapp.android:id/productTV"),
 		init=False
 	)
-	SHOPPING_CART_ICON: Tuple[str, str] = field(
-		default=(AppiumBy.ACCESSIBILITY_ID, "test-Mixture"),
+	MENU_BUTTON: Tuple[str, str] = field(default= (AppiumBy.ID, "com.saucelabs.mydemoapp.android:id/menuIV"),init=False)
+	PRODUCT_NAME: Tuple[str, str] = field(
+		default=(AppiumBy.XPATH , PRODUCT_NAME_XPATH_PATTERN),
 		init=False
 	)
-	MENU_BUTTON: Tuple[str, str] = field(default= (AppiumBy.ID, "com.saucelabs.mydemoapp.android:id/menuIV"),init=False)
-
-	@staticmethod
-	def add_to_cart_button_pattern(product_name: str) -> Tuple[str, str]:
-		"""
-		generates a dynamic locator for the "Add to Cart" button of a specific product.
-		"""
-		return (AppiumBy.XPATH,
-				f"//android.widget.TextView[@text='{product_name}']/following-sibling::android.view.ViewGroup[@content-desc='test-Add To Cart']")
+	PRODUCT_IMAGE: Tuple[str, str] = field(
+		default=(AppiumBy.XPATH,PRODUCT_NAME_XPATH_PATTERN + "/preceding-sibling::*[@content-desc='Product Image']"),
+		init=False
+	)
+	PRODUCT_PRICE: Tuple[str, str] = field(
+		default=(AppiumBy.XPATH,PRODUCT_NAME_XPATH_PATTERN + "/following-sibling::*[@content-desc='Product Price']"),
+		init=False
+	)
 
 
 class ProductsPage(BasePage):
 
-	@allure.step("Verifying if 'Products' header is displayed")
+	@allure.step("the user waits until the products page is displayed")
 	def is_products_header_displayed(self) -> bool:
 		"""Checks if the 'Products' header is visible on the Products Page."""
 		try:
@@ -46,22 +47,12 @@ class ProductsPage(BasePage):
 			)
 			return False
 
-	@allure.step("the user adds '{product_name}' to the shopping cart")
-	def add_product_to_cart(self, product_name: str) -> None:
-		"""adds a specified product to the shopping cart by clicking its 'Add to Cart' button."""
-
-		# 1. generate dynamic locator for the product
-		locator = ProductsPageLocators.add_to_cart_button_pattern(product_name=product_name)
-
-		# 2. click the "Add to Cart" button
-		self.tap_element(locator)
-
-		allure.attach(f"Product '{product_name}' has been added to the cart.", name="Add Product to Cart",attachment_type=allure.attachment_type.TEXT,)
-
-	@allure.step("the user opens the shopping cart")
-	def open_shopping_cart(self) -> None:
-		"""clicks on the shopping cart icon to open the cart page."""
-		self.tap_element(ProductsPageLocators.SHOPPING_CART_ICON)
+	@allure.step("the user opens the product details for '{product_name}'")
+	def open_product_details(self, product_name: str) -> None:
+		"""Opens the details page for a specific product by tapping on its image."""
+		product_locator = (ProductsPageLocators.PRODUCT_IMAGE[0],
+						   ProductsPageLocators.PRODUCT_IMAGE[1].format(product_name=product_name))
+		self.tap_element(product_locator)
 
 	@allure.step("waiting for the products page to be fully loaded")
 	def wait_until_page_is_loaded(self, timeout=10) -> None:
@@ -84,3 +75,24 @@ class ProductsPage(BasePage):
 	@allure.step("the user opens the side menu")
 	def open_side_menu(self):
 		self.tap_element(ProductsPageLocators.MENU_BUTTON)
+
+	@allure.step("retrieving the price for product: {product_name}")
+	def get_product_price(self, product_name: str) -> str:
+		"""Retrieves the price of a specific product by its name."""
+		price_locator = (ProductsPageLocators.PRODUCT_PRICE[0],
+						 ProductsPageLocators.PRODUCT_PRICE[1].format(product_name=product_name))
+		price_element = self.wait_for_element(price_locator, condition=EC.visibility_of_element_located)
+		return price_element.text
+
+	@allure.step("waiting until product '{product_name}' is displayed")
+	def wait_until_product_is_displayed(self, product_name: str, timeout: int = 10) -> None:
+		"""Waits until the specified product is visible on the Products Page."""
+		product_locator = (ProductsPageLocators.PRODUCT_NAME[0],
+						   ProductsPageLocators.PRODUCT_NAME[1].format(product_name=product_name))
+		price_locator = (ProductsPageLocators.PRODUCT_PRICE[0],
+						 ProductsPageLocators.PRODUCT_PRICE[1].format(product_name=product_name))
+		image_locator = (ProductsPageLocators.PRODUCT_IMAGE[0],
+						 ProductsPageLocators.PRODUCT_IMAGE[1].format(product_name=product_name))
+		product_elements = [product_locator, price_locator, image_locator]
+		for product_element in product_elements:
+			self.wait_for_element(product_element, condition=EC.visibility_of_element_located, timeout=timeout)

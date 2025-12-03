@@ -1,3 +1,5 @@
+faker==19.13.0
+requests==2.32.5
 black==25.11.0
 pylint==4.0.3
 pytest==9.0.1
@@ -7,3 +9,5 @@ selenium==4.38.0
 mypy==1.18.2
 allure-pytest==2.15.0
 iniconfig==2.3.0
+pytest-html==4.1.1
+pre-commit==4.5.0
