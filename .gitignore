@@ -221,3 +221,7 @@ src/
 # config
 config/.env
 .idea
+
+# instructions
+.github/instructions/
+.github/

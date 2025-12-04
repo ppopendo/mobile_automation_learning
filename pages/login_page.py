@@ -49,6 +49,7 @@ class LoginPageLocators:
 
 class LoginPage(BasePage):
 
+	@allure.step("the user waits until the login page is displayed")
 	def wait_until_page_is_loaded(self, timeout: int = 10) -> None:
 		expected_locators = [
 			LoginPageLocators.USERNAME_INPUT,
