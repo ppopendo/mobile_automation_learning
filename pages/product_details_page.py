@@ -64,8 +64,7 @@ class ProductDetailsPage(BasePage):
         for locator in expected_locators:
             self.wait_for_element(locator, timeout=timeout, scroll_to_element=True)
 
-    allure.step("the user adds the product to the cart")
-
+    @allure.step("the user adds the product to the cart")
     def click_add_to_cart_button(self) -> None:
         self.tap_element(ProductDetailsPageLocators.ADD_TO_CART_BUTTON)
 
@@ -116,6 +115,6 @@ class ProductDetailsPage(BasePage):
                         attachment_type=allure.attachment_type.TEXT,
                     )
                 return
-            except:
+            except Exception:
                 continue
         raise TimeoutError(f"Item count in cart did not update to {expected_count} within the given time.")

@@ -54,23 +54,8 @@ def checkout_test_cleanup(driver):
                 menu_component.click_logout()
                 menu_component.confirm_logout()
                 logger.info("[CHECKOUT SUITE TEARDOWN] User logged out")
-        except Exception:
-            pass
+        except Exception as exc:
+            logger.warning("[CHECKOUT SUITE TEARDOWN] Failed to log out during cleanup: %s", exc)
 
     except Exception as exc:
         logger.warning("[CHECKOUT SUITE TEARDOWN] Error during cleanup: %s", exc)
-
-
-@pytest.fixture
-def logged_in_user(driver, user_data, login_page):
-    """Fixture that provides a logged-in user state.
-
-    Uses login_page fixture which handles navigation, then logs in.
-    """
-    login_page.login(user_data["username"], user_data["password"])
-
-    products_page = ProductsPage(driver)
-    products_page.wait_until_page_is_loaded()
-
-    logger.info("[FIXTURE] User logged in successfully")
-    return user_data

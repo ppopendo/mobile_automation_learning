@@ -38,7 +38,7 @@ class ProductsPage(BasePage):
         try:
             self.wait_for_element(ProductsPageLocators.PRODUCTS_HEADER)
             return True
-        except:
+        except Exception:
             allure.attach(
                 "Header 'Products' is not displayed.",
                 name="Header Verification",

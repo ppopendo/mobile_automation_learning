@@ -24,6 +24,10 @@ def login_page(driver):
     4. Returns a ready LoginPage instance
 
     Use this fixture when you need to access the login screen.
+
+    Note:
+        This fixture modifies application state by logging out the user if they are logged in.
+        Use with care in tests that require a specific authentication state, as it will force the user to be logged out before proceeding.
     """
     product_page = ProductsPage(driver)
     menu_component = MenuComponent(driver)

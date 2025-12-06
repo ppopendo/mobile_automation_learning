@@ -39,12 +39,17 @@ class BasePage:
     def is_element_displayed(self, locator: Tuple[str, str], timeout: int = 5) -> bool:
         """Check if element is displayed on the screen.
 
-        Returns False if element is not found or not visible (no exception raised).
+        Args:
+            locator: Tuple of (By strategy, locator value) to identify the element.
+            timeout: Maximum time in seconds to wait for element visibility (default: 5).
+
+        Returns:
+            bool: True if element is displayed, False if element is not found or not visible.
         """
         try:
             element = WebDriverWait(self._driver, timeout).until(EC.visibility_of_element_located(locator))
-            return element is not None
-        except (TimeoutException, NoSuchElementException, AttributeError):
+            return element.is_displayed()
+        except (TimeoutException, NoSuchElementException):
             return False
 
     def wait_for_element(
