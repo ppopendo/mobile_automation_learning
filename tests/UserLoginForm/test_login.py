@@ -14,7 +14,7 @@ class TestLogin:
     @pytest.mark.regression
     @allure.story("as user I want to log in with valid credentials to access the products page")
     @allure.severity(allure.severity_level.CRITICAL)
-    def test_successful_login(self, driver, user_data, login_page):
+    def test_successful_login(self, driver, user_data, login_page, logout_after_test):
         """Successful login with valid credentials."""
         product_page = ProductsPage(driver)
         login_page.login(username=user_data["username"], password=user_data["password"])

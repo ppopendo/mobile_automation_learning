@@ -16,34 +16,16 @@ import logging
 import os
 from datetime import datetime
 from typing import Any
-
 import pytest
+from tests.fixtures.fixtures_driver import take_screenshot
 
-# Import shared fixtures to make them available globally
-from tests.fixtures.fixtures_driver import (
-    platform,
-    appium_service,
-    device_capabilities,
-    driver,
-    screenshots_dir,
-    take_screenshot,
-)
-from tests.fixtures.fixtures_auth import user_data, logout_after_test
-from tests.fixtures.fixtures_navigation import (
-    login_page,
-    products_page,
-    menu_component,
-)
-from tests.fixtures.fixtures_checkout import (
-    checkout_address_data,
-    checkout_payment_data,
-    cart_page,
-    checkout_address_page,
-    checkout_payment_page,
-    checkout_review_page,
-    checkout_complete_page,
-    product_details_page,
-)
+# Register shared fixture modules using pytest_plugins for modularity
+pytest_plugins = [
+    "tests.fixtures.fixtures_driver",
+    "tests.fixtures.fixtures_auth",
+    "tests.fixtures.fixtures_navigation",
+    "tests.fixtures.fixtures_checkout",
+]
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s [%(name)s] %(message)s")
@@ -109,7 +91,9 @@ def pytest_runtest_makereport(item, call):
         # Try to get driver and screenshots_dir from fixtures
         try:
             driver = item.funcargs.get("driver")
-            screenshots_path = os.path.join(os.path.dirname(__file__), "screenshots")
+            screenshots_path = item.funcargs.get("screenshots_dir")
+            if screenshots_path is None:
+                screenshots_path = os.path.join(os.path.dirname(__file__), "screenshots")
             os.makedirs(screenshots_path, exist_ok=True)
 
             if driver:
@@ -148,6 +132,7 @@ def pytest_collection_modifyitems(config, items):
     Args:
         config: pytest Config object with command line options
         items: List of collected test Item objects to be modified in-place
+        If --tcid is provided, only tests marked with @pytest.mark.tcid matching the value are run; others are deselected.
     """
     # Get --tcid option value; if not provided, run all tests
     tc_id = config.getoption("--tcid")
