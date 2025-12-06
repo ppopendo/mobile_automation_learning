@@ -1,6 +1,6 @@
 import logging
 import time
-from typing import Callable, Optional, Tuple
+from typing import Callable, List, Optional, Tuple
 
 from appium import webdriver
 from selenium.common.exceptions import (
@@ -12,7 +12,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from config.config_vars import TIMEOUT
+from config.config_vars import TIMEOUT, SHORT_TIMEOUT, PAGE_LOAD_TIMEOUT
 
 logger = logging.getLogger(__name__)
 
@@ -22,13 +22,15 @@ class BasePage:
     def __init__(self, driver: webdriver.Remote):
         self._driver = driver
         self._timeout = TIMEOUT
+        self._short_timeout = SHORT_TIMEOUT
+        self._page_load_timeout = PAGE_LOAD_TIMEOUT
 
     def find_element(self, locator: Tuple[str, str]):
         try:
-            element = WebDriverWait(self._driver, self._timeout).until(EC.presence_of_element_located(locator))
+            element = WebDriverWait(self._driver, self._short_timeout).until(EC.presence_of_element_located(locator))
             return element
         except TimeoutException as exc:
-            raise TimeoutException(f"❌ Element not found within {self._timeout} seconds: {locator}") from exc
+            raise TimeoutException(f"❌ Element not found within {self._short_timeout} seconds: {locator}") from exc
         except NoSuchElementException as exc:
             raise NoSuchElementException(f"❌ Element {locator} not found in the DOM.") from exc
 
@@ -36,30 +38,30 @@ class BasePage:
         element = self.find_element(locator)
         element.send_keys(text)
 
-    def is_element_displayed(self, locator: Tuple[str, str], timeout: int = 5) -> bool:
+    def is_element_displayed(self, locator: Tuple[str, str], timeout: int = 3) -> bool:
         """Check if element is displayed on the screen.
 
         Args:
             locator: Tuple of (By strategy, locator value) to identify the element.
-            timeout: Maximum time in seconds to wait for element visibility (default: 5).
+            timeout: Maximum time in seconds to wait for element visibility (default: 3).
         Returns:
             bool: True if element is displayed, False if element is not found or not visible.
         """
         try:
-            WebDriverWait(self._driver, timeout).until(EC.visibility_of_element_located(locator))
-            return True
-        except (TimeoutException, NoSuchElementException):
+            element = WebDriverWait(self._driver, timeout).until(EC.presence_of_element_located(locator))
+            return element.is_displayed()
+        except (TimeoutException, NoSuchElementException, AttributeError):
             return False
 
     def wait_for_element(
         self,
         locator: Tuple[str, str],
         condition: Callable = EC.visibility_of_element_located,
-        timeout: Optional[int] = 5,
+        timeout: Optional[int] = None,
         scroll_to_element: bool = False,
     ):
         """Waits for an element to meet a specified condition within a timeout period."""
-        timeout_value = timeout or self._timeout
+        timeout_value = timeout if timeout is not None else self._short_timeout
         try:
             if scroll_to_element:
                 self._scroll_to_element(locator)
@@ -68,6 +70,29 @@ class BasePage:
             raise TimeoutException(
                 f"❌ Element {locator} did not meet condition within {timeout_value} seconds. Exception: {exc}"
             ) from exc
+
+    def wait_for_all_elements(
+        self,
+        locators: List[Tuple[str, str]],
+        condition: Callable = EC.presence_of_element_located,
+        timeout: Optional[int] = None,
+    ) -> None:
+        """Waits for all elements to meet the specified condition.
+
+        Optimized version that uses a single WebDriverWait per element with short timeout.
+        Fails fast if any element is not found.
+
+        Args:
+            locators: List of locator tuples to wait for
+            condition: Expected condition to check (default: presence_of_element_located)
+            timeout: Maximum time to wait per element (default: page_load_timeout)
+        """
+        timeout_value = timeout if timeout is not None else self._page_load_timeout
+        for locator in locators:
+            try:
+                WebDriverWait(self._driver, timeout_value).until(condition(locator))
+            except TimeoutException as exc:
+                raise TimeoutException(f"❌ Element {locator} did not meet condition within {timeout_value}s") from exc
 
     def safe_send_keys(
         self,

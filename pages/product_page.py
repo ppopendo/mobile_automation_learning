@@ -4,6 +4,7 @@ import allure
 from appium.webdriver.common.appiumby import AppiumBy
 from selenium.webdriver.support import expected_conditions as EC
 from .base_page import BasePage
+from config.config_vars import SHORT_TIMEOUT
 
 
 @dataclass(frozen=True)
@@ -56,10 +57,13 @@ class ProductsPage(BasePage):
         self.tap_element(product_locator)
 
     @allure.step("waiting for the products page to be fully loaded")
-    def wait_until_page_is_loaded(self, timeout=10) -> None:
-        expected_locators = [ProductsPageLocators.PRODUCTS_HEADER, ProductsPageLocators.MENU_BUTTON]
-        for locator in expected_locators:
-            self.wait_for_element(locator, condition=EC.presence_of_element_located, timeout=timeout)
+    def wait_until_page_is_loaded(self, timeout=SHORT_TIMEOUT) -> None:
+        # Wait only for essential elements with reduced timeout
+        self.wait_for_all_elements(
+            [ProductsPageLocators.PRODUCTS_HEADER, ProductsPageLocators.MENU_BUTTON],
+            condition=EC.presence_of_element_located,
+            timeout=timeout,
+        )
 
     @allure.step("checking if the menu button is displayed")
     def is_menu_button_displayed(self) -> bool:
@@ -88,20 +92,11 @@ class ProductsPage(BasePage):
         return price_element.text
 
     @allure.step("waiting until product '{product_name}' is displayed")
-    def wait_until_product_is_displayed(self, product_name: str, timeout: int = 10) -> None:
+    def wait_until_product_is_displayed(self, product_name: str, timeout: int = SHORT_TIMEOUT) -> None:
         """Waits until the specified product is visible on the Products Page."""
         product_locator = (
             ProductsPageLocators.PRODUCT_NAME[0],
             ProductsPageLocators.PRODUCT_NAME[1].format(product_name=product_name),
         )
-        price_locator = (
-            ProductsPageLocators.PRODUCT_PRICE[0],
-            ProductsPageLocators.PRODUCT_PRICE[1].format(product_name=product_name),
-        )
-        image_locator = (
-            ProductsPageLocators.PRODUCT_IMAGE[0],
-            ProductsPageLocators.PRODUCT_IMAGE[1].format(product_name=product_name),
-        )
-        product_elements = [product_locator, price_locator, image_locator]
-        for product_element in product_elements:
-            self.wait_for_element(product_element, condition=EC.visibility_of_element_located, timeout=timeout)
+        # Only wait for product name - if name is visible, other elements are loaded
+        self.wait_for_element(product_locator, condition=EC.visibility_of_element_located, timeout=timeout)

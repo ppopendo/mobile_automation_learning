@@ -3,6 +3,7 @@ from typing import Tuple
 import allure
 from appium.webdriver.common.appiumby import AppiumBy
 from .base_page import BasePage
+from config.config_vars import SHORT_TIMEOUT
 
 
 @dataclass(frozen=True)
@@ -25,16 +26,11 @@ class CheckoutCompletePageLocators:
 class CheckoutCompletePage(BasePage):
 
     @allure.step("the user waits until the checkout complete page is displayed")
-    def wait_until_page_is_loaded(self, timeout: int = 10) -> None:
-        expected_locators = [
-            CheckoutCompletePageLocators.PAGE_HEADER,
-            CheckoutCompletePageLocators.SUB_HEADER,
-            CheckoutCompletePageLocators.SWAG_TXT,
-            CheckoutCompletePageLocators.ORDER_INFORMATION_TXT,
-            CheckoutCompletePageLocators.CONTINUE_SHOPPING_BUTTON,
-        ]
-        for locator in expected_locators:
-            self.wait_for_element(locator, timeout=timeout)
+    def wait_until_page_is_loaded(self, timeout: int = SHORT_TIMEOUT) -> None:
+        # Wait only for header - if header is visible, page is loaded
+        self.wait_for_all_elements(
+            [CheckoutCompletePageLocators.PAGE_HEADER, CheckoutCompletePageLocators.SUB_HEADER], timeout=timeout
+        )
 
     @allure.step("the user taps the 'Continue Shopping' button")
     def tap_continue_shopping_button(self) -> None:

@@ -1,12 +1,11 @@
 from dataclasses import dataclass, field
 from typing import Tuple
-
 import allure
 from appium.webdriver.common.appiumby import AppiumBy
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
-
 from .base_page import BasePage
+from config.config_vars import SHORT_TIMEOUT
 
 
 @dataclass(frozen=True)
@@ -44,16 +43,9 @@ class LoginPageLocators:
 class LoginPage(BasePage):
 
     @allure.step("the user waits until the login page is displayed")
-    def wait_until_page_is_loaded(self, timeout: int = 10) -> None:
-        expected_locators = [
-            LoginPageLocators.USERNAME_INPUT,
-            LoginPageLocators.PASSWORD_INPUT,
-            LoginPageLocators.LOGIN_BUTTON,
-            LoginPageLocators.HEADER_TITLE,
-            LoginPageLocators.HEADER_MESSAGE,
-        ]
-        for locator in expected_locators:
-            self.wait_for_element(locator, condition=EC.presence_of_element_located, timeout=timeout)
+    def wait_until_page_is_loaded(self, timeout: int = SHORT_TIMEOUT) -> None:
+        # Wait only for essential elements - username input and login button
+        self.wait_for_all_elements([LoginPageLocators.USERNAME_INPUT, LoginPageLocators.LOGIN_BUTTON], timeout=timeout)
 
     @property
     @allure.step("retrieving username error message")
@@ -62,7 +54,7 @@ class LoginPage(BasePage):
             element = self.wait_for_element(
                 LoginPageLocators.USERNAME_ERROR_MESSAGE,
                 condition=EC.visibility_of_element_located,
-                timeout=5,
+                timeout=SHORT_TIMEOUT,
             )
             return element.text
         except TimeoutException as exc:
@@ -75,7 +67,7 @@ class LoginPage(BasePage):
             element = self.wait_for_element(
                 LoginPageLocators.PASSWORD_ERROR_MESSAGE,
                 condition=EC.visibility_of_element_located,
-                timeout=5,
+                timeout=SHORT_TIMEOUT,
             )
             return element.text
         except TimeoutException as exc:

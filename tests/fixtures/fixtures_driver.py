@@ -10,7 +10,7 @@ from datetime import datetime
 from typing import Any, Dict, Generator
 
 import pytest
-from config.config_vars import TIMEOUT
+from config.config_vars import SHORT_TIMEOUT
 from drivers.appium_driver import AppiumDriverService
 from libs.common import load_device_capabilities
 
@@ -52,9 +52,9 @@ def driver(appium_service: AppiumDriverService, device_capabilities: Dict[str, A
     """
     appium_driver: Any = appium_service.initialize_driver()
 
-    # Set implicit wait
+    # Set implicit wait - keep low to allow explicit waits to control timing
     try:
-        appium_driver.implicitly_wait(TIMEOUT)
+        appium_driver.implicitly_wait(SHORT_TIMEOUT)
     except Exception:
         logger.debug("Could not set implicit wait on driver; continuing.")
 

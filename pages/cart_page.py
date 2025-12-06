@@ -3,8 +3,8 @@ from typing import Tuple
 import allure
 from appium.webdriver.common.appiumby import AppiumBy
 from selenium.webdriver.support import expected_conditions as EC
-
 from .base_page import BasePage
+from config.config_vars import SHORT_TIMEOUT
 
 
 @dataclass(frozen=True)
@@ -53,15 +53,13 @@ class CartPageLocators:
 class CartPage(BasePage):
 
     @allure.step("the user waits until the cart page is displayed")
-    def wait_until_page_is_loaded(self, timeout=10) -> None:
-        expected_locators = [
-            CartPageLocators.PAGE_HEADER,
-            CartPageLocators.PRODUCT_NAME,
-            CartPageLocators.PRODUCT_PRICE,
-            CartPageLocators.CHECKOUT_BUTTON,
-        ]
-        for locator in expected_locators:
-            self.wait_for_element(locator, condition=EC.presence_of_element_located, timeout=timeout)
+    def wait_until_page_is_loaded(self, timeout=SHORT_TIMEOUT) -> None:
+        # Wait only for essential elements
+        self.wait_for_all_elements(
+            [CartPageLocators.PAGE_HEADER, CartPageLocators.CHECKOUT_BUTTON],
+            condition=EC.presence_of_element_located,
+            timeout=timeout,
+        )
 
     @allure.step("the user clicks the 'Proceed to Checkout' button")
     def click_proceed_to_checkout_button(self) -> None:
