@@ -4,5 +4,35 @@ skip-string-normalization = true
 
 [tool.isort]
 profile = "black"
+line_length = 120
+
+[tool.pylint.main]
+max-line-length = 120
+ignore-patterns = ["test_.*\\.py"]
+
+[tool.pylint."messages control"]
+disable = [
+    "C0103",  # invalid-name (UPPER_CASE for locators is Page Object convention)
+    "C0114",  # missing-module-docstring
+    "C0115",  # missing-class-docstring
+    "C0116",  # missing-function-docstring
+    "C0301",  # line-too-long (handled by black)
+    "C0411",  # wrong-import-order (handled by isort)
+    "E1102",  # not-callable (false positive with dynamic getattr)
+    "R0801",  # duplicate-code (common in page objects)
+    "R0902",  # too-many-instance-attributes (common in page objects)
+    "R0903",  # too-few-public-methods
+    "R0917",  # too-many-positional-arguments
+    "W0212",  # protected-access (acceptable in tests)
+    "W0611",  # unused-import (fixtures need to be imported to be available)
+    "W0613",  # unused-argument (common in pytest hooks)
+    "W0621",  # redefined-outer-name (common in pytest fixtures)
+    "W0702",  # bare-except
+    "W0718",  # broad-exception-caught (acceptable in test teardown)
+    "W1203",  # logging-fstring-interpolation
+]
+
+[tool.pylint.design]
+max-args = 10  # Allow more arguments for test functions with fixtures
 
 
