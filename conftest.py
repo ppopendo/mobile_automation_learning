@@ -1,22 +1,44 @@
+"""
+Root conftest.py - Global pytest configuration and hooks.
+
+This file contains:
+- pytest CLI options (--tcid, --platform)
+- Global setup: verify app is launched
+- Screenshot on test failure hook
+- Test collection modifiers
+
+Test-specific fixtures are located in:
+- tests/fixtures/ - shared, reusable fixtures
+- tests/<suite>/conftest.py - suite-specific fixtures
+"""
+
 import logging
-from typing import Any, Dict, Generator
+import os
+from datetime import datetime
+from typing import Any
+
 import pytest
-from config.config_vars import TIMEOUT
-from drivers.appium_driver import AppiumDriverService
-from libs.common import load_device_capabilities
-from pages.menu_component import MenuComponent
-from pages.product_page import ProductsPage
+from tests.fixtures.fixtures_driver import take_screenshot
+
+# Register shared fixture modules using pytest_plugins for modularity
+pytest_plugins = [
+    "tests.fixtures.fixtures_driver",
+    "tests.fixtures.fixtures_auth",
+    "tests.fixtures.fixtures_navigation",
+    "tests.fixtures.fixtures_checkout",
+]
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s [%(name)s] %(message)s")
 
 
 def pytest_addoption(parser):
+    """Add custom command line options for pytest."""
     parser.addoption(
         "--tcid",
         action="store",
         default=None,
-        help="Run only tests annotated with @pytest.mark.tc(\"TC-XXXX\") matching this id",
+        help="Run only tests annotated with @pytest.mark.tcid(\"TC-XXXX\") matching this id",
     )
     parser.addoption(
         "--platform",
@@ -25,11 +47,6 @@ def pytest_addoption(parser):
         help="Device platform to run tests against (android|ios). Default: android",
     )
 
-@pytest.fixture(scope="session")
-def platform(request: pytest.FixtureRequest):
-    """Get the platform specified via --platform option."""
-    return request.config.getoption("--platform")
-
 
 @pytest.fixture(scope="session")
 def tcid(request: pytest.FixtureRequest):
@@ -37,99 +54,89 @@ def tcid(request: pytest.FixtureRequest):
     return request.config.getoption("--tcid")
 
 
-@pytest.fixture(scope="session")
-def appium_service(request: pytest.FixtureRequest, platform) -> AppiumDriverService:
-    """Create AppiumDriverService for the whole test session.
-
-    Platform is read from --platform pytest option (default: android).
-    """
-    platform = request.config.getoption("--platform")
-    service = AppiumDriverService(platform=platform)
-    return service
-
-
-@pytest.fixture(scope="session")
-def device_capabilities(request: pytest.FixtureRequest, platform: pytest.FixtureRequest) -> Dict[str, Any]:
-    """Load device capabilities for the requested platform.
-
-    Uses the same --platform option as `appium_service`.
-    """
-    platform = request.config.getoption("--platform")
-    caps = load_device_capabilities(platform=platform)
-    return caps
-
-
-@pytest.fixture(scope="session")
-def driver(appium_service: AppiumDriverService, device_capabilities: Dict[str, Any]) -> Generator[Any, None, None]:
-    """Create a single Appium driver for the test session and perform teardown when finished.
-
-    Yields the raw driver object (Appium WebDriver). The type is kept generic (Any) because
-    Appium driver exposes methods beyond standard Selenium RemoteWebDriver.
-    """
-    appium_driver: Any = appium_service.initialize_driver()
-    # set implicit wait
-    try:
-        appium_driver.implicitly_wait(TIMEOUT)
-    except Exception:
-        # Some drivers might not implement implicitly_wait exactly the same way,
-        # ignore if setting it fails but continue to provide the driver to tests
-        logger.debug("Could not set implicit wait on driver; continuing.")
-
-    yield appium_driver
-
-    # Teardown session (best-effort)
-    try:
-        app_package = device_capabilities.get("appPackage") if isinstance(device_capabilities, dict) else None
-        if app_package:
-            try:
-                appium_service.terminate_application(app_package=app_package)
-            except Exception as exc:  # keep broad-except only for teardown
-                logger.exception("[TEARDOWN - session] error terminating app: %s", exc)
-    finally:
-        try:
-            appium_service.quit_driver()
-        except Exception as exc:
-            logger.exception("[TEARDOWN - session] error quitting driver: %s", exc)
-
-
 @pytest.fixture(scope="session", autouse=True)
-def suite_setup(driver) -> None:
-    """Suite-level setup: navigate to the login screen once per test session.
+def global_setup(driver: Any, screenshots_dir: str) -> None:
+    """Global session setup: verify the application is launched successfully.
 
-    This is executed once per test session (autouse). It will log errors but not fail the session setup.
+    This minimal setup only checks that the app is running.
+    Suite-specific setup is handled in local conftest.py files.
+    Takes a screenshot if verification fails.
     """
     try:
-        product_page = ProductsPage(driver)
-        menu_component = MenuComponent(driver)
-        product_page.open_side_menu()
-        menu_component.wait_until_page_is_loaded()
-        menu_component.click_login_button()
-    except Exception as exception:  # do not raise to allow tests to run; log details for debugging
+        # Verify app is launched by checking driver session is active
+        session_id = driver.session_id
+        if not session_id:
+            raise RuntimeError("Driver session is not active")
+        logger.info("[GLOBAL SETUP] Application launched successfully. Session ID: %s", session_id)
+    except Exception as exception:
         logger.exception(
-            "[SETUP - session]: could not navigate to login screen at session setup, details: %s",
+            "[GLOBAL SETUP] Application launch verification failed: %s",
             exception,
         )
+        # Take screenshot on setup failure
+        try:
+            take_screenshot(driver, screenshots_dir, "global_setup_failure")
+        except Exception as screenshot_exc:
+            logger.exception("[GLOBAL SETUP] Failed to take screenshot: %s", screenshot_exc)
+        raise
+
+
+@pytest.hookimpl(tryfirst=True, hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    """Hook to capture test result and take screenshot on failure."""
+    outcome = yield
+    report = outcome.get_result()
+
+    # Only handle test call phase failures (not setup/teardown)
+    if report.when == "call" and report.failed:
+        # Try to get driver and screenshots_dir from fixtures
+        try:
+            driver = item.funcargs.get("driver")
+            screenshots_path = item.funcargs.get("screenshots_dir")
+            if screenshots_path is None:
+                screenshots_path = os.path.join(os.path.dirname(__file__), "screenshots")
+            os.makedirs(screenshots_path, exist_ok=True)
+
+            if driver:
+                test_name = item.name.replace(" ", "_").replace("/", "_")
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                filename = f"FAIL_{test_name}_{timestamp}.png"
+                filepath = os.path.join(screenshots_path, filename)
+                driver.save_screenshot(filepath)
+                logger.info("[FAILURE SCREENSHOT] Saved: %s", filepath)
+        except Exception as exc:
+            logger.warning("[FAILURE SCREENSHOT] Could not take screenshot: %s", exc)
 
 
 def pytest_collection_modifyitems(config, items):
+    """Filter collected tests by Test Case ID (--tcid option).
+
+    If --tcid is provided, only tests marked with @pytest.mark.tcid matching the value are run; others are deselected.
+    """
+    # Get --tcid option value; if not provided, run all tests
     tc_id = config.getoption("--tcid")
     if not tc_id:
         return
+
+    # Separate tests into kept (matching tcid) and deselected (not matching)
     kept = []
     deselected = []
+
     for item in items:
+        # Get @pytest.mark.tcid marker from test
         marker = item.get_closest_marker("tcid")
         if marker:
-            # marker can be used as @pytest.mark.tc("TC-00002")
+            # Extract marker value (first positional argument)
             value = marker.args[0] if marker.args else None
             if value == tc_id:
                 kept.append(item)
             else:
                 deselected.append(item)
         else:
-            # not marked with tc -> deselect
+            # No tcid marker - deselect when filtering by tcid
             deselected.append(item)
 
+    # Report deselected tests and update items list
     if deselected:
         config.hook.pytest_deselected(items=deselected)
         items[:] = kept

@@ -1,0 +1,28 @@
+# Pre-commit hooks configuration
+# Install: pip install pre-commit && pre-commit install
+# Run manually: pre-commit run --all-files
+
+repos:
+  # Black - code formatter (config in pyproject.toml)
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
+    hooks:
+      - id: black
+        language_version: python3
+
+  # Pylint - code linter (config in pyproject.toml)
+  - repo: https://github.com/pylint-dev/pylint
+    rev: v3.3.2
+    hooks:
+      - id: pylint
+        args:
+          - --rcfile=pyproject.toml
+        additional_dependencies:
+          - pytest
+          - allure-pytest
+          - appium-python-client
+          - selenium
+          - faker
+          - python-dotenv
+          - toml
+
