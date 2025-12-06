@@ -114,7 +114,7 @@ class ProductDetailsPage(BasePage):
                         name="Item Count Update",
                         attachment_type=allure.attachment_type.TEXT,
                     )
-                return
+                    return
             except Exception:
                 continue
         raise TimeoutError(f"Item count in cart did not update to {expected_count} within the given time.")
