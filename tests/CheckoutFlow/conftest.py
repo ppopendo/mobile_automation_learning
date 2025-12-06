@@ -55,7 +55,7 @@ def checkout_test_cleanup(driver):
                 menu_component.confirm_logout()
                 logger.info("[CHECKOUT SUITE TEARDOWN] User logged out")
         except Exception as exc:
-            logger.warning("[CHECKOUT SUITE TEARDOWN] Failed to log out during cleanup: %s", exc)
+            logger.warning(f"[CHECKOUT SUITE TEARDOWN] Failed to log out during cleanup: {exc}")
 
     except Exception as exc:
         logger.warning("[CHECKOUT SUITE TEARDOWN] Error during cleanup: %s", exc)
