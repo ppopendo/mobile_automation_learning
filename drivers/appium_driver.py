@@ -53,15 +53,11 @@ class AppiumDriverService:
                         f"Failed to connect to Appium after {self._appium_connect_retries} attempts: {exc}"
                     ) from exc
             if not self._driver:
-                raise ConnectionError(
-                    f"Failed to connect to Appium server at {self._appium_server_url}"
-                )
+                raise ConnectionError(f"Failed to connect to Appium server at {self._appium_server_url}")
             return self._driver
         except Exception as exc:
             # Wrap unexpected errors in ConnectionError to provide clearer context
-            raise ConnectionError(
-                f"Failed to connect to Appium server at {self._appium_server_url}: {exc}"
-            ) from exc
+            raise ConnectionError(f"Failed to connect to Appium server at {self._appium_server_url}: {exc}") from exc
 
     def _get_driver_options(self) -> AppiumOptions:
         if self.platform == "android":
@@ -88,6 +84,8 @@ class AppiumDriverService:
                 if callable(terminate):
                     terminate(app_package)
                 else:
-                    logger.warning("Driver does not implement 'terminate_app'; skipping termination for %s", app_package)
+                    logger.warning(
+                        "Driver does not implement 'terminate_app'; skipping termination for %s", app_package
+                    )
             except Exception as exc:
                 logger.exception("Error while terminating application: %s", exc)
