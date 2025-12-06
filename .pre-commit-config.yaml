@@ -17,7 +17,6 @@ repos:
       - id: pylint
         args:
           - --rcfile=pyproject.toml
-        exclude: ^.*/test_.*\.py$
         additional_dependencies:
           - pytest
           - allure-pytest
