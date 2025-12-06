@@ -47,8 +47,8 @@ class BasePage:
             bool: True if element is displayed, False if element is not found or not visible.
         """
         try:
-            element = WebDriverWait(self._driver, timeout).until(EC.visibility_of_element_located(locator))
-            return element.is_displayed()
+            WebDriverWait(self._driver, timeout).until(EC.visibility_of_element_located(locator))
+            return True
         except (TimeoutException, NoSuchElementException):
             return False
 
