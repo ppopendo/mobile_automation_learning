@@ -3,6 +3,7 @@ from typing import Tuple
 import allure
 from appium.webdriver.common.appiumby import AppiumBy
 from .base_page import BasePage
+from config.config_vars import SHORT_TIMEOUT
 
 
 @dataclass(frozen=True)
@@ -66,26 +67,15 @@ class CheckoutReviewOrderPageLocators:
 class CheckoutReviewOrderPage(BasePage):
 
     @allure.step("the user waits until the checkout review order page is displayed")
-    def wait_until_page_is_loaded(self, timeout=10) -> None:
-        expected_locators = [
-            CheckoutReviewOrderPageLocators.PAGE_HEADER,
-            CheckoutReviewOrderPageLocators.FULL_NAME_VALUE,
-            CheckoutReviewOrderPageLocators.ADDRESS_LINE_1_VALUE,
-            CheckoutReviewOrderPageLocators.CITY_STATE_VALUE,
-            CheckoutReviewOrderPageLocators.COUNTRY_ZIP_VALUE,
-            CheckoutReviewOrderPageLocators.CARD_HOLDER_NAME_VALUE,
-            CheckoutReviewOrderPageLocators.CAR_NUMBER_VALUE,
-            CheckoutReviewOrderPageLocators.EXPIRATION_DATE_VALUE,
-            CheckoutReviewOrderPageLocators.BILLING_ADDRESS_AS_SHIPPING_VALUE,
-            CheckoutReviewOrderPageLocators.DELIVERY_AMOUNT,
-            CheckoutReviewOrderPageLocators.ESTIMATE_ARRIVAL_VALUE,
-            CheckoutReviewOrderPageLocators.TOTAL_ITEMS_VALUE,
-            CheckoutReviewOrderPageLocators.TOTAL_AMOUNT_VALUE,
-            CheckoutReviewOrderPageLocators.PLACE_ORDER_BUTTON,
-        ]
-        for locator in expected_locators:
-            self.wait_for_element(locator, timeout=timeout, scroll_to_element=True)
+    def wait_until_page_is_loaded(self, timeout=SHORT_TIMEOUT) -> None:
+        # Wait only for header - page content loads together
+        self.wait_for_all_elements(
+            [CheckoutReviewOrderPageLocators.PAGE_HEADER, CheckoutReviewOrderPageLocators.FULL_NAME_VALUE],
+            timeout=timeout,
+        )
 
     @allure.step("the user taps the 'Place Order' button")
     def tap_place_order_button(self) -> None:
+        # Scroll to element before tapping as button may be below fold
+        self.wait_for_element(CheckoutReviewOrderPageLocators.PLACE_ORDER_BUTTON, scroll_to_element=True)
         self.tap_element(CheckoutReviewOrderPageLocators.PLACE_ORDER_BUTTON)

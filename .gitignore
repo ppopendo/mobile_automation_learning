@@ -223,5 +223,4 @@ config/.env
 .idea
 
 # instructions
-.github/instructions/
-.github/
+allure-results/

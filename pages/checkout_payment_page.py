@@ -3,6 +3,7 @@ from typing import Tuple
 import allure
 from appium.webdriver.common.appiumby import AppiumBy
 from .base_page import BasePage
+from config.config_vars import SHORT_TIMEOUT
 
 
 @dataclass(frozen=True)
@@ -58,20 +59,11 @@ class CheckoutPaymentPageLocators:
 class CheckoutPaymentPage(BasePage):
 
     @allure.step("the user waits until the checkout payment page is displayed")
-    def wait_until_page_is_loaded(self, timeout=10) -> None:
-        expected_locators = [
-            CheckoutPaymentPageLocators.PAGE_HEADER,
-            CheckoutPaymentPageLocators.PAGE_SUB_TITLE,
-            CheckoutPaymentPageLocators.CARD_HEADER,
-            CheckoutPaymentPageLocators.FULL_NAME_INPUT,
-            CheckoutPaymentPageLocators.CARD_NUMBER_INPUT,
-            CheckoutPaymentPageLocators.EXPIRATION_DATE_INPUT,
-            CheckoutPaymentPageLocators.SECURITY_CODE_INPUT,
-            CheckoutPaymentPageLocators.BILLING_ADDRESS_SAME_AS_SHIPPING_CHECKBOX,
-            CheckoutPaymentPageLocators.REVIEW_ORDER_BUTTON,
-        ]
-        for locator in expected_locators:
-            self.wait_for_element(locator, timeout=timeout)
+    def wait_until_page_is_loaded(self, timeout=SHORT_TIMEOUT) -> None:
+        # Wait only for header and submit button - form fields load with page
+        self.wait_for_all_elements(
+            [CheckoutPaymentPageLocators.PAGE_HEADER, CheckoutPaymentPageLocators.REVIEW_ORDER_BUTTON], timeout=timeout
+        )
 
     def enter_full_name(self, full_name: str) -> None:
         with allure.step(f"the user enters full name: {full_name}"):

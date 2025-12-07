@@ -1,8 +1,10 @@
+import time
 from dataclasses import dataclass, field
 from typing import Tuple
 import allure
 from appium.webdriver.common.appiumby import AppiumBy
 from .base_page import BasePage
+from config.config_vars import SHORT_TIMEOUT
 
 
 @dataclass(frozen=True)
@@ -49,20 +51,14 @@ class ProductDetailsPageLocators:
 class ProductDetailsPage(BasePage):
 
     @allure.step("the user waits until the product details page is displayed")
-    def wait_until_page_is_loaded(self, timeout=10) -> None:
-        expected_locators = [
+    def wait_until_page_is_loaded(self, timeout=SHORT_TIMEOUT) -> None:
+        # Wait only for critical elements - others will load with the page
+        critical_locators = [
             ProductDetailsPageLocators.PRODUCT_HEADER,
             ProductDetailsPageLocators.PRODUCT_PRICE,
-            ProductDetailsPageLocators.PRODUCT_HIGHLIGHTS,
-            ProductDetailsPageLocators.PRODUCT_DESCRIPTION,
-            ProductDetailsPageLocators.INCREASE_QUANTITY_BUTTON,
-            ProductDetailsPageLocators.DECREASE_QUANTITY_BUTTON,
-            ProductDetailsPageLocators.COUNT_ITEM,
             ProductDetailsPageLocators.ADD_TO_CART_BUTTON,
-            ProductDetailsPageLocators.CART_ICON,
         ]
-        for locator in expected_locators:
-            self.wait_for_element(locator, timeout=timeout, scroll_to_element=True)
+        self.wait_for_all_elements(critical_locators, timeout=timeout)
 
     @allure.step("the user adds the product to the cart")
     def click_add_to_cart_button(self) -> None:
@@ -103,10 +99,12 @@ class ProductDetailsPage(BasePage):
             self.tap_element(ProductDetailsPageLocators.INCREASE_QUANTITY_BUTTON)
 
     @allure.step("the user waits until the item count in cart is updated to {expected_count}")
-    def wait_until_item_count_is_updated(self, expected_count: int, attempts: int = 5) -> None:
-        for _ in range(attempts):
+    def wait_until_item_count_is_updated(self, expected_count: int, timeout: int = 3) -> None:
+        """Waits until cart count matches expected value with optimized polling."""
+        start_time = time.time()
+        while time.time() - start_time < timeout:
             try:
-                element = self.wait_for_element(ProductDetailsPageLocators.COUNT_ITEM_IN_CART_VALUE)
+                element = self.wait_for_element(ProductDetailsPageLocators.COUNT_ITEM_IN_CART_VALUE, timeout=1)
                 actual_count = int(element.text)
                 if actual_count == expected_count:
                     allure.attach(
@@ -114,7 +112,8 @@ class ProductDetailsPage(BasePage):
                         name="Item Count Update",
                         attachment_type=allure.attachment_type.TEXT,
                     )
-                return
-            except:
-                continue
-        raise TimeoutError(f"Item count in cart did not update to {expected_count} within the given time.")
+                    return
+            except Exception:
+                pass
+            time.sleep(0.2)
+        raise TimeoutError(f"Item count in cart did not update to {expected_count} within {timeout}s.")

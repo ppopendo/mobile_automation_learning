@@ -64,16 +64,12 @@ class MenuComponentLocators:
 class MenuComponent(BasePage):
 
     @allure.step("waiting for the menu page to be fully loaded")
-    def wait_until_page_is_loaded(self, timeout: int = 10) -> None:
+    def wait_until_page_is_loaded(self, timeout: int = 3) -> None:
         """Wait until the menu page is fully loaded."""
-        expected_locators = [
-            MenuComponentLocators.CATALOG_OPTION,
-            MenuComponentLocators.WEBVIEW_OPTION,
-            MenuComponentLocators.ABOUT_OPTION,
-            MenuComponentLocators.CRASH_APP_OPTION,
-        ]
-        for locator in expected_locators:
-            self.wait_for_element(locator, condition=EC.presence_of_element_located, timeout=timeout)
+        # Wait only for catalog option - if it's visible, menu is open
+        self.wait_for_element(
+            MenuComponentLocators.CATALOG_OPTION, condition=EC.presence_of_element_located, timeout=timeout
+        )
 
     @allure.step("the user clicks on the login option in the menu")
     def click_login_button(self) -> None:
