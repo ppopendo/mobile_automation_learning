@@ -16,13 +16,11 @@ logger = logging.getLogger(__name__)
 @pytest.fixture
 def login_page(driver):
     """Return a ready LoginPage instance, ensuring user is logged out first.
-
     This fixture:
     1. Opens the side menu
     2. Checks if user is logged in - if yes, logs out
     3. Navigates to the login form
     4. Returns a ready LoginPage instance
-
     Use this fixture when you need to access the login screen.
     Note:
         This fixture modifies application state by logging out the user if they are logged in.
@@ -30,11 +28,9 @@ def login_page(driver):
     """
     product_page = ProductsPage(driver)
     menu_component = MenuComponent(driver)
-
     # Open side menu
     product_page.open_side_menu()
     menu_component.wait_until_page_is_loaded()
-
     # Check if user is logged in - if yes, logout first
     if menu_component.is_logout_option_displayed():
         logger.info("[LOGIN PAGE] User is logged in, logging out first...")
@@ -43,11 +39,9 @@ def login_page(driver):
         # Re-open menu after logout
         product_page.open_side_menu()
         menu_component.wait_until_page_is_loaded()
-
     # Navigate to login form
     menu_component.click_login_button()
     logger.info("[LOGIN PAGE] Navigated to login form")
-
     # Return ready LoginPage instance
     page = LoginPage(driver)
     page.wait_until_page_is_loaded()

@@ -2,6 +2,7 @@
 Keep only simple constants here (timeouts, retries) — environment values should be in `config/.env`.
 """
 
+import os
 from typing import Final
 
 
@@ -13,3 +14,5 @@ SHORT_TIMEOUT: Final[int] = 5
 PAGE_LOAD_TIMEOUT: Final[int] = 10
 APPIUM_CONNECT_RETRIES: Final[int] = 5
 APPIUM_CONNECT_DELAY: Final[float] = 2.0
+# Path to store screenshots
+SCREENSHOTS_PATH: Final[str] = os.path.join(os.path.dirname(os.path.dirname(__file__)), "screenshots")

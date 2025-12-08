@@ -117,3 +117,33 @@ class CheckoutAddressPage(BasePage):
         self.enter_city(city)
         self.enter_zip_code(zip_code)
         self.enter_country(country)
+
+    @property
+    @allure.step("retrieving full name error message")
+    def full_name_error_message(self) -> str:
+        """Retrieves the error message displayed for the full name field."""
+        return self.wait_for_element(CheckoutAddressPageLocators.FULL_NAME_ERROR_MESSAGE).text
+
+    @property
+    @allure.step("retrieving address line 1 error message")
+    def address_line_1_error_message(self) -> str:
+        """Retrieves the error message displayed for the address line 1 field."""
+        return self.wait_for_element(CheckoutAddressPageLocators.ADDRESS_LINE_1_ERROR_MESSAGE).text
+
+    @property
+    @allure.step("retrieving city error message")
+    def city_error_message(self) -> str:
+        """Retrieves the error message displayed for the city field."""
+        return self.wait_for_element(CheckoutAddressPageLocators.CITY_ERROR_MESSAGE).text
+
+    @property
+    @allure.step("retrieving zip code error message")
+    def zip_code_error_message(self) -> str:
+        """Retrieves the error message displayed for the zip code field."""
+        return self.wait_for_element(CheckoutAddressPageLocators.ZIP_CODE_ERROR_MESSAGE).text
+
+    @property
+    @allure.step("retrieving country error message")
+    def country_error_message(self) -> str:
+        """Retrieves the error message displayed for the country field."""
+        return self.wait_for_element(CheckoutAddressPageLocators.COUNTRY_ERROR_MESSAGE).text

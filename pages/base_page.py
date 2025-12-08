@@ -1,7 +1,6 @@
 import logging
 import time
 from typing import Callable, List, Optional, Tuple
-
 from appium import webdriver
 from selenium.common.exceptions import (
     NoSuchElementException,
