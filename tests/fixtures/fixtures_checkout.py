@@ -12,6 +12,7 @@ from pages.checkout_payment_page import CheckoutPaymentPage
 from pages.checkout_review_order import CheckoutReviewOrderPage
 from pages.checkout_complete import CheckoutCompletePage
 from pages.product_details_page import ProductDetailsPage
+from pages.product_page import ProductsPage
 
 
 @pytest.fixture
@@ -60,3 +61,9 @@ def checkout_complete_page(driver):
 def product_details_page(driver):
     """Return a ProductDetailsPage instance."""
     return ProductDetailsPage(driver)
+
+
+@pytest.fixture
+def product_page(driver):
+    """Return a ProductsPage instance."""
+    return ProductsPage(driver)

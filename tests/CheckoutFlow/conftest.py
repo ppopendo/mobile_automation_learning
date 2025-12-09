@@ -9,13 +9,12 @@ import logging
 import pytest
 
 from pages.product_page import ProductsPage
-from tests.fixtures.fixtures_driver import take_screenshot
 
 logger = logging.getLogger(__name__)
 
 
 @pytest.fixture(scope="module", autouse=True)
-def checkout_suite_setup(driver, screenshots_dir):
+def checkout_suite_setup(driver):
     """Suite setup: Ensure app is on products page before checkout tests.
 
     This setup runs once per module and prepares the app for checkout flow tests.
@@ -29,5 +28,4 @@ def checkout_suite_setup(driver, screenshots_dir):
         logger.info("[CHECKOUT SUITE SETUP] Products page is ready for checkout tests")
     except Exception as exc:
         logger.exception("[CHECKOUT SUITE SETUP] Failed to prepare for checkout tests: %s", exc)
-        take_screenshot(driver, screenshots_dir, "checkout_suite_setup_failure")
         # Don't raise - let individual tests handle their own setup
