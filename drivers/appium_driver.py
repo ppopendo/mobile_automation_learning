@@ -16,18 +16,24 @@ logger = logging.getLogger(__name__)
 
 class AppiumDriverService:
 
-    def __init__(self, platform: str):
-        """Service wrapper around Appium WebDriver initialization and teardown.
-
-        Args:
-            platform: 'android' or 'ios'
+    def __init__(self, platform: str, app_name: Optional[str] = "mydemoapp") -> None:
         """
+        Initialize AppiumDriverService with platform and app name.
+        Args:
+            platform: 'android' or 'ios'. Specifies the mobile platform to test against.
+            app_name: Name of the application under test. Used to select app-specific capabilities or configuration.
+            Valid values are typically the names of supported apps (e.g., "mydemoapp"). Defaults to "mydemoapp"
+        Raises:
+            ValueError: If an unsupported platform is provided
+        """
+
         load_dotenv(dotenv_path=Path(__file__).resolve().parents[1] / "config" / ".env")
         self.platform = platform
         self._appium_server_url = os.getenv("APPIUM_SERVER_URL")
         self._appium_connect_retries = APPIUM_CONNECT_RETRIES
         self._appium_connect_delay = APPIUM_CONNECT_DELAY
         self._driver: Optional[Any] = None
+        self.app_name = app_name
 
     def initialize_driver(self) -> Any:
         """Initialize and return a Remote WebDriver instance with retries on connection errors."""
@@ -60,14 +66,31 @@ class AppiumDriverService:
             raise ConnectionError(f"Failed to connect to Appium server at {self._appium_server_url}: {exc}") from exc
 
     def _get_driver_options(self) -> AppiumOptions:
+        device_name = os.getenv("DEVICE_NAME")
+        platform_version = os.getenv("PLATFORM_VERSION")
+        if not device_name:
+            raise ValueError("DEVICE_NAME not found in environment variables")
+        if not platform_version:
+            raise ValueError("PLATFORM_VERSION not found in environment variables")
+        logger.info("Loading capabilities for platform: %s, app: %s", self.platform, self.app_name)
+        logger.info("Device Name: %s, Platform Version: %s", device_name, platform_version)
         if self.platform == "android":
-            options = UiAutomator2Options().load_capabilities(caps=load_device_capabilities(platform="android"))
+            options = UiAutomator2Options().load_capabilities(
+                caps=load_device_capabilities(platform="android", app_name=self.app_name)
+            )
         elif self.platform == "ios":
-            options = XCUITestOptions().load_capabilities(caps=load_device_capabilities(platform="ios"))
+            options = XCUITestOptions().load_capabilities(
+                caps=load_device_capabilities(platform="ios", app_name=self.app_name)
+            )
         else:
             raise ValueError(f"Unsupported platform: {self.platform}")
-        options.device_name = os.getenv("DEVICE_NAME")
-        options.platform_version = os.getenv("PLATFORM_VERSION")
+        # Set device identification
+        options.device_name = device_name
+        options.platform_version = str(platform_version)
+        # Log complete capabilities for debugging
+        logger.info("Final capabilities being sent to Appium:")
+        logger.info("Capabilities dict: %s", options.to_capabilities())
+        logger.info("Driver options configured successfully")
         return options
 
     def quit_driver(self) -> None:

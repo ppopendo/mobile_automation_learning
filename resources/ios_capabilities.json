@@ -1,9 +1,0 @@
-{
-    "platformName": "iOS",
-    "appium:platformVersion": "{platform_version}",
-    "appium:deviceName": "{device_name}",
-    "appium:app": "/path/to/your/app/app.ipa",
-    "appPackage": "com.saucelabs.mydemoapp.android",
-    "appActivity": "com.saucelabs.mydemoapp.android.view.activities.SplashActivity",
-    "appium:automationName": "XCUITest"
-}

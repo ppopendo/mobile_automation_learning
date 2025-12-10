@@ -1,1 +1,1 @@
-# Fixtures module for shared test fixtures
+# Package marker for pytest fixtures
