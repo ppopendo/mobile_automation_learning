@@ -1,0 +1,16 @@
+{
+    "platformName": "Android",
+    "platformVersion": "{platform_version}",
+    "deviceName": "{device_name}",
+    "appPackage": "com.vodqareactnative",
+    "appActivity": "com.vodqareactnative.MainActivity",
+    "automationName": "UiAutomator2",
+    "systemPort": 8202,
+    "noReset": true,
+    "fullReset": false,
+    "appWaitForLaunch": true,
+    "deviceReadyTimeout": 120,
+    "newCommandTimeout": 90,
+    "appWaitDuration": 30000,
+    "appWaitActivity":  "*"
+}
