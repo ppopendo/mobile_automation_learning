@@ -20,11 +20,12 @@ def platform(request: pytest.FixtureRequest) -> str:
 
 
 @pytest.fixture(scope="session")
-def appium_service(platform: str) -> AppiumDriverService:
+def appium_service(platform: str, appname: str) -> AppiumDriverService:
     """Create AppiumDriverService for the whole test session.
     Platform is read from --platform pytest option (default: android).
+    App name is read from --appname pytest option.
     """
-    service = AppiumDriverService(platform=platform)
+    service = AppiumDriverService(platform=platform, app_name=appname)
     return service
 
 
