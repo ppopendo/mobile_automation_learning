@@ -76,7 +76,7 @@ class TestSwipeGestures:
             - Swipe gesture is performed on screen center
         """
         # Perform swipe left on screen
-        slider_page.swipe_left(percentage=0.75, speed=2500)
+        slider_page.swipe_left(locator=None, percentage=0.75, speed=2500)
 
         # Verify the operation completed (method should not raise exceptions)
 
@@ -95,7 +95,7 @@ class TestSwipeGestures:
             - Swipe gesture is performed on screen center
         """
         # Perform swipe right on screen
-        slider_page.swipe_right(percentage=0.75, speed=2500)
+        slider_page.swipe_right(locator=None, percentage=0.75, speed=2500)
 
         # Verify the operation completed (method should not raise exceptions)
 

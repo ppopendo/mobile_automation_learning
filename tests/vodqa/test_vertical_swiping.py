@@ -34,7 +34,7 @@ class TestVerticalSwiping:
         assert vertical_swiping_page.is_item_1_displayed, "Item 1 should be visible initially"
 
         # Perform swipe up gesture
-        vertical_swiping_page.swipe_up(percentage=0.75, speed=2500)
+        vertical_swiping_page.swipe_up(locator=None, percentage=0.75, speed=2500)
 
         # After swipe up, content should have moved
         # This is a basic test to verify the method executes without errors
@@ -64,7 +64,7 @@ class TestVerticalSwiping:
         assert vertical_swiping_page.is_item_last_displayed, "Last item should be visible after scrolling"
 
         # Perform swipe down gesture
-        vertical_swiping_page.swipe_down(percentage=0.75, speed=2500)
+        vertical_swiping_page.swipe_down(locator=None, percentage=0.75, speed=2500)
 
         # After swipe down, content should have moved
         # This is a basic test to verify the method executes without errors

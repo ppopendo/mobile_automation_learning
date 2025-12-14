@@ -56,7 +56,7 @@ class LongPressPage(BaseAppiumGestures, HeaderBarComponent):
 
     @property
     @allure.step("retrieving press target center coordinates")
-    def press_target_center_coordinates(self) -> tuple:
+    def press_target_center_coordinates(self) -> Tuple[int, int]:
         """Get center coordinates of press target element."""
         element = self.wait_for_element(LongPressPageLocators.PRESS_TARGET)
         x = element.location["x"] + element.size["width"] // 2

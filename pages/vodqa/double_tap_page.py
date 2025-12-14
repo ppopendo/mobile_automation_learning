@@ -56,7 +56,7 @@ class DoubleTapPage(BaseAppiumGestures, HeaderBarComponent):
 
     @property
     @allure.step("retrieving tap target center coordinates")
-    def tap_target_center_coordinates(self) -> tuple:
+    def tap_target_center_coordinates(self) -> Tuple[int, int]:
         """Get center coordinates of tap target element."""
         element = self.wait_for_element(DoubleTapPageLocators.TAP_TARGET)
         x = element.location["x"] + element.size["width"] // 2
