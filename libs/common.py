@@ -27,8 +27,6 @@ def load_device_capabilities(platform: str, app_name: str) -> Dict[str, Any]:
     if platform.lower() not in ("android", "ios"):
         raise ValueError(f"No such platform: {platform}")
     config_data = json_reader(file_name=f"{platform}_capabilities.json", file_path=f"{Path.cwd()}/resources/{app_name}")
-    if platform.lower() not in ("android", "ios"):
-        raise ValueError(f"No such platform: {platform}")
     return config_data
 
 
