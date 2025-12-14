@@ -77,7 +77,6 @@ class SliderPage(BaseAppiumGestures, HeaderBarComponent):
     @allure.step("retrieving slider 1 value")
     def slider_1_value(self) -> float:
         """Get the current value of slider 1.
-
         Returns:
             The text attribute of slider 1.
         """
@@ -85,19 +84,21 @@ class SliderPage(BaseAppiumGestures, HeaderBarComponent):
 
     @property
     @allure.step("retrieving slider 2 value")
-    def slider_2_value(self) -> str:
+    def slider_2_value(self) -> float:
         """Get the current value of slider 2.
-
         Returns:
-            str: The text attribute of slider 2.
+            The text attribute of slider 2.
         """
-        slider = self.wait_for_element(SliderPageLocators.SLIDER_2)
-        return slider.text
+        return float(self.wait_for_element(SliderPageLocators.SLIDER_2).text)
 
+    @property
+    @allure.step("checking if slider 1 is displayed")
     def is_slider_1_displayed(self) -> bool:
         """Check if slider 1 is displayed on screen."""
         return self.is_element_displayed(SliderPageLocators.SLIDER_1)
 
+    @property
+    @allure.step("checking if slider 2 is displayed")
     def is_slider_2_displayed(self) -> bool:
         """Check if slider 2 is displayed on screen."""
         return self.is_element_displayed(SliderPageLocators.SLIDER_2)
@@ -108,7 +109,7 @@ class SliderPage(BaseAppiumGestures, HeaderBarComponent):
         self.tap_element(HeaderBarComponentLocators.BACK_BUTTON)
 
     @property
-    @allure.step("slider displayed value retrieval")
+    @allure.step("the user retrieves the displayed slider value")
     def slider_display_value(self) -> float:
         """Get the displayed value of slider 1 or 2."""
         return float(self.wait_for_element(SliderPageLocators.SLIDER_DISPLAY_VALUE).text)

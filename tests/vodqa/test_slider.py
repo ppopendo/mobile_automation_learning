@@ -23,8 +23,8 @@ class TestSlider:
             - Slider 1 is visible on the page
             - Slider 2 is visible on the page
         """
-        assert slider_page.is_slider_1_displayed(), "Slider 1 should be visible on the Slider page"
-        assert slider_page.is_slider_2_displayed(), "Slider 2 should be visible on the Slider page"
+        assert slider_page.is_slider_1_displayed, "Slider 1 should be visible on the Slider page"
+        assert slider_page.is_slider_2_displayed, "Slider 2 should be visible on the Slider page"
 
     @pytest.mark.tcid("TC-02-02")
     @allure.severity(allure.severity_level.NORMAL)

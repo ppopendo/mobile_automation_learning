@@ -77,7 +77,7 @@ class LoginPage(BasePage):
     def enter_username(self, username: str) -> None:
         self.safe_send_keys(LoginPageLocators.USERNAME_INPUT, username)
 
-    @allure.step("the user enters the password: {password}")
+    @allure.step("the user enters the password")
     def enter_password(self, password: str) -> None:
         self.safe_send_keys(LoginPageLocators.PASSWORD_INPUT, password)
 
@@ -85,7 +85,7 @@ class LoginPage(BasePage):
     def click_login(self) -> None:
         self.tap_element(LoginPageLocators.LOGIN_BUTTON)
 
-    @allure.step("the user attempts to log in with username: {username} and password: {password}")
+    @allure.step("the user attempts to log in with username: {username}")
     def login(self, username: str, password: str) -> None:
         self.enter_username(username)
         self.enter_password(password)

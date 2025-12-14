@@ -23,9 +23,6 @@ class LoginPage(BaseAppiumGestures, BasePage):
     Provides methods to interact with the login page elements.
     """
 
-    def __init__(self, driver: Any):
-        super().__init__(driver)
-
     def wait_until_page_is_loaded(self, timeout: int = SHORT_TIMEOUT) -> None:
         # Wait only for essential elements - username input and login button
         self.wait_for_all_elements([LoginPageLocators.USERNAME_INPUT, LoginPageLocators.LOGIN_BUTTON], timeout=timeout)
@@ -36,7 +33,7 @@ class LoginPage(BaseAppiumGestures, BasePage):
         username_input.clear()
         username_input.send_keys(username)
 
-    @allure.step("the user enters password: {password}")
+    @allure.step("the user enters password")
     def enter_password(self, password: str) -> None:
         password_input = self.wait_for_element(LoginPageLocators.PASSWORD_INPUT)
         password_input.clear()
@@ -46,7 +43,7 @@ class LoginPage(BaseAppiumGestures, BasePage):
     def tap_login_button(self) -> None:
         self.tap_element(LoginPageLocators.LOGIN_BUTTON)
 
-    @allure.step("the user attempts to log in with username: {username} and password: {password}")
+    @allure.step("the user attempts to log in with username: {username}")
     def login(self, username: str, password: str) -> None:
         self.enter_username(username)
         self.enter_password(password)

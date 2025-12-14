@@ -26,9 +26,6 @@ class SamplesListLocators:
 
 class SamplesListPage(BaseAppiumGestures, HeaderBarComponent):
 
-    def __init__(self, driver: Any) -> None:
-        super().__init__(driver)
-
     @allure.step("the user waits until the samples list page is displayed")
     def wait_until_page_is_loaded(self) -> None:
         """Waits until the Samples List page is fully loaded."""

@@ -31,7 +31,6 @@ class BaseAppiumGestures(BasePage):
             driver: Appium WebDriver instance.
         """
         super().__init__(driver)
-        self._driver = driver
         self._timeout = TIMEOUT
         self._short_timeout = SHORT_TIMEOUT
 
