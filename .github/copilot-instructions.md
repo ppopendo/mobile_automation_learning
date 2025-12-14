@@ -172,7 +172,8 @@ isort .
 - Use `tap_element()` instead of direct `.click()` for mobile elements
 
 **Problem**: Slow test execution
-**Solution**: 
+**Solution**:
+
 - Use `wait_for_all_elements()` to wait for multiple critical elements in parallel
 - Avoid `time.sleep()` - use explicit waits instead
 - Import specific timeout constants from `config.config_vars`
@@ -193,9 +194,9 @@ isort .
 - Return type hints are mandatory
 
 **Never:**
-- Don't use hardcoded `time.sleep()` - use explicit waits
-- Don't access `self._driver` directly in tests - use page methods
-- Don't mix test logic with page logic - keep them separate
+- Use hardcoded `time.sleep()` - use explicit waits instead
+- Access `self._driver` directly in tests - use page methods
+- Mix test logic with page logic - keep them separate
 
 ## Security Considerations
 
