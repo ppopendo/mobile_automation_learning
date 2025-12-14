@@ -102,3 +102,128 @@ When adding new dependencies, add them to `requirements.txt` and ensure compatib
 
 The project uses pre-commit hooks for code quality. Run `pre-commit run --all-files` before committing.
 
+## Build, Test, and Lint Commands
+
+### Installing Dependencies
+
+```bash
+# Create and activate virtual environment
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\Activate.ps1
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Install pre-commit hooks
+pre-commit install
+```
+
+### Running Tests
+
+```bash
+# Run all tests
+pytest tests/
+
+# Run specific test file
+pytest tests/UserLoginForm/test_login.py
+
+# Run specific test case
+pytest tests/UserLoginForm/test_login.py::TestLogin::test_successful_login
+
+# Run tests with specific marker
+pytest -m regression tests/
+
+# Run tests with Allure report
+pytest --alluredir=allure-results tests/
+
+# Generate and open Allure report
+allure generate allure-results --clean -o reports
+allure open ./reports/
+```
+
+### Code Quality Checks
+
+```bash
+# Run all pre-commit hooks
+pre-commit run --all-files
+
+# Format code with Black
+black .
+
+# Run Pylint
+pylint pages/ tests/ config/ libs/
+
+# Type checking with mypy
+mypy pages/ tests/ config/ libs/
+
+# Sort imports with isort
+isort .
+```
+
+## Common Patterns and Troubleshooting
+
+### Element Interaction Patterns
+
+**Problem**: Element not found or stale element exceptions
+**Solution**: Always use wait methods from `BasePage`:
+- Use `wait_for_element()` for single elements
+- Use `wait_for_all_elements()` for multiple elements
+- Use `safe_send_keys()` for input fields with retry logic
+- Use `tap_element()` instead of direct `.click()` for mobile elements
+
+**Problem**: Slow test execution
+**Solution**:
+
+- Use `wait_for_all_elements()` to wait for multiple critical elements in parallel
+- Avoid `time.sleep()` - use explicit waits instead
+- Import specific timeout constants from `config.config_vars`
+
+### Test Data Management
+
+- Use pytest fixtures for test data (see `conftest.py`)
+- Store reusable test data in `data/` directory
+- Use `faker` library for generating random test data when needed
+
+### Page Object Best Practices
+
+**Always:**
+- Inherit from `BasePage`
+- Define locators as frozen dataclasses at the top of the file
+- Use `@allure.step()` decorators on all public methods
+- Use descriptive step names in natural language
+- Return type hints are mandatory
+
+**Never:**
+- Use hardcoded `time.sleep()` - use explicit waits instead
+- Access `self._driver` directly in tests - use page methods
+- Mix test logic with page logic - keep them separate
+
+## Security Considerations
+
+- Never hardcode credentials in test files
+- Use environment variables for sensitive data (stored in `.env` file, not committed)
+- Use the `.env_template` file as a reference for required environment variables
+- Test data should not contain real user information
+
+## Test Organization
+
+Tests are organized by feature in subdirectories under `tests/`:
+- `tests/UserLoginForm/` - Login functionality tests
+- `tests/CheckoutFlow/` - Checkout process tests
+- `tests/CheckoutShippingAddress/` - Shipping address tests
+- `tests/General/` - General utility tests
+
+Each test class should:
+- Use `@allure.epic()`, `@allure.feature()`, `@allure.story()` decorators
+- Use `@pytest.mark.tcid()` for test case IDs
+- Use `@pytest.mark.regression` or other markers for test categorization
+- Use descriptive class names: `Test{Feature}` (e.g., `TestLogin`)
+
+## Debugging Tips
+
+- Use `allure.attach()` to add screenshots or data to test reports
+- Check `allure-results/` directory for test execution details
+- Use `pytest -v` for verbose test output
+- Use `pytest --log-cli-level=INFO` to see logging output during test runs
+- Use `--capture=no` or `-s` flag to see print statements during test execution
+
