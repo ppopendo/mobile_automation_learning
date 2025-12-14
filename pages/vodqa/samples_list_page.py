@@ -1,5 +1,5 @@
-from dataclasses import field, dataclass
-from typing import Tuple
+from dataclasses import dataclass, field
+from typing import Tuple, Any
 
 import allure
 from appium.webdriver.common.appiumby import AppiumBy
@@ -46,7 +46,7 @@ class SamplesListLocators:
 
 class SamplesListPage(BaseAppiumGestures, HeaderBarComponent):
 
-    def __init__(self, driver) -> None:
+    def __init__(self, driver: Any) -> None:
         super().__init__(driver)
 
     @allure.step("the user waits until the samples list page is displayed")

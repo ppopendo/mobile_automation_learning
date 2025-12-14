@@ -15,9 +15,7 @@ class SliderPageLocators:
     """Locators for Slider page elements."""
 
     SLIDER_1: Tuple[str, str] = field(default=(AppiumBy.ACCESSIBILITY_ID, "slider"), init=False)
-    SLIDER_2: Tuple[str, str] = field(
-        default=(AppiumBy.ACCESSIBILITY_ID, "slider1"), init=False
-    )  # ⚠️ GENERATED VIA EXPLORATION - VERIFY ID
+    SLIDER_2: Tuple[str, str] = field(default=(AppiumBy.ACCESSIBILITY_ID, "slider1"), init=False)
 
 
 class SliderPage(BaseAppiumGestures, HeaderBarComponent):

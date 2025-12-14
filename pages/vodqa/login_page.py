@@ -1,5 +1,5 @@
-from dataclasses import field, dataclass
-from typing import Tuple
+from dataclasses import dataclass, field
+from typing import Tuple, Any
 
 import allure
 from appium.webdriver.common.appiumby import AppiumBy
@@ -17,14 +17,14 @@ class LoginPageLocators:
     )
 
 
-class LoginPage(BasePage, BaseAppiumGestures):
+class LoginPage(BaseAppiumGestures, BasePage):
     """
     Represents the login page of the application.
     Provides methods to interact with the login page elements.
     """
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, driver: Any):
+        super().__init__(driver)
 
     def wait_until_page_is_loaded(self, timeout: int = SHORT_TIMEOUT) -> None:
         # Wait only for essential elements - username input and login button

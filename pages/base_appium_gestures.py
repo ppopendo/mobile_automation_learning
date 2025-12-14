@@ -208,7 +208,7 @@ class BaseAppiumGestures(BasePage):
         """
         for attempt in range(max_scrolls):
             try:
-                element = WebDriverWait(self._driver, 1).until(EC.visibility_of_element_located(locator))
+                element = WebDriverWait(self._driver, SHORT_TIMEOUT).until(EC.visibility_of_element_located(locator))
                 if element.is_displayed():
                     logger.info(f"✅ Element {locator} found after {attempt + 1} scroll(s)")
                     return
