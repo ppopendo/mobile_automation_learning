@@ -74,7 +74,7 @@ class TestSwipeGestures:
 
     @pytest.mark.tcid("TC-07-04")
     @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test swipe gestures with {percentage}% distance")
+    @allure.title("Test swipe left gesture with {percentage}% distance")
     @pytest.mark.parametrize("percentage", [0.5, 0.75], ids=["50%", "75%"])
     def test_swipe_with_different_percentages(self, slider_page: SliderPage, percentage: float) -> None:
         """Test swipe gestures with different swipe percentages.
@@ -98,7 +98,7 @@ class TestSwipeGestures:
 
     @pytest.mark.tcid("TC-07-05")
     @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test swipe gestures with {speed} pixels per second")
+    @allure.title("Test swipe left gesture with {speed} pixels per second")
     @pytest.mark.parametrize("speed", [1500, 2500], ids=["slow", "medium"])
     def test_swipe_with_different_speeds(self, slider_page: SliderPage, speed: int) -> None:
         """Test swipe gestures with different speed values.

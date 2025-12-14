@@ -17,7 +17,7 @@ class TestVerticalSwiping:
 
     @pytest.mark.tcid("TC-03-01")
     @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test swipe_up gesture on screen")
+    @allure.title("Test swipe up gesture on screen")
     def test_swipe_up_gesture(self, vertical_swiping_page: VerticalSwipingPage) -> None:
         """Verify that swipe up gesture scrolls content upward.
 
@@ -36,7 +36,7 @@ class TestVerticalSwiping:
 
     @pytest.mark.tcid("TC-03-02")
     @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test swipe_down gesture on screen")
+    @allure.title("Test swipe down gesture on screen")
     def test_swipe_down_gesture(self, vertical_swiping_page: VerticalSwipingPage) -> None:
         """Verify that swipe down gesture scrolls content downward.
 
