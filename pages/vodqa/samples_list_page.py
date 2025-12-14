@@ -12,36 +12,16 @@ class SamplesListLocators:
     PAGE_HEADER: Tuple[str, str] = field(
         default=(AppiumBy.XPATH, "//android.widget.TextView[@text='Samples List']"), init=False
     )
-    NATIVE_VIEW: Tuple[str, str] = field(
-        default=(AppiumBy.XPATH, "//android.widget.TextView[@content-desc='chainedView']"), init=False
-    )
-    SLIDER: Tuple[str, str] = field(
-        default=(AppiumBy.XPATH, "//android.widget.TextView[@content-desc='slider1']"), init=False
-    )
-    VERTICAL_SWIPING: Tuple[str, str] = field(
-        default=(AppiumBy.XPATH, "//android.widget.TextView[@content-desc='verticalSwiping']"), init=False
-    )
-    DRAG_AND_DROP: Tuple[str, str] = field(
-        default=(AppiumBy.XPATH, "//android.widget.TextView[@content-desc='dragAndDrop']"), init=False
-    )
-    DOUBLE_TAP: Tuple[str, str] = field(
-        default=(AppiumBy.XPATH, "//android.widget.TextView[@content-desc='doubleTap']"), init=False
-    )
-    LONG_PRESS: Tuple[str, str] = field(
-        default=(AppiumBy.XPATH, "//android.widget.TextView[@content-desc='longPress']"), init=False
-    )
-    PHOTO_VIEW: Tuple[str, str] = field(
-        default=(AppiumBy.XPATH, "//android.widget.TextView[@content-desc='photoView']"), init=False
-    )
-    WEB_VIEW: Tuple[str, str] = field(
-        default=(AppiumBy.XPATH, "//android.widget.TextView[@content-desc='webView']"), init=False
-    )
-    CAROUSEL: Tuple[str, str] = field(
-        default=(AppiumBy.XPATH, "//android.widget.TextView[@content-desc='carousel']"), init=False
-    )
-    WHEEL_PICKER: Tuple[str, str] = field(
-        default=(AppiumBy.XPATH, "//android.widget.TextView[@content-desc='wheelPicker']"), init=False
-    )
+    NATIVE_VIEW: Tuple[str, str] = field(default=(AppiumBy.ACCESSIBILITY_ID, "chainedView"), init=False)
+    SLIDER: Tuple[str, str] = field(default=(AppiumBy.ACCESSIBILITY_ID, "slider1"), init=False)
+    VERTICAL_SWIPING: Tuple[str, str] = field(default=(AppiumBy.ACCESSIBILITY_ID, "verticalSwiping"), init=False)
+    DRAG_AND_DROP: Tuple[str, str] = field(default=(AppiumBy.ACCESSIBILITY_ID, "dragAndDrop"), init=False)
+    DOUBLE_TAP: Tuple[str, str] = field(default=(AppiumBy.ACCESSIBILITY_ID, "doubleTap"), init=False)
+    LONG_PRESS: Tuple[str, str] = field(default=(AppiumBy.ACCESSIBILITY_ID, "longPress"), init=False)
+    PHOTO_VIEW: Tuple[str, str] = field(default=(AppiumBy.ACCESSIBILITY_ID, "photoView"), init=False)
+    WEB_VIEW: Tuple[str, str] = field(default=(AppiumBy.ACCESSIBILITY_ID, "webView"), init=False)
+    CAROUSEL: Tuple[str, str] = field(default=(AppiumBy.ACCESSIBILITY_ID, "carousel"), init=False)
+    WHEEL_PICKER: Tuple[str, str] = field(default=(AppiumBy.ACCESSIBILITY_ID, "wheelPicker"), init=False)
 
 
 class SamplesListPage(BaseAppiumGestures, HeaderBarComponent):

@@ -16,6 +16,10 @@ class SliderPageLocators:
 
     SLIDER_1: Tuple[str, str] = field(default=(AppiumBy.ACCESSIBILITY_ID, "slider"), init=False)
     SLIDER_2: Tuple[str, str] = field(default=(AppiumBy.ACCESSIBILITY_ID, "slider1"), init=False)
+    SLIDER_DISPLAY_VALUE: Tuple[str, str] = field(
+        default=(AppiumBy.XPATH, "//android.widget.SeekBar[@content-desc='slider']/following-sibling::*[@text][1]"),
+        init=False,
+    )
 
 
 class SliderPage(BaseAppiumGestures, HeaderBarComponent):
@@ -71,14 +75,13 @@ class SliderPage(BaseAppiumGestures, HeaderBarComponent):
 
     @property
     @allure.step("retrieving slider 1 value")
-    def slider_1_value(self) -> str:
+    def slider_1_value(self) -> float:
         """Get the current value of slider 1.
 
         Returns:
-            str: The text attribute of slider 1.
+            The text attribute of slider 1.
         """
-        slider = self.wait_for_element(SliderPageLocators.SLIDER_1)
-        return slider.text
+        return float(self.wait_for_element(SliderPageLocators.SLIDER_1).text)
 
     @property
     @allure.step("retrieving slider 2 value")
@@ -103,3 +106,9 @@ class SliderPage(BaseAppiumGestures, HeaderBarComponent):
     def tap_back_button(self) -> None:
         """Tap the back button to return to Samples List."""
         self.tap_element(HeaderBarComponentLocators.BACK_BUTTON)
+
+    @property
+    @allure.step("slider displayed value retrieval")
+    def slider_display_value(self) -> float:
+        """Get the displayed value of slider 1 or 2."""
+        return float(self.wait_for_element(SliderPageLocators.SLIDER_DISPLAY_VALUE).text)
