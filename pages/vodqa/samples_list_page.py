@@ -1,8 +1,9 @@
 from dataclasses import dataclass, field
-from typing import Tuple, Any
+from typing import Any, Tuple
 
 import allure
 from appium.webdriver.common.appiumby import AppiumBy
+
 from pages.base_appium_gestures import BaseAppiumGestures
 from pages.vodqa.header_bar_component import HeaderBarComponent
 
@@ -40,3 +41,18 @@ class SamplesListPage(BaseAppiumGestures, HeaderBarComponent):
     def tap_vertical_swiping(self) -> None:
         """Taps on the 'Vertical Swiping' sample in the samples list."""
         self.tap_element(SamplesListLocators.VERTICAL_SWIPING)
+
+    @allure.step("the user taps on the 'Drag and Drop' sample")
+    def tap_drag_and_drop(self) -> None:
+        """Taps on the 'Drag and Drop' sample in the samples list."""
+        self.tap_element(SamplesListLocators.DRAG_AND_DROP)
+
+    @allure.step("the user taps on the 'Double Tap' sample")
+    def tap_double_tap(self) -> None:
+        """Taps on the 'Double Tap' sample in the samples list."""
+        self.tap_element(SamplesListLocators.DOUBLE_TAP)
+
+    @allure.step("the user taps on the 'Long Press' sample")
+    def tap_long_press(self) -> None:
+        """Taps on the 'Long Press' sample in the samples list."""
+        self.tap_element(SamplesListLocators.LONG_PRESS)
