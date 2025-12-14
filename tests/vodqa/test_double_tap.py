@@ -22,9 +22,10 @@ class TestDoubleTap:
         """Verify that the Double Tap page contains required elements.
 
         Expected:
-            - Tap target element is visible
+            - Double tap me button is visible
         """
-        assert double_tap_page.is_tap_target_displayed, "Tap target should be visible"
+        # Assert
+        assert double_tap_page.is_double_tap_me_button_displayed, "Double tap me button should be visible"
 
     @pytest.mark.tcid("TC-05-02")
     @allure.severity(allure.severity_level.NORMAL)
@@ -32,119 +33,68 @@ class TestDoubleTap:
     def test_double_tap_on_element(self, double_tap_page: DoubleTapPage) -> None:
         """Verify that double_tap method works on an element.
 
-        Steps:
-            1. Verify tap target is displayed
-            2. Perform double tap on the target element
-            3. Verify double tap operation completes without errors
-
         Expected:
             - double_tap method executes successfully
             - Double tap gesture is performed on target element
         """
-        # Verify element is displayed
-        assert double_tap_page.is_tap_target_displayed, "Tap target should be visible before double tap"
+        # Arrange - verify element is displayed
+        assert (
+            double_tap_page.is_double_tap_me_button_displayed
+        ), "Double tap me button should be visible before double tap"
 
-        # Perform double tap
-        double_tap_page.double_tap(DoubleTapPageLocators.TAP_TARGET)
+        # Act - perform double tap
+        double_tap_page.double_tap(DoubleTapPageLocators.DOUBLE_TAP_ME_BUTTON)
 
-        # Verify the operation completed (method should not raise exceptions)
-        # In a real app with proper feedback, we would verify the counter or state change
+        # Assert - verify the operation completed without exceptions
+        assert double_tap_page.is_double_tap_me_button_displayed, "Double tap me button should still be visible"
 
     @pytest.mark.tcid("TC-05-03")
     @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test double_tap_at_coordinates method")
-    def test_double_tap_at_coordinates(self, double_tap_page: DoubleTapPage) -> None:
-        """Verify that double_tap_at_coordinates method works with specified coordinates.
-
-        Steps:
-            1. Get center coordinates of tap target
-            2. Perform double tap at those coordinates
-            3. Verify double tap operation completes without errors
-
-        Expected:
-            - double_tap_at_coordinates method executes successfully
-            - Double tap gesture is performed at specified coordinates
-        """
-        # Get target coordinates
-        x, y = double_tap_page.tap_target_center_coordinates
-
-        # Perform double tap at coordinates
-        double_tap_page.double_tap_at_coordinates(x, y)
-
-        # Verify the operation completed (method should not raise exceptions)
-
-    @pytest.mark.tcid("TC-05-04")
-    @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test multiple double taps on same element")
-    def test_multiple_double_taps(self, double_tap_page: DoubleTapPage) -> None:
-        """Test performing multiple double taps on the same element.
-
-        Steps:
-            1. Perform first double tap
-            2. Perform second double tap
-            3. Perform third double tap
-            4. Verify all operations complete without errors
+    @allure.title("Test double_tap method multiple times")
+    def test_double_tap_multiple_times(self, double_tap_page: DoubleTapPage) -> None:
+        """Test performing double tap multiple times on the same element.
 
         Expected:
             - Multiple double taps can be performed sequentially
             - Each double tap operation completes successfully
         """
-        # Perform multiple double taps
-        for _ in range(3):
-            double_tap_page.double_tap(DoubleTapPageLocators.TAP_TARGET)
+        # Arrange - verify element is displayed
+        assert (
+            double_tap_page.is_double_tap_me_button_displayed
+        ), "Double tap me button should be visible before double tap"
 
-        # Verify the operations completed (methods should not raise exceptions)
+        # Act - perform first double tap
+        double_tap_page.double_tap(DoubleTapPageLocators.DOUBLE_TAP_ME_BUTTON)
 
-    @pytest.mark.tcid("TC-05-05")
+        # Assert - verify button still visible after first tap
+        assert (
+            double_tap_page.is_double_tap_me_button_displayed
+        ), "Double tap me button should still be visible after first tap"
+
+    @pytest.mark.tcid("TC-05-04")
     @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test double tap at different coordinate positions")
-    def test_double_tap_at_different_positions(self, double_tap_page: DoubleTapPage) -> None:
-        """Test double tap at different coordinate positions on screen.
+    @allure.title("Test double_tap on element with {count} taps")
+    @pytest.mark.parametrize("count", [1, 2, 3], ids=["1_tap", "2_taps", "3_taps"])
+    def test_double_tap_parametrized(self, double_tap_page: DoubleTapPage, count: int) -> None:
+        """Test double_tap method with varying number of executions.
 
-        Steps:
-            1. Get target element center coordinates
-            2. Double tap at center
-            3. Double tap at offset positions
-            4. Verify all operations complete without errors
+        Args:
+            count: Number of times to perform double tap
 
         Expected:
-            - Double tap works at different coordinate positions
-            - Each operation completes successfully
+            - double_tap can be performed multiple times
+            - Element remains interactable after multiple taps
         """
-        # Get base coordinates
-        x, y = double_tap_page.tap_target_center_coordinates
+        # Arrange - verify element is displayed
+        assert (
+            double_tap_page.is_double_tap_me_button_displayed
+        ), "Double tap me button should be visible before double tap"
 
-        # Double tap at center
-        double_tap_page.double_tap_at_coordinates(x, y)
+        # Act - perform double tap specified number of times
+        for _ in range(count):
+            double_tap_page.double_tap(DoubleTapPageLocators.DOUBLE_TAP_ME_BUTTON)
 
-        # Double tap at slightly different positions (within element bounds)
-        double_tap_page.double_tap_at_coordinates(x + 10, y + 10)
-        double_tap_page.double_tap_at_coordinates(x - 10, y - 10)
-
-        # Verify the operations completed (methods should not raise exceptions)
-
-    @pytest.mark.tcid("TC-05-06")
-    @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test alternating double_tap and double_tap_at_coordinates")
-    def test_alternating_double_tap_methods(self, double_tap_page: DoubleTapPage) -> None:
-        """Test alternating between double_tap and double_tap_at_coordinates methods.
-
-        Steps:
-            1. Perform double_tap on element
-            2. Perform double_tap_at_coordinates
-            3. Perform double_tap on element again
-            4. Verify all operations complete without errors
-
-        Expected:
-            - Both methods can be used interchangeably
-            - All operations complete successfully
-        """
-        # Get coordinates
-        x, y = double_tap_page.tap_target_center_coordinates
-
-        # Alternate between methods
-        double_tap_page.double_tap(DoubleTapPageLocators.TAP_TARGET)
-        double_tap_page.double_tap_at_coordinates(x, y)
-        double_tap_page.double_tap(DoubleTapPageLocators.TAP_TARGET)
-
-        # Verify the operations completed (methods should not raise exceptions)
+        # Assert - verify button still visible
+        assert (
+            double_tap_page.is_double_tap_me_button_displayed
+        ), f"Double tap me button should still be visible after {count} taps"

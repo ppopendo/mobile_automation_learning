@@ -6,6 +6,7 @@ Tests verify that the slider responds to touch gestures and displays correct val
 
 import allure
 import pytest
+
 from pages.vodqa.slider_page import SliderPage
 
 

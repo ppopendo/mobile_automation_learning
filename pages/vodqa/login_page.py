@@ -1,11 +1,12 @@
 from dataclasses import dataclass, field
-from typing import Tuple, Any
+from typing import Any, Tuple
 
 import allure
 from appium.webdriver.common.appiumby import AppiumBy
-from pages.base_page import BasePage
-from pages.base_appium_gestures import BaseAppiumGestures
+
 from config.config_vars import SHORT_TIMEOUT
+from pages.base_appium_gestures import BaseAppiumGestures
+from pages.base_page import BasePage
 
 
 @dataclass(frozen=True)

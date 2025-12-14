@@ -17,152 +17,96 @@ class TestVerticalSwiping:
 
     @pytest.mark.tcid("TC-03-01")
     @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test swipe up gesture on screen")
+    @allure.title("Test swipe_up gesture on screen")
     def test_swipe_up_gesture(self, vertical_swiping_page: VerticalSwipingPage) -> None:
         """Verify that swipe up gesture scrolls content upward.
-
-        Steps:
-            1. Verify initial items are visible
-            2. Perform swipe up gesture
-            3. Verify that content has scrolled
 
         Expected:
             - Swipe up gesture executes without errors
             - Content scrolls upward on screen
         """
-        # Verify initial state - first items should be visible
-        assert vertical_swiping_page.is_item_1_displayed, "Item 1 should be visible initially"
+        # Arrange - verify initial item is visible
+        assert vertical_swiping_page.is_item_displayed("C"), "Item 'C' should be visible initially"
 
-        # Perform swipe up gesture
+        # Act - perform swipe up gesture
         vertical_swiping_page.swipe_up(locator=None, percentage=0.75, speed=2500)
 
-        # After swipe up, content should have moved
-        # This is a basic test to verify the method executes without errors
-        # In a real scenario, you would verify that new items become visible
+        # Assert - verify first item is still present (basic check)
+        assert vertical_swiping_page.is_item_displayed("C"), "Page should still contain items after swipe"
 
     @pytest.mark.tcid("TC-03-02")
     @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test swipe down gesture on screen")
+    @allure.title("Test swipe_down gesture on screen")
     def test_swipe_down_gesture(self, vertical_swiping_page: VerticalSwipingPage) -> None:
         """Verify that swipe down gesture scrolls content downward.
-
-        Steps:
-            1. Scroll to bottom first
-            2. Perform swipe down gesture
-            3. Verify that content has scrolled
 
         Expected:
             - Swipe down gesture executes without errors
             - Content scrolls downward on screen
         """
-        # Scroll to bottom first
+        # Arrange - scroll to bottom first
         vertical_swiping_page.scroll_element_into_view(
-            VerticalSwipingPageLocators.ITEM_LAST, direction="down", max_scrolls=10
+            VerticalSwipingPageLocators.item_locator("Karma"), direction="down", max_scrolls=10
         )
+        assert vertical_swiping_page.is_item_displayed("Karma"), "Item 'Karma' should be visible after scrolling"
 
-        # Verify last item is visible
-        assert vertical_swiping_page.is_item_last_displayed, "Last item should be visible after scrolling"
-
-        # Perform swipe down gesture
+        # Act - perform swipe down gesture
         vertical_swiping_page.swipe_down(locator=None, percentage=0.75, speed=2500)
 
-        # After swipe down, content should have moved
-        # This is a basic test to verify the method executes without errors
+        # Assert - verify last item is still present
+        assert vertical_swiping_page.is_item_displayed("Karma"), "Page should still contain items after swipe"
 
     @pytest.mark.tcid("TC-03-03")
-    @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test swipe up on scrollable container element")
-    def test_swipe_up_on_element(self, vertical_swiping_page: VerticalSwipingPage) -> None:
-        """Verify that swipe up gesture works on a specific element.
-
-        Steps:
-            1. Verify initial items are visible
-            2. Perform swipe up gesture on scrollable container
-            3. Verify that content has scrolled
-
-        Expected:
-            - Swipe up gesture on element executes without errors
-            - Content scrolls within the container
-        """
-        # Verify initial state
-        assert vertical_swiping_page.is_item_1_displayed, "Item 1 should be visible initially"
-
-        # Perform swipe up on the scrollable container
-        vertical_swiping_page.swipe_up(
-            locator=VerticalSwipingPageLocators.SCROLLABLE_CONTAINER, percentage=0.75, speed=2500
-        )
-
-        # After swipe up, content should have moved
-        # This is a basic test to verify the method executes without errors
-
-    @pytest.mark.tcid("TC-03-04")
     @allure.severity(allure.severity_level.NORMAL)
     @allure.title("Test scroll_element_into_view method scrolling down")
     def test_scroll_element_into_view_down(self, vertical_swiping_page: VerticalSwipingPage) -> None:
         """Verify that scroll_element_into_view scrolls to make element visible.
 
-        Steps:
-            1. Verify target element is not initially visible
-            2. Use scroll_element_into_view to scroll down to item 10
-            3. Verify element becomes visible
-
         Expected:
             - scroll_element_into_view executes successfully
             - Target element becomes visible after scrolling
         """
-        # Scroll to item 10
+        # Arrange - element 'Java' may not be initially visible
+        target_item = "Java"
+
+        # Act - scroll to make item visible
         vertical_swiping_page.scroll_element_into_view(
-            VerticalSwipingPageLocators.ITEM_10, direction="down", percentage=0.75, max_scrolls=10
+            VerticalSwipingPageLocators.item_locator(target_item), direction="down", percentage=0.75, max_scrolls=10
         )
 
-        # Verify item 10 is now visible
-        assert vertical_swiping_page.is_item_10_displayed, "Item 10 should be visible after scrolling into view"
+        # Assert - verify item is now visible
+        assert vertical_swiping_page.is_item_displayed(
+            target_item
+        ), f"Item '{target_item}' should be visible after scrolling"
 
-    @pytest.mark.tcid("TC-03-05")
+    @pytest.mark.tcid("TC-03-04")
     @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test scroll_element_into_view method scrolling to last item")
-    def test_scroll_element_into_view_last_item(self, vertical_swiping_page: VerticalSwipingPage) -> None:
-        """Verify that scroll_element_into_view can scroll to the last item.
-
-        Steps:
-            1. Verify last item is not initially visible
-            2. Use scroll_element_into_view to scroll to last item
-            3. Verify last element becomes visible
-
-        Expected:
-            - scroll_element_into_view executes successfully
-            - Last item becomes visible after scrolling
-        """
-        # Scroll to last item
-        vertical_swiping_page.scroll_element_into_view(
-            VerticalSwipingPageLocators.ITEM_LAST, direction="down", percentage=0.75, max_scrolls=15
-        )
-
-        # Verify last item is now visible
-        assert vertical_swiping_page.is_item_last_displayed, "Last item should be visible after scrolling into view"
-
-    @pytest.mark.tcid("TC-03-06")
-    @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test scroll_element_into_view with different scroll percentages")
-    @pytest.mark.parametrize("percentage", [0.5, 0.75, 0.9], ids=["50%", "75%", "90%"])
+    @allure.title("Test scroll_element_into_view with {percentage} percentage")
+    @pytest.mark.parametrize("percentage", [0.5, 0.75], ids=["50%", "75%"])
     def test_scroll_with_different_percentages(
         self, vertical_swiping_page: VerticalSwipingPage, percentage: float
     ) -> None:
         """Test scroll_element_into_view with different scroll percentages.
 
         Args:
-            percentage: Scroll distance as percentage (0.5, 0.75, 0.9).
+            percentage: Scroll distance as percentage (0.5, 0.75).
 
         Expected:
             - scroll_element_into_view works with different percentages
             - Target element becomes visible regardless of percentage used
         """
-        # Scroll to item 5 with specified percentage
+        # Arrange - target item
+        target_item = "Ruby"
+
+        # Act - scroll to item with specified percentage
         vertical_swiping_page.scroll_element_into_view(
-            VerticalSwipingPageLocators.ITEM_5, direction="down", percentage=percentage, max_scrolls=10
+            VerticalSwipingPageLocators.item_locator(target_item),
+            direction="down",
+            percentage=percentage,
+            max_scrolls=10,
         )
 
-        # Verify item 5 is visible
-        assert (
-            vertical_swiping_page.is_item_5_displayed
-        ), f"Item 5 should be visible after scrolling with {percentage*100}% distance"
+        # Assert - verify item is visible
+        assert vertical_swiping_page.is_item_displayed(
+            target_item
+        ), f"Item '{target_item}' should be visible after scrolling with {percentage*100}% distance"

@@ -1,9 +1,11 @@
 from dataclasses import dataclass, field
 from typing import Tuple
+
 import allure
 from appium.webdriver.common.appiumby import AppiumBy
-from pages.base_page import BasePage
+
 from config.config_vars import SHORT_TIMEOUT
+from pages.base_page import BasePage
 
 
 @dataclass(frozen=True)
@@ -44,3 +46,8 @@ class HeaderBarComponent(BasePage):
         self.wait_for_all_elements(
             [HeaderBarComponentLocators.BACK_BUTTON, HeaderBarComponentLocators.title_locator(title)], timeout=timeout
         )
+
+    @allure.step("the user navigates back")
+    def tap_back_button(self) -> None:
+        """Tap the back button to navigate back."""
+        self.tap_element(HeaderBarComponentLocators.BACK_BUTTON)
