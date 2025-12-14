@@ -12,11 +12,12 @@ from appium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from config.config_vars import SHORT_TIMEOUT, TIMEOUT
+from pages.base_page import BasePage
 
 logger = logging.getLogger(__name__)
 
 
-class BaseAppiumGestures:
+class BaseAppiumGestures(BasePage):
     """Base class providing gesture methods using appium-gestures-plugin.
 
     This class uses the appium-gestures-plugin for executing mobile gestures.
@@ -29,34 +30,19 @@ class BaseAppiumGestures:
         Args:
             driver: Appium WebDriver instance.
         """
+        super().__init__(driver)
         self._driver = driver
         self._timeout = TIMEOUT
         self._short_timeout = SHORT_TIMEOUT
 
-    def _find_element_by_locator(self, locator: Tuple[str, str], timeout: Optional[int] = None):
-        """Find element by locator tuple.
-
-        Args:
-            locator: Tuple of (By strategy, locator value).
-            timeout: Maximum time to wait for element.
-
-        Returns:
-            WebElement: Found element.
-        """
-        timeout_value = timeout if timeout is not None else self._short_timeout
-        return WebDriverWait(self._driver, timeout_value).until(EC.presence_of_element_located(locator))
-
-    def _get_element_id(self, locator: Tuple[str, str], timeout: Optional[int] = None) -> str:
+    def _get_element_id(self, locator: Tuple[str, str]) -> str:
         """Get element ID for use with gesture plugin.
-
         Args:
             locator: Tuple of (By strategy, locator value).
-            timeout: Maximum time to wait for element.
-
         Returns:
             str: Element ID for gesture commands.
         """
-        element = self._find_element_by_locator(locator, timeout)
+        element = self.wait_for_element(locator=locator, timeout=self._short_timeout)
         return element.id
 
     # ==================== SWIPE GESTURES ====================
@@ -227,7 +213,7 @@ class BaseAppiumGestures:
                     logger.info(f"✅ Element {locator} found after {attempt + 1} scroll(s)")
                     return
             except Exception:
-                pass
+                pass  # Ignore and perform scroll
 
             size = self._driver.get_window_size()
             params = {
@@ -261,8 +247,8 @@ class BaseAppiumGestures:
             target_locator: Target element locator tuple.
             speed: Drag speed in pixels per second.
         """
-        source_element = self._find_element_by_locator(source_locator)
-        target_element = self._find_element_by_locator(target_locator)
+        source_element = self.wait_for_element(locator=source_locator, timeout=self._short_timeout)
+        target_element = self.wait_for_element(locator=target_locator, timeout=self._short_timeout)
 
         # Calculate target center coordinates
         target_center_x = target_element.location["x"] + target_element.size["width"] // 2
@@ -296,7 +282,7 @@ class BaseAppiumGestures:
             end_y: Target Y coordinate.
             speed: Drag speed in pixels per second.
         """
-        source_element = self._find_element_by_locator(source_locator)
+        source_element = self.wait_for_element(locator=source_locator, timeout=self._short_timeout)
 
         params = {
             "elementId": source_element.id,

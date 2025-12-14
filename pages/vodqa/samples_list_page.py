@@ -46,14 +46,20 @@ class SamplesListLocators:
 
 class SamplesListPage(BaseAppiumGestures, HeaderBarComponent):
 
+    def __init__(self, driver) -> None:
+        super().__init__(driver)
+
     @allure.step("the user waits until the samples list page is displayed")
     def wait_until_page_is_loaded(self) -> None:
+        """Waits until the Samples List page is fully loaded."""
         self.wait_until_component_is_loaded(title="Samples List")
 
     @allure.step("the user taps on the 'Slider' sample")
     def tap_slider(self) -> None:
+        """Taps on the 'Slider' sample in the samples list."""
         self.tap_element(SamplesListLocators.SLIDER)
 
     @allure.step("the user taps on the 'Vertical Swiping' sample")
     def tap_vertical_swiping(self) -> None:
+        """Taps on the 'Vertical Swiping' sample in the samples list."""
         self.tap_element(SamplesListLocators.VERTICAL_SWIPING)

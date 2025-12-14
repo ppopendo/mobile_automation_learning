@@ -3,9 +3,10 @@ from typing import Tuple
 import allure
 from appium.webdriver.common.appiumby import AppiumBy
 from pages.base_page import BasePage
+from config.config_vars import SHORT_TIMEOUT
 
 
-@dataclass
+@dataclass(frozen=True)
 class HeaderBarComponentLocators:
     BACK_BUTTON: Tuple[str, str] = field(
         default=(AppiumBy.XPATH, "//android.widget.TextView[@text='Back']"), init=False
@@ -16,7 +17,7 @@ class HeaderBarComponentLocators:
 class HeaderBarComponent(BasePage):
 
     @allure.step("the user waits until the header bar component is loaded with title '{title}'")
-    def wait_until_component_is_loaded(self, title: str, timeout=10) -> None:
+    def wait_until_component_is_loaded(self, title: str, timeout: int = SHORT_TIMEOUT) -> None:
         title_locator = (
             HeaderBarComponentLocators.TITLE[0],
             HeaderBarComponentLocators.TITLE[1].format(title=title),

@@ -17,11 +17,16 @@ logger = logging.getLogger(__name__)
 class AppiumDriverService:
 
     def __init__(self, platform: str, app_name: Optional[str] = "mydemoapp") -> None:
-        """Service wrapper around Appium WebDriver initialization and teardown.
-
-        Args:
-                platform: 'android' or 'ios'
         """
+        Initialize AppiumDriverService with platform and app name.
+        Args:
+            platform: 'android' or 'ios'. Specifies the mobile platform to test against.
+            app_name: Name of the application under test. Used to select app-specific capabilities or configuration.
+            Valid values are typically the names of supported apps (e.g., "mydemoapp"). Defaults to "mydemoapp"
+        Raises:
+            ValueError: If an unsupported platform is provided
+        """
+
         load_dotenv(dotenv_path=Path(__file__).resolve().parents[1] / "config" / ".env")
         self.platform = platform
         self._appium_server_url = os.getenv("APPIUM_SERVER_URL")

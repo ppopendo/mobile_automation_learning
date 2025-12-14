@@ -20,6 +20,12 @@ def platform(request: pytest.FixtureRequest) -> str:
 
 
 @pytest.fixture(scope="session")
+def appname(request: pytest.FixtureRequest) -> str:
+    """Get the application name specified via --appname option."""
+    return request.config.getoption("--appname")
+
+
+@pytest.fixture(scope="session")
 def appium_service(platform: str, appname: str) -> AppiumDriverService:
     """Create AppiumDriverService for the whole test session.
     Platform is read from --platform pytest option (default: android).
@@ -59,9 +65,3 @@ def driver(appium_service: AppiumDriverService, device_capabilities: Dict[str, A
             appium_service.quit_driver()
         except Exception as exc:
             logger.exception("[TEARDOWN - session] error quitting driver: %s", exc)
-
-
-@pytest.fixture(scope="session")
-def appname(request: pytest.FixtureRequest) -> str:
-    """Get the application name specified via --appname option."""
-    return request.config.getoption("--appname")
