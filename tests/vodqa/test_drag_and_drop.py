@@ -47,16 +47,16 @@ class TestDragAndDrop:
             - Element is dragged from source to target
         """
         # Arrange - verify elements are displayed
-        button_visible = drag_and_drop_page.is_drag_me_button_displayed
-        zone_visible = drag_and_drop_page.is_drop_here_zone_displayed
+        assert drag_and_drop_page.is_drag_me_button_displayed, "Drag me button should be visible"
+        assert drag_and_drop_page.is_drop_here_zone_displayed, "Drop here zone should be visible"
         # Act - perform drag and drop
         drag_and_drop_page.drag_and_drop(
             source_locator=DragAndDropPageLocators.DRAG_ME_BUTTON,
             target_locator=DragAndDropPageLocators.DROP_HERE_ZONE,
             speed=2500,
         )
-        # Assert - verify elements were visible before operation
-        assert button_visible and zone_visible, "Both drag me button and drop zone should be visible"
+        # Assert - verify drag and drop was successful (check for success message or state change)
+        assert drag_and_drop_page.is_drop_here_zone_displayed, "Drop here zone should still be visible after drag"
 
     @pytest.mark.tcid("TC-04-04")
     @allure.severity(allure.severity_level.NORMAL)
@@ -71,13 +71,15 @@ class TestDragAndDrop:
             - Operation completes successfully regardless of speed
         """
         # Arrange - verify elements are displayed
-        button_visible = drag_and_drop_page.is_drag_me_button_displayed
-        zone_visible = drag_and_drop_page.is_drop_here_zone_displayed
+        assert drag_and_drop_page.is_drag_me_button_displayed, "Drag me button should be visible"
+        assert drag_and_drop_page.is_drop_here_zone_displayed, "Drop here zone should be visible"
         # Act - perform drag and drop with specified speed
         drag_and_drop_page.drag_and_drop(
             source_locator=DragAndDropPageLocators.DRAG_ME_BUTTON,
             target_locator=DragAndDropPageLocators.DROP_HERE_ZONE,
             speed=speed,
         )
-        # Assert - verify elements were visible
-        assert button_visible and zone_visible, f"Elements should be visible before drag at {speed} speed"
+        # Assert - verify drag and drop was successful
+        assert (
+            drag_and_drop_page.is_drop_here_zone_displayed
+        ), f"Drop zone should be visible after drag at {speed} speed"

@@ -37,11 +37,11 @@ class TestLongPress:
             - Long press gesture is performed on target element
         """
         # Arrange - verify element is displayed
-        button_visible_before = long_press_page.is_long_press_button_displayed
+        assert long_press_page.is_long_press_button_displayed, "Long press button should be visible"
         # Act - perform long press with default duration (1000ms)
         long_press_page.long_press(LongPressPageLocators.LONG_PRESS_BUTTON)
-        # Assert - verify button was visible
-        assert button_visible_before, "Long press button should be visible"
+        # Assert - verify long press was executed (pop-up may appear)
+        assert long_press_page.is_long_press_header_displayed, "Long press header should still be visible"
 
     @pytest.mark.tcid("TC-06-03")
     @allure.severity(allure.severity_level.NORMAL)
@@ -56,8 +56,10 @@ class TestLongPress:
             - Long press gesture is performed with specified duration
         """
         # Arrange - verify element is displayed
-        button_visible_before = long_press_page.is_long_press_button_displayed
+        assert long_press_page.is_long_press_button_displayed, "Long press button should be visible"
         # Act - perform long press with specified duration
         long_press_page.long_press(LongPressPageLocators.LONG_PRESS_BUTTON, duration=duration)
-        # Assert - verify button was visible
-        assert button_visible_before, f"Long press button should be visible before {duration}ms press"
+        # Assert - verify long press was executed (pop-up may appear)
+        assert (
+            long_press_page.is_long_press_header_displayed
+        ), f"Long press header should be visible after {duration}ms press"

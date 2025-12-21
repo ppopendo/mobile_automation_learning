@@ -20,23 +20,19 @@ from pages.vodqa.vertical_swiping_page import VerticalSwipingPage
 @pytest.fixture(scope="session")
 def vodqa_logged_in(driver: Any) -> Generator[None, None, None]:
     """Login to VodQA app once per session.
-
     This fixture handles the initial login at session start.
     """
     login_page = LoginPage(driver)
     login_page.wait_until_page_is_loaded()
     login_page.login(username="admin", password="admin")
-
     samples_list_page = SamplesListPage(driver)
     samples_list_page.wait_until_page_is_loaded()
-
     yield
 
 
 @pytest.fixture
 def samples_list_page(driver: Any, vodqa_logged_in: None) -> SamplesListPage:
     """Get SamplesListPage object. Ensures user is logged in.
-
     Returns:
         SamplesListPage: Page object for Samples List screen.
     """
@@ -48,19 +44,14 @@ def samples_list_page(driver: Any, vodqa_logged_in: None) -> SamplesListPage:
 @pytest.fixture
 def slider_page(driver: Any, samples_list_page: SamplesListPage) -> Generator[SliderPage, None, None]:
     """Navigate to Slider page and return page object.
-
     Handles teardown by navigating back to Samples List.
-
     Yields:
         SliderPage: Page object for Slider screen.
     """
     samples_list_page.tap_slider()
-
     page = SliderPage(driver)
     page.wait_until_page_is_loaded()
-
     yield page
-
     # Teardown: Navigate back to Samples List
     with allure.step("Teardown: navigating back to Samples List"):
         page.tap_back_button()
@@ -72,19 +63,14 @@ def vertical_swiping_page(
     driver: Any, samples_list_page: SamplesListPage
 ) -> Generator[VerticalSwipingPage, None, None]:
     """Navigate to Vertical Swiping page and return page object.
-
     Handles teardown by navigating back to Samples List.
-
     Yields:
         VerticalSwipingPage: Page object for Vertical Swiping screen.
     """
     samples_list_page.tap_vertical_swiping()
-
     page = VerticalSwipingPage(driver)
     page.wait_until_page_is_loaded()
-
     yield page
-
     # Teardown: Navigate back to Samples List
     with allure.step("Teardown: navigating back to Samples List"):
         page.tap_back_button()
@@ -94,19 +80,14 @@ def vertical_swiping_page(
 @pytest.fixture
 def drag_and_drop_page(driver: Any, samples_list_page: SamplesListPage) -> Generator[DragAndDropPage, None, None]:
     """Navigate to Drag and Drop page and return page object.
-
     Handles teardown by navigating back to Samples List.
-
     Yields:
         DragAndDropPage: Page object for Drag and Drop screen.
     """
     samples_list_page.tap_drag_and_drop()
-
     page = DragAndDropPage(driver)
     page.wait_until_page_is_loaded()
-
     yield page
-
     # Teardown: Navigate back to Samples List
     with allure.step("Teardown: navigating back to Samples List"):
         page.tap_back_button()
@@ -116,19 +97,14 @@ def drag_and_drop_page(driver: Any, samples_list_page: SamplesListPage) -> Gener
 @pytest.fixture
 def double_tap_page(driver: Any, samples_list_page: SamplesListPage) -> Generator[DoubleTapPage, None, None]:
     """Navigate to Double Tap page and return page object.
-
     Handles teardown by navigating back to Samples List.
-
     Yields:
         DoubleTapPage: Page object for Double Tap screen.
     """
     samples_list_page.tap_double_tap()
-
     page = DoubleTapPage(driver)
     page.wait_until_page_is_loaded()
-
     yield page
-
     # Teardown: Navigate back to Samples List
     with allure.step("Teardown: navigating back to Samples List"):
         page.tap_back_button()
@@ -138,19 +114,14 @@ def double_tap_page(driver: Any, samples_list_page: SamplesListPage) -> Generato
 @pytest.fixture
 def long_press_page(driver: Any, samples_list_page: SamplesListPage) -> Generator[LongPressPage, None, None]:
     """Navigate to Long Press page and return page object.
-
     Handles teardown by navigating back to Samples List.
-
     Yields:
         LongPressPage: Page object for Long Press screen.
     """
     samples_list_page.tap_long_press()
-
     page = LongPressPage(driver)
     page.wait_until_page_is_loaded()
-
     yield page
-
     # Teardown: Navigate back to Samples List
     with allure.step("Teardown: navigating back to Samples List"):
         page.tap_back_button()
