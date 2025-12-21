@@ -20,7 +20,6 @@ class DragAndDropPageLocators:
 
 class DragAndDropPage(BaseAppiumGestures, HeaderBarComponent):
     """Page Object for the Drag and Drop screen in VodQA app.
-
     This page contains a draggable button and drop zone for testing drag and drop gestures.
     """
 

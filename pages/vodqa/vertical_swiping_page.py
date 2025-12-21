@@ -25,10 +25,8 @@ class VerticalSwipingPageLocators:
     @staticmethod
     def item_locator(item_text: str) -> Tuple[str, str]:
         """Generate locator for list item by text.
-
         Args:
             item_text: The text of the item (e.g., 'C', 'C++', 'Javascript', etc.)
-
         Returns:
             Tuple[str, str]: Locator tuple for the item.
         """
@@ -37,7 +35,6 @@ class VerticalSwipingPageLocators:
 
 class VerticalSwipingPage(BaseAppiumGestures, HeaderBarComponent):
     """Page Object for the Vertical Swiping screen in VodQA app.
-
     This page contains a scrollable list for testing vertical swipe gestures.
     List items: [C, C++, Javascript, Ruby, RR, Java, C#, .net, MySql, Appium, Jasmine, Jest, Karma]
     """
@@ -50,10 +47,8 @@ class VerticalSwipingPage(BaseAppiumGestures, HeaderBarComponent):
     @allure.step("checking if item '{item_text}' is displayed")
     def is_item_displayed(self, item_text: str) -> bool:
         """Check if specific item is displayed on screen.
-
         Args:
             item_text: The text of the item to check.
-
         Returns:
             bool: True if item is displayed, False otherwise.
         """

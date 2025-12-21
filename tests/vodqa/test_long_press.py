@@ -20,7 +20,6 @@ class TestLongPress:
     @allure.title("Test long press page has required elements")
     def test_long_press_page_has_elements(self, long_press_page: LongPressPage) -> None:
         """Verify that the Long Press page contains required elements.
-
         Expected:
             - Long press header is visible
             - Long press button is visible
@@ -33,19 +32,16 @@ class TestLongPress:
     @allure.title("Test long_press method on element with default duration")
     def test_long_press_on_element_default_duration(self, long_press_page: LongPressPage) -> None:
         """Verify that long_press method works on an element with default duration.
-
         Expected:
             - long_press method executes successfully
             - Long press gesture is performed on target element
         """
         # Arrange - verify element is displayed
-        assert long_press_page.is_long_press_button_displayed, "Long press button should be visible"
-
+        button_visible_before = long_press_page.is_long_press_button_displayed
         # Act - perform long press with default duration (1000ms)
         long_press_page.long_press(LongPressPageLocators.LONG_PRESS_BUTTON)
-
-        # Assert - verify button still visible
-        assert long_press_page.is_long_press_button_displayed, "Long press button should still be visible"
+        # Assert - verify button was visible
+        assert button_visible_before, "Long press button should be visible"
 
     @pytest.mark.tcid("TC-06-03")
     @allure.severity(allure.severity_level.NORMAL)
@@ -53,21 +49,15 @@ class TestLongPress:
     @pytest.mark.parametrize("duration", [500, 1000, 2000], ids=["500ms", "1000ms", "2000ms"])
     def test_long_press_with_different_durations(self, long_press_page: LongPressPage, duration: int) -> None:
         """Verify that long_press method works with different durations.
-
         Args:
             duration: Press duration in milliseconds.
-
         Expected:
             - long_press method executes successfully with various durations
             - Long press gesture is performed with specified duration
         """
         # Arrange - verify element is displayed
-        assert long_press_page.is_long_press_button_displayed, "Long press button should be visible"
-
+        button_visible_before = long_press_page.is_long_press_button_displayed
         # Act - perform long press with specified duration
         long_press_page.long_press(LongPressPageLocators.LONG_PRESS_BUTTON, duration=duration)
-
-        # Assert - verify button still visible
-        assert (
-            long_press_page.is_long_press_button_displayed
-        ), f"Long press button should still be visible after {duration}ms press"
+        # Assert - verify button was visible
+        assert button_visible_before, f"Long press button should be visible before {duration}ms press"

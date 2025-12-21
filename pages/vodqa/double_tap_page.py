@@ -19,7 +19,6 @@ class DoubleTapPageLocators:
 
 class DoubleTapPage(BaseAppiumGestures, HeaderBarComponent):
     """Page Object for the Double Tap screen in VodQA app.
-
     This page contains a button for testing double tap gestures.
     """
 

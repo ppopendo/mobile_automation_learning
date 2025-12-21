@@ -22,7 +22,6 @@ class LongPressPageLocators:
 
 class LongPressPage(BaseAppiumGestures, HeaderBarComponent):
     """Page Object for the Long Press screen in VodQA app.
-
     This page contains a button for testing long press gestures.
     """
 
