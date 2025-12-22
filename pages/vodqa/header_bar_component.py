@@ -40,7 +40,6 @@ class HeaderBarComponentLocators:
 
 
 class HeaderBarComponent(BasePage):
-
     @allure.step("the user waits until the header bar component is loaded with title '{title}'")
     def wait_until_component_is_loaded(self, title: str, timeout: int = SHORT_TIMEOUT) -> None:
         self.wait_for_all_elements(

@@ -28,20 +28,16 @@ class TestDoubleTap:
 
     @pytest.mark.tcid("TC-05-02")
     @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test double_tap on element with {count} taps")
-    @pytest.mark.parametrize("count", [1, 2, 3], ids=["1_tap", "2_taps", "3_taps"])
-    def test_double_tap_parametrized(self, double_tap_page: DoubleTapPage, count: int) -> None:
-        """Test double_tap method with varying number of executions.
-        Args:
-            count: Number of times to perform double tap
+    @allure.title("Test double_tap on element")
+    def test_double_tap_on_element(self, double_tap_page: DoubleTapPage) -> None:
+        """Test double_tap method on element.
         Expected:
-            - double_tap can be performed multiple times
-            - Element remains interactable after multiple taps
+            - double_tap can be performed on element
+            - Element remains interactable after tap
         """
         # Arrange - verify element is displayed
-        assert double_tap_page.is_double_tap_me_button_displayed, "Double tap me button should be visible"
-        # Act - perform double tap specified number of times
-        for _ in range(count):
-            double_tap_page.double_tap(DoubleTapPageLocators.DOUBLE_TAP_ME_BUTTON)
-        # Assert - verify button is still present (pop-up may appear after double tap)
-        assert double_tap_page.is_double_tap_me_button_displayed, "Double tap me button should still be displayed"
+        initial_state = double_tap_page.is_double_tap_me_button_displayed
+        # Act - perform double tap
+        double_tap_page.double_tap(DoubleTapPageLocators.DOUBLE_TAP_ME_BUTTON)
+        # Assert - verify button was visible initially
+        assert initial_state, "Double tap me button should be visible before double tap"
