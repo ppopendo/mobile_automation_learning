@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Any, Dict
 
 
-def json_reader(file_name: str, file_path: Path) -> Dict[str, Any]:
+def json_reader(file_name: str, file_path: str) -> Dict[str, Any]:
     """Read and return JSON contents from the given path.
 
     Args:
@@ -16,22 +16,19 @@ def json_reader(file_name: str, file_path: Path) -> Dict[str, Any]:
     Raises:
         FileNotFoundError: if file does not exist
     """
-    full_path = file_path / file_name
     try:
-        with full_path.open("r", encoding="utf-8") as json_data:
+        with open(f"{file_path}/{file_name}", "r", encoding="utf-8") as json_data:
             return json.load(json_data)
     except FileNotFoundError as exc:
-        raise FileNotFoundError(f"File not found: {full_path}") from exc
+        raise FileNotFoundError(f"File not found: {file_path}/{file_name}") from exc
 
 
-def load_device_capabilities(platform: str, base_path: Path = Path.cwd()) -> Dict[str, Any]:
-    resources = base_path / "resources"
-    config_data = json_reader(file_name=f"{platform}_capabilities.json", file_path=resources)
+def load_device_capabilities(platform: str, app_name: str) -> Dict[str, Any]:
     if platform.lower() not in ("android", "ios"):
         raise ValueError(f"No such platform: {platform}")
+    config_data = json_reader(file_name=f"{platform}_capabilities.json", file_path=f"{Path.cwd()}/resources/{app_name}")
     return config_data
 
 
-def load_user_data(base_path: Path = Path.cwd()) -> Dict[str, Any]:
-    data = base_path / "data"
-    return json_reader(file_name="users.json", file_path=data)
+def load_user_data() -> Dict[str, Any]:
+    return json_reader(file_name="users.json", file_path=f"{Path.cwd()}/data")

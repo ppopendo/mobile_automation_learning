@@ -54,15 +54,33 @@ appium
 
 Note: iOS testing typically requires macOS with Xcode; Windows does not support iOS simulators.
 
-4) Appium drivers (recommended)
+4) Appium drivers and plugins (recommended)
 
-Starting with Appium 2.x, drivers are distributed separately. Install drivers you plan to use:
+Starting with Appium 2.x, drivers and plugins are distributed separately.
+
+Install drivers you plan to use:
 
 ```powershell
 # Android (UIAutomator2)
 appium driver install uiautomator2
 # iOS (XCUITest) - requires macOS + Xcode
 appium driver install xcuitest
+```
+
+Install plugins (optional):
+
+To use advanced gestures, install the `appium-gestures-plugin`:
+
+```powershell
+appium plugin install --source=npm appium-gestures-plugin
+```
+
+To run Appium with the plugin enabled:
+
+```powershell
+appium --use-plugins=gestures
+# OR to enable all installed plugins
+appium --use-plugins=all
 ```
 
 5) adb / Android SDK installation (Android)

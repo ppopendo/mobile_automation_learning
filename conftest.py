@@ -21,9 +21,9 @@ from config.config_vars import SCREENSHOTS_PATH
 # Register shared fixture modules using pytest_plugins for modularity
 pytest_plugins = [
     "tests.fixtures.fixtures_driver",
-    "tests.fixtures.fixtures_auth",
-    "tests.fixtures.fixtures_navigation",
-    "tests.fixtures.fixtures_checkout",
+    "tests.mydemoapp.fixtures.fixtures_auth",
+    "tests.mydemoapp.fixtures.fixtures_navigation",
+    "tests.mydemoapp.fixtures.fixtures_checkout",
 ]
 
 logger = logging.getLogger(__name__)
@@ -68,6 +68,12 @@ def pytest_addoption(parser):
         action="store",
         default="android",
         help="Device platform to run tests against (android|ios). Default: android",
+    )
+    parser.addoption(
+        "--appname",
+        action="store",
+        default="mydemoapp",
+        help="Application name to test (mydemoapp|vodqa). Default: mydemoapp",
     )
 
 
