@@ -6,7 +6,7 @@ See: https://github.com/AppiumTestDistribution/appium-gestures-plugin
 """
 
 import logging
-from typing import Optional, Tuple
+from typing import Any, Dict, Optional, Tuple
 import allure
 from appium import webdriver
 from selenium.common import TimeoutException, NoSuchElementException, StaleElementReferenceException
@@ -549,7 +549,7 @@ class BaseAppiumGestures(BasePage):
         if speed <= 0:
             raise ValueError(f"Speed must be a positive integer, got {speed}")
 
-        params = {
+        params: Dict[str, Any] = {
             "percent": percentage,
             "speed": speed,
         }
@@ -587,7 +587,7 @@ class BaseAppiumGestures(BasePage):
         if speed <= 0:
             raise ValueError(f"Speed must be a positive integer, got {speed}")
 
-        params = {
+        params: Dict[str, Any] = {
             "percent": percentage,
             "speed": speed,
         }
