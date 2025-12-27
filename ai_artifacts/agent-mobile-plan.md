@@ -40,15 +40,14 @@
 | **4. Drag and Drop** | ✅ **Automated** | **6** | ✅ `DragAndDropPage` | TC-04-01 to TC-04-04 complete |
 | **5. Double Tap** | ✅ **Automated** | **2** | ✅ `DoubleTapPage` | TC-05-01, TC-05-02 complete |
 | **6. Long Press** | ✅ **Automated** | **2** | ✅ `LongPressPage` | TC-06-01, TC-06-02 complete |
-| 7. Photo View | 🔲 Not Started | 0 | 🔲 - | - |
+| **7. Photo View** | ✅ **Automated** | **7** | ✅ `PhotoViewPage` | TC-09-01 to TC-09-07 complete (Pinch gestures) |
 | 8. Web View | 🔲 Not Started | 0 | 🔲 - | - |
-| 9. Carousel | 🔲 Not Started | 0 | 🔲 - | - |
+| **9. Carousel** | ✅ **Automated** | **6** | ✅ `CarouselPage` | TC-10-01 to TC-10-06 complete (Horizontal fling) |
 | 10. Wheel Picker | 🔲 Not Started | 0 | 🔲 - | - |
 | **11. Swipe Gestures** | ✅ **Automated** | **6** | ✅ `SliderPage` | TC-07-01, TC-07-02, TC-07-04, TC-07-05 complete |
-| **12. Fling & Scroll Gestures** | ✅ **Automated** | **11** | ✅ `VerticalSwipingPage` | TC-08-01 to TC-08-11 complete (W3C gestures) |
-| **13. Pinch Gestures** | ✅ **Automated** | **7** | ✅ `VerticalSwipingPage` | TC-09-01 to TC-09-07 complete (W3C gestures) |
+| **12. Fling & Scroll Gestures** | ✅ **Automated** | **9** | ✅ `VerticalSwipingPage` | TC-08-01 to TC-08-09 complete (W3C gestures, vertical) |
 
-**Total Automated Tests:** 44  
+**Total Automated Tests:** 50  
 **Last Updated:** 2025-12-27
 
 ---
@@ -664,12 +663,18 @@ WHEEL_PICKER_BUTTON = (AppiumBy.XPATH, "//android.widget.TextView[@content-desc=
 
 ## Recent Updates
 
-### 2025-12-27: W3C Gesture Methods Added
+### 2025-12-27: W3C Gesture Methods and New Page Objects
 - Added comprehensive parameter validation for all gesture methods (percentage 0.0-1.0, speed > 0)
 - Implemented new W3C gesture commands: `fling_element`, `scroll_element`, `pinch_open`, `pinch_close`
-- Added 18 new test cases (11 for fling/scroll, 7 for pinch gestures)
+- Created PhotoViewPage for pinch gesture testing (zoom in/out functionality)
+- Created CarouselPage for horizontal fling gesture testing
+- Added 13 new test cases:
+  - 9 for vertical fling/scroll gestures (consolidated validation tests)
+  - 7 for pinch gestures on Photo View
+  - 6 for horizontal fling gestures on Carousel
 - Refactored duplicate code using `_validate_gesture_result()` helper method
 - Updated documentation to clarify behavior changes and method distinctions
+- Consolidated parameter validation tests using pytest parametrize
 
 ---
 
