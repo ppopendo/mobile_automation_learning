@@ -45,9 +45,11 @@
 | 9. Carousel | 🔲 Not Started | 0 | 🔲 - | - |
 | 10. Wheel Picker | 🔲 Not Started | 0 | 🔲 - | - |
 | **11. Swipe Gestures** | ✅ **Automated** | **6** | ✅ `SliderPage` | TC-07-01, TC-07-02, TC-07-04, TC-07-05 complete |
+| **12. Fling & Scroll Gestures** | ✅ **Automated** | **11** | ✅ `VerticalSwipingPage` | TC-08-01 to TC-08-11 complete (W3C gestures) |
+| **13. Pinch Gestures** | ✅ **Automated** | **7** | ✅ `VerticalSwipingPage` | TC-09-01 to TC-09-07 complete (W3C gestures) |
 
-**Total Automated Tests:** 26  
-**Last Updated:** 2025-12-23
+**Total Automated Tests:** 44  
+**Last Updated:** 2025-12-27
 
 ---
 
@@ -656,10 +658,22 @@ WHEEL_PICKER_BUTTON = (AppiumBy.XPATH, "//android.widget.TextView[@content-desc=
 3. **App State:** Application should be installed and accessible
 4. **Capabilities:** Use correct `platformVersion` and `deviceName` from `.env` file
 5. **Gesture Timing:** Some gestures may require timing adjustments based on device performance
+6. **W3C Gesture Commands:** Fling, scroll, and pinch gestures use the appium-gestures-plugin which must be installed and enabled on the Appium server
 
 ---
 
-**Document Version:** 1.0  
-**Last Updated:** 2025-12-11  
+## Recent Updates
+
+### 2025-12-27: W3C Gesture Methods Added
+- Added comprehensive parameter validation for all gesture methods (percentage 0.0-1.0, speed > 0)
+- Implemented new W3C gesture commands: `fling_element`, `scroll_element`, `pinch_open`, `pinch_close`
+- Added 18 new test cases (11 for fling/scroll, 7 for pinch gestures)
+- Refactored duplicate code using `_validate_gesture_result()` helper method
+- Updated documentation to clarify behavior changes and method distinctions
+
+---
+
+**Document Version:** 1.1  
+**Last Updated:** 2025-12-27  
 **Status:** Ready for Implementation
 

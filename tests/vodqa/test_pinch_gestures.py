@@ -132,56 +132,27 @@ class TestPinchGestures:
 
     @pytest.mark.tcid("TC-09-07")
     @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test pinch_open validates percentage parameter")
-    def test_pinch_open_invalid_percentage(self, vertical_swiping_page: VerticalSwipingPage) -> None:
-        """Verify that pinch_open validates percentage parameter.
+    @allure.title("Test pinch gestures validate parameters")
+    @pytest.mark.parametrize(
+        "method,param,value,error_match",
+        [
+            ("pinch_open", "percentage", 1.5, "Percentage must be between 0.0 and 1.0"),
+            ("pinch_close", "percentage", -0.1, "Percentage must be between 0.0 and 1.0"),
+            ("pinch_open", "speed", 0, "Speed must be a positive integer"),
+            ("pinch_close", "speed", -100, "Speed must be a positive integer"),
+        ],
+        ids=["open-invalid-percentage", "close-invalid-percentage", "open-invalid-speed", "close-invalid-speed"],
+    )
+    def test_pinch_gestures_invalid_parameters(
+        self, vertical_swiping_page: VerticalSwipingPage, method: str, param: str, value: int, error_match: str
+    ) -> None:
+        """Verify that pinch gestures validate parameters.
 
         Expected:
-            - ValueError is raised for invalid percentage
+            - ValueError is raised for invalid percentage or speed
             - Error message is descriptive
         """
-        # Act & Assert - attempt to pinch with invalid percentage
-        with pytest.raises(ValueError, match="Percentage must be between 0.0 and 1.0"):
-            vertical_swiping_page.pinch_open(percentage=1.5)
-
-    @pytest.mark.tcid("TC-09-08")
-    @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test pinch_close validates percentage parameter")
-    def test_pinch_close_invalid_percentage(self, vertical_swiping_page: VerticalSwipingPage) -> None:
-        """Verify that pinch_close validates percentage parameter.
-
-        Expected:
-            - ValueError is raised for invalid percentage
-            - Error message is descriptive
-        """
-        # Act & Assert - attempt to pinch with invalid percentage
-        with pytest.raises(ValueError, match="Percentage must be between 0.0 and 1.0"):
-            vertical_swiping_page.pinch_close(percentage=-0.1)
-
-    @pytest.mark.tcid("TC-09-09")
-    @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test pinch_open validates speed parameter")
-    def test_pinch_open_invalid_speed(self, vertical_swiping_page: VerticalSwipingPage) -> None:
-        """Verify that pinch_open validates speed parameter.
-
-        Expected:
-            - ValueError is raised for non-positive speed
-            - Error message is descriptive
-        """
-        # Act & Assert - attempt to pinch with invalid speed
-        with pytest.raises(ValueError, match="Speed must be a positive integer"):
-            vertical_swiping_page.pinch_open(speed=0)
-
-    @pytest.mark.tcid("TC-09-10")
-    @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test pinch_close validates speed parameter")
-    def test_pinch_close_invalid_speed(self, vertical_swiping_page: VerticalSwipingPage) -> None:
-        """Verify that pinch_close validates speed parameter.
-
-        Expected:
-            - ValueError is raised for non-positive speed
-            - Error message is descriptive
-        """
-        # Act & Assert - attempt to pinch with invalid speed
-        with pytest.raises(ValueError, match="Speed must be a positive integer"):
-            vertical_swiping_page.pinch_close(speed=-100)
+        # Act & Assert - attempt to call method with invalid parameter
+        kwargs = {param: value}
+        with pytest.raises(ValueError, match=error_match):
+            getattr(vertical_swiping_page, method)(**kwargs)
