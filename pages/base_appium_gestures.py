@@ -45,6 +45,29 @@ class BaseAppiumGestures(BasePage):
         element = self.wait_for_element(locator=locator, timeout=self._short_timeout)
         return element.id
 
+    def _get_screen_center_bounds(self) -> dict:
+        """Get bounds for screen center area.
+
+        Returns a dictionary with coordinates defining a centered area
+        (50% of screen size, centered in the middle).
+
+        Returns:
+            dict: Dictionary with 'left', 'top', 'width', 'height' keys.
+        """
+        size = self._driver.get_window_size()
+        width = size["width"]
+        height = size["height"]
+
+        center_width = width // 2
+        center_height = height // 2
+
+        return {
+            "left": width // 4,
+            "top": height // 4,
+            "width": center_width,
+            "height": center_height,
+        }
+
     # ==================== SWIPE GESTURES ====================
 
     @allure.step("the user swipes left on element")
@@ -70,11 +93,7 @@ class BaseAppiumGestures(BasePage):
         if locator:
             params["elementId"] = self._get_element_id(locator)
         else:
-            size = self._driver.get_window_size()
-            params["left"] = 0
-            params["top"] = 0
-            params["width"] = size["width"]
-            params["height"] = size["height"]
+            params.update(self._get_screen_center_bounds())
 
         self._driver.execute_script("mobile: swipeGesture", params)
         logger.info(f"✅ Performed swipe left gesture with params: {params}")
@@ -104,11 +123,7 @@ class BaseAppiumGestures(BasePage):
         if locator:
             params["elementId"] = self._get_element_id(locator)
         else:
-            size = self._driver.get_window_size()
-            params["left"] = 0
-            params["top"] = 0
-            params["width"] = size["width"]
-            params["height"] = size["height"]
+            params.update(self._get_screen_center_bounds())
 
         self._driver.execute_script("mobile: swipeGesture", params)
         logger.info(f"✅ Performed swipe right gesture with params: {params}")
@@ -136,11 +151,7 @@ class BaseAppiumGestures(BasePage):
         if locator:
             params["elementId"] = self._get_element_id(locator)
         else:
-            size = self._driver.get_window_size()
-            params["left"] = 0
-            params["top"] = 0
-            params["width"] = size["width"] / 2
-            params["height"] = size["height"] / 2
+            params.update(self._get_screen_center_bounds())
         self._driver.execute_script("mobile: swipeGesture", params)
         logger.info(f"✅ Performed swipe up gesture with params: {params}")
 
@@ -167,11 +178,7 @@ class BaseAppiumGestures(BasePage):
         if locator:
             params["elementId"] = self._get_element_id(locator)
         else:
-            size = self._driver.get_window_size()
-            params["left"] = 0
-            params["top"] = 0
-            params["width"] = size["width"] / 2
-            params["height"] = size["height"] / 2
+            params.update(self._get_screen_center_bounds())
 
         self._driver.execute_script("mobile: swipeGesture", params)
         logger.info(f"✅ Performed swipe down gesture with params: {params}")
@@ -212,16 +219,12 @@ class BaseAppiumGestures(BasePage):
             except (TimeoutException, NoSuchElementException, StaleElementReferenceException):
                 pass  # Ignore and perform scroll
 
-            size = self._driver.get_window_size()
             params = {
                 "direction": direction,
                 "percent": percentage,
                 "speed": 2500,
-                "left": 0,
-                "top": 0,
-                "width": size["width"] / 2,
-                "height": size["height"] / 2,
             }
+            params.update(self._get_screen_center_bounds())
             self._driver.execute_script("mobile: scrollGesture", params)
             logger.debug(f"Scroll attempt {attempt + 1}/{max_scrolls}")
 
@@ -371,3 +374,198 @@ class BaseAppiumGestures(BasePage):
 
         self._driver.execute_script("mobile: longClickGesture", params)
         logger.info(f"✅ Performed long press at coordinates ({x}, {y}) for {duration}ms")
+
+    # ==================== FLING GESTURES ====================
+
+    def _fling(
+        self,
+        direction: str,
+        locator: Optional[Tuple[str, str]] = None,
+        speed: int = 5000,
+    ) -> bool:
+        """Private method to perform fling gesture in specified direction.
+
+        Uses W3C mobile: flingGesture command. Fling is a fast swipe
+        that continues scrolling after the gesture ends.
+
+        Args:
+            direction: Fling direction - 'left', 'right', 'up', or 'down'.
+            locator: Optional element locator. If None, flings on screen center.
+            speed: Fling speed in pixels per second (default: 5000).
+
+        Returns:
+            bool: True if fling can continue (more content), False if at the end.
+        """
+        params = {
+            "direction": direction,
+            "speed": speed,
+        }
+
+        if locator:
+            params["elementId"] = self._get_element_id(locator)
+        else:
+            params.update(self._get_screen_center_bounds())
+
+        result = self._driver.execute_script("mobile: flingGesture", params)
+        logger.info(f"✅ Performed fling {direction} gesture with params: {params}")
+        return result
+
+    @allure.step("the user flings element in specified direction")
+    def fling_element(
+        self,
+        direction: str,
+        locator: Optional[Tuple[str, str]] = None,
+        speed: int = 5000,
+    ) -> bool:
+        """Perform fling gesture in specified direction.
+
+        Uses W3C mobile: flingGesture command. Fling is a fast swipe
+        that continues scrolling after the gesture ends.
+
+        Args:
+            direction: Fling direction - 'left', 'right', 'up', or 'down'.
+            locator: Optional element locator. If None, flings on screen center.
+            speed: Fling speed in pixels per second (default: 5000).
+
+        Returns:
+            bool: True if fling can continue (more content), False if at the end.
+
+        Raises:
+            ValueError: If direction is not one of 'left', 'right', 'up', 'down'.
+        """
+        valid_directions = ("left", "right", "up", "down")
+        if direction not in valid_directions:
+            raise ValueError(f"Invalid direction '{direction}'. Must be one of: {valid_directions}")
+
+        return self._fling(direction=direction, locator=locator, speed=speed)
+
+    # ==================== PINCH GESTURES ====================
+
+    @allure.step("the user pinches open (zoom in) on element")
+    def pinch_open(
+        self,
+        locator: Optional[Tuple[str, str]] = None,
+        percentage: float = 0.75,
+        speed: int = 2500,
+    ) -> None:
+        """Perform pinch open (zoom in) gesture.
+
+        Uses W3C mobile: pinchOpenGesture command.
+        Pinch open spreads two fingers apart to zoom in.
+
+        Args:
+            locator: Optional element locator. If None, pinches on screen center.
+            percentage: Pinch distance as percentage of element/screen size (0.0-1.0).
+            speed: Pinch speed in pixels per second.
+        """
+        params = {
+            "percent": percentage,
+            "speed": speed,
+        }
+
+        if locator:
+            params["elementId"] = self._get_element_id(locator)
+        else:
+            params.update(self._get_screen_center_bounds())
+
+        self._driver.execute_script("mobile: pinchOpenGesture", params)
+        logger.info(f"✅ Performed pinch open (zoom in) gesture with params: {params}")
+
+    @allure.step("the user pinches close (zoom out) on element")
+    def pinch_close(
+        self,
+        locator: Optional[Tuple[str, str]] = None,
+        percentage: float = 0.75,
+        speed: int = 2500,
+    ) -> None:
+        """Perform pinch close (zoom out) gesture.
+
+        Uses W3C mobile: pinchCloseGesture command.
+        Pinch close brings two fingers together to zoom out.
+
+        Args:
+            locator: Optional element locator. If None, pinches on screen center.
+            percentage: Pinch distance as percentage of element/screen size (0.0-1.0).
+            speed: Pinch speed in pixels per second.
+        """
+        params = {
+            "percent": percentage,
+            "speed": speed,
+        }
+
+        if locator:
+            params["elementId"] = self._get_element_id(locator)
+        else:
+            params.update(self._get_screen_center_bounds())
+
+        self._driver.execute_script("mobile: pinchCloseGesture", params)
+        logger.info(f"✅ Performed pinch close (zoom out) gesture with params: {params}")
+
+    # ==================== SCROLL GESTURES ====================
+
+    def _scroll(
+        self,
+        direction: str,
+        locator: Optional[Tuple[str, str]] = None,
+        percentage: float = 0.75,
+        speed: int = 2500,
+    ) -> bool:
+        """Private method to perform scroll gesture in specified direction.
+
+        Uses W3C mobile: scrollGesture command.
+        Unlike fling, scroll stops immediately when the gesture ends.
+
+        Args:
+            direction: Scroll direction - 'left', 'right', 'up', or 'down'.
+            locator: Optional element locator. If None, scrolls on screen center.
+            percentage: Scroll distance as percentage of element/screen size (0.0-1.0).
+            speed: Scroll speed in pixels per second.
+
+        Returns:
+            bool: True if scroll can continue (more content), False if at the end.
+        """
+        params = {
+            "direction": direction,
+            "percent": percentage,
+            "speed": speed,
+        }
+
+        if locator:
+            params["elementId"] = self._get_element_id(locator)
+        else:
+            params.update(self._get_screen_center_bounds())
+
+        result = self._driver.execute_script("mobile: scrollGesture", params)
+        logger.info(f"✅ Performed scroll {direction} gesture with params: {params}")
+        return result
+
+    @allure.step("the user scrolls element in specified direction")
+    def scroll_element(
+        self,
+        direction: str,
+        locator: Optional[Tuple[str, str]] = None,
+        percentage: float = 0.75,
+        speed: int = 2500,
+    ) -> bool:
+        """Perform scroll gesture in specified direction.
+
+        Uses W3C mobile: scrollGesture command.
+        Unlike fling, scroll stops immediately when the gesture ends.
+
+        Args:
+            direction: Scroll direction - 'left', 'right', 'up', or 'down'.
+            locator: Optional element locator. If None, scrolls on screen center.
+            percentage: Scroll distance as percentage of element/screen size (0.0-1.0).
+            speed: Scroll speed in pixels per second.
+
+        Returns:
+            bool: True if scroll can continue (more content), False if at the end.
+
+        Raises:
+            ValueError: If direction is not one of 'left', 'right', 'up', 'down'.
+        """
+        valid_directions = ("left", "right", "up", "down")
+        if direction not in valid_directions:
+            raise ValueError(f"Invalid direction '{direction}'. Must be one of: {valid_directions}")
+
+        return self._scroll(direction=direction, locator=locator, percentage=percentage, speed=speed)
