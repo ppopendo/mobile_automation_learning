@@ -244,6 +244,10 @@ class BaseAppiumGestures(BasePage):
 
         Uses appium-gestures-plugin's mobile: scrollGesture command.
 
+        Note: This method performs multiple scroll gestures until the target element
+        becomes visible or max_scrolls is reached. For a single controlled scroll
+        gesture, use scroll_element() instead.
+
         Args:
             locator: Element locator tuple to scroll into view.
             direction: Scroll direction - 'up' or 'down' (default: 'down').
@@ -668,6 +672,10 @@ class BaseAppiumGestures(BasePage):
 
         Uses W3C mobile: scrollGesture command.
         Unlike fling, scroll stops immediately when the gesture ends.
+
+        Note: This method performs a single scroll gesture and returns whether more
+        content is available. For scrolling until a specific element becomes visible,
+        use scroll_element_into_view() instead.
 
         Args:
             direction: Scroll direction - 'left', 'right', 'up', or 'down'.
