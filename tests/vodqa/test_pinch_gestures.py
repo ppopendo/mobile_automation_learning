@@ -1,12 +1,12 @@
 """Test suite for Pinch Gestures in VodQA application.
 
 This module contains tests for pinch_open and pinch_close methods
-from BaseAppiumGestures.
+from BaseAppiumGestures using the Photo View page.
 """
 
 import allure
 import pytest
-from pages.vodqa.vertical_swiping_page import VerticalSwipingPage
+from pages.vodqa.photo_view_page import PhotoViewPage
 
 
 @allure.feature("VodQA Samples")
@@ -17,7 +17,7 @@ class TestPinchGestures:
     @pytest.mark.tcid("TC-09-01")
     @allure.severity(allure.severity_level.NORMAL)
     @allure.title("Test pinch_open (zoom in) gesture without locator")
-    def test_pinch_open_without_locator(self, vertical_swiping_page: VerticalSwipingPage) -> None:
+    def test_pinch_open_without_locator(self, photo_view_page: PhotoViewPage) -> None:
         """Verify that pinch_open gesture works on screen center.
 
         Expected:
@@ -25,7 +25,7 @@ class TestPinchGestures:
             - Pinch open gesture is performed on screen center
         """
         # Act - perform pinch open on screen center
-        vertical_swiping_page.pinch_open()
+        photo_view_page.pinch_open_on_screen()
 
         # Assert - no exception raised means success
         assert True, "pinch_open should execute without error"
@@ -33,7 +33,7 @@ class TestPinchGestures:
     @pytest.mark.tcid("TC-09-02")
     @allure.severity(allure.severity_level.NORMAL)
     @allure.title("Test pinch_close (zoom out) gesture without locator")
-    def test_pinch_close_without_locator(self, vertical_swiping_page: VerticalSwipingPage) -> None:
+    def test_pinch_close_without_locator(self, photo_view_page: PhotoViewPage) -> None:
         """Verify that pinch_close gesture works on screen center.
 
         Expected:
@@ -41,7 +41,7 @@ class TestPinchGestures:
             - Pinch close gesture is performed on screen center
         """
         # Act - perform pinch close on screen center
-        vertical_swiping_page.pinch_close()
+        photo_view_page.pinch_close_on_screen()
 
         # Assert - no exception raised means success
         assert True, "pinch_close should execute without error"
@@ -50,9 +50,7 @@ class TestPinchGestures:
     @allure.severity(allure.severity_level.NORMAL)
     @allure.title("Test pinch_open with different percentages")
     @pytest.mark.parametrize("percentage", [0.5, 0.75, 0.9], ids=["50%", "75%", "90%"])
-    def test_pinch_open_with_different_percentages(
-        self, vertical_swiping_page: VerticalSwipingPage, percentage: float
-    ) -> None:
+    def test_pinch_open_with_different_percentages(self, photo_view_page: PhotoViewPage, percentage: float) -> None:
         """Test pinch open gestures with different percentages.
 
         Args:
@@ -63,7 +61,7 @@ class TestPinchGestures:
             - Operations complete successfully regardless of percentage used
         """
         # Act - pinch open with specified percentage
-        vertical_swiping_page.pinch_open(percentage=percentage)
+        photo_view_page.pinch_open_on_photo(percentage=percentage)
 
         # Assert - no exception raised means success
         assert True, f"pinch_open should execute without error for {percentage*100}%"
@@ -72,9 +70,7 @@ class TestPinchGestures:
     @allure.severity(allure.severity_level.NORMAL)
     @allure.title("Test pinch_close with different percentages")
     @pytest.mark.parametrize("percentage", [0.5, 0.75, 0.9], ids=["50%", "75%", "90%"])
-    def test_pinch_close_with_different_percentages(
-        self, vertical_swiping_page: VerticalSwipingPage, percentage: float
-    ) -> None:
+    def test_pinch_close_with_different_percentages(self, photo_view_page: PhotoViewPage, percentage: float) -> None:
         """Test pinch close gestures with different percentages.
 
         Args:
@@ -85,7 +81,7 @@ class TestPinchGestures:
             - Operations complete successfully regardless of percentage used
         """
         # Act - pinch close with specified percentage
-        vertical_swiping_page.pinch_close(percentage=percentage)
+        photo_view_page.pinch_close_on_photo(percentage=percentage)
 
         # Assert - no exception raised means success
         assert True, f"pinch_close should execute without error for {percentage*100}%"
@@ -94,7 +90,7 @@ class TestPinchGestures:
     @allure.severity(allure.severity_level.NORMAL)
     @allure.title("Test pinch_open with different speeds")
     @pytest.mark.parametrize("speed", [1500, 2500, 3500], ids=["slow", "medium", "fast"])
-    def test_pinch_open_with_different_speeds(self, vertical_swiping_page: VerticalSwipingPage, speed: int) -> None:
+    def test_pinch_open_with_different_speeds(self, photo_view_page: PhotoViewPage, speed: int) -> None:
         """Test pinch open gestures with different speed values.
 
         Args:
@@ -105,7 +101,7 @@ class TestPinchGestures:
             - Operations complete successfully regardless of speed used
         """
         # Act - pinch open with specified speed
-        vertical_swiping_page.pinch_open(speed=speed)
+        photo_view_page.pinch_open_on_photo(speed=speed)
 
         # Assert - no exception raised means success
         assert True, f"pinch_open should execute without error for speed {speed}"
@@ -114,7 +110,7 @@ class TestPinchGestures:
     @allure.severity(allure.severity_level.NORMAL)
     @allure.title("Test pinch_close with different speeds")
     @pytest.mark.parametrize("speed", [1500, 2500, 3500], ids=["slow", "medium", "fast"])
-    def test_pinch_close_with_different_speeds(self, vertical_swiping_page: VerticalSwipingPage, speed: int) -> None:
+    def test_pinch_close_with_different_speeds(self, photo_view_page: PhotoViewPage, speed: int) -> None:
         """Test pinch close gestures with different speed values.
 
         Args:
@@ -125,7 +121,7 @@ class TestPinchGestures:
             - Operations complete successfully regardless of speed used
         """
         # Act - pinch close with specified speed
-        vertical_swiping_page.pinch_close(speed=speed)
+        photo_view_page.pinch_close_on_photo(speed=speed)
 
         # Assert - no exception raised means success
         assert True, f"pinch_close should execute without error for speed {speed}"
@@ -136,15 +132,15 @@ class TestPinchGestures:
     @pytest.mark.parametrize(
         "method,param,value,error_match",
         [
-            ("pinch_open", "percentage", 1.5, "Percentage must be between 0.0 and 1.0"),
-            ("pinch_close", "percentage", -0.1, "Percentage must be between 0.0 and 1.0"),
-            ("pinch_open", "speed", 0, "Speed must be a positive integer"),
-            ("pinch_close", "speed", -100, "Speed must be a positive integer"),
+            ("pinch_open_on_photo", "percentage", 1.5, "Percentage must be between 0.0 and 1.0"),
+            ("pinch_close_on_photo", "percentage", -0.1, "Percentage must be between 0.0 and 1.0"),
+            ("pinch_open_on_photo", "speed", 0, "Speed must be a positive integer"),
+            ("pinch_close_on_photo", "speed", -100, "Speed must be a positive integer"),
         ],
         ids=["open-invalid-percentage", "close-invalid-percentage", "open-invalid-speed", "close-invalid-speed"],
     )
     def test_pinch_gestures_invalid_parameters(
-        self, vertical_swiping_page: VerticalSwipingPage, method: str, param: str, value: int, error_match: str
+        self, photo_view_page: PhotoViewPage, method: str, param: str, value: int, error_match: str
     ) -> None:
         """Verify that pinch gestures validate parameters.
 
@@ -155,4 +151,4 @@ class TestPinchGestures:
         # Act & Assert - attempt to call method with invalid parameter
         kwargs = {param: value}
         with pytest.raises(ValueError, match=error_match):
-            getattr(vertical_swiping_page, method)(**kwargs)
+            getattr(photo_view_page, method)(**kwargs)

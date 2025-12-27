@@ -154,42 +154,27 @@ class TestFlingAndScrollGestures:
 
     @pytest.mark.tcid("TC-08-09")
     @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test scroll_element validates direction parameter")
-    def test_scroll_element_invalid_direction(self, vertical_swiping_page: VerticalSwipingPage) -> None:
-        """Verify that scroll_element validates direction parameter.
+    @allure.title("Test scroll_element validates parameters")
+    @pytest.mark.parametrize(
+        "param,value,error_match",
+        [
+            ("direction", "invalid", "Invalid direction"),
+            ("percentage", 1.5, "Percentage must be between 0.0 and 1.0"),
+            ("speed", 0, "Speed must be a positive integer"),
+        ],
+        ids=["invalid-direction", "invalid-percentage", "invalid-speed"],
+    )
+    def test_scroll_element_invalid_parameters(
+        self, vertical_swiping_page: VerticalSwipingPage, param: str, value: any, error_match: str
+    ) -> None:
+        """Verify that scroll_element validates parameters.
 
         Expected:
-            - ValueError is raised for invalid direction
+            - ValueError is raised for invalid parameter values
             - Error message is descriptive
         """
-        # Act & Assert - attempt to scroll with invalid direction
-        with pytest.raises(ValueError, match="Invalid direction"):
-            vertical_swiping_page.scroll_element(direction="invalid")
-
-    @pytest.mark.tcid("TC-08-10")
-    @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test scroll_element validates percentage parameter")
-    def test_scroll_element_invalid_percentage(self, vertical_swiping_page: VerticalSwipingPage) -> None:
-        """Verify that scroll_element validates percentage parameter.
-
-        Expected:
-            - ValueError is raised for invalid percentage
-            - Error message is descriptive
-        """
-        # Act & Assert - attempt to scroll with invalid percentage
-        with pytest.raises(ValueError, match="Percentage must be between 0.0 and 1.0"):
-            vertical_swiping_page.scroll_element(direction="down", percentage=1.5)
-
-    @pytest.mark.tcid("TC-08-11")
-    @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test scroll_element validates speed parameter")
-    def test_scroll_element_invalid_speed(self, vertical_swiping_page: VerticalSwipingPage) -> None:
-        """Verify that scroll_element validates speed parameter.
-
-        Expected:
-            - ValueError is raised for non-positive speed
-            - Error message is descriptive
-        """
-        # Act & Assert - attempt to scroll with invalid speed
-        with pytest.raises(ValueError, match="Speed must be a positive integer"):
-            vertical_swiping_page.scroll_element(direction="down", speed=0)
+        # Act & Assert - attempt to call method with invalid parameter
+        kwargs = {"direction": "down", "percentage": 0.75, "speed": 2500}
+        kwargs[param] = value
+        with pytest.raises(ValueError, match=error_match):
+            vertical_swiping_page.scroll_element(**kwargs)
