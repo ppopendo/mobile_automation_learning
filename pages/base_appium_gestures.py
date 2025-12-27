@@ -79,11 +79,23 @@ class BaseAppiumGestures(BasePage):
     ) -> None:
         """Perform swipe left gesture.
         Uses appium-gestures-plugin's mobile: swipeGesture command.
+
+        Note: When no locator is provided, swipes on a centered screen area
+        (50% of screen size, centered in the middle) rather than the full screen.
+
         Args:
             locator: Optional element locator. If None, swipes on screen center.
             percentage: Swipe distance as percentage of element/screen width (0.0-1.0).
             speed: Swipe speed in pixels per second.
+
+        Raises:
+            ValueError: If percentage is not in range 0.0-1.0 or speed is not positive.
         """
+        if not 0.0 <= percentage <= 1.0:
+            raise ValueError(f"Percentage must be between 0.0 and 1.0, got {percentage}")
+        if speed <= 0:
+            raise ValueError(f"Speed must be a positive integer, got {speed}")
+
         params = {
             "direction": "left",
             "percent": percentage,
@@ -109,11 +121,22 @@ class BaseAppiumGestures(BasePage):
 
         Uses appium-gestures-plugin's mobile: swipeGesture command.
 
+        Note: When no locator is provided, swipes on a centered screen area
+        (50% of screen size, centered in the middle) rather than the full screen.
+
         Args:
             locator: Optional element locator. If None, swipes on screen center.
             percentage: Swipe distance as percentage of element/screen width (0.0-1.0).
             speed: Swipe speed in pixels per second.
+
+        Raises:
+            ValueError: If percentage is not in range 0.0-1.0 or speed is not positive.
         """
+        if not 0.0 <= percentage <= 1.0:
+            raise ValueError(f"Percentage must be between 0.0 and 1.0, got {percentage}")
+        if speed <= 0:
+            raise ValueError(f"Speed must be a positive integer, got {speed}")
+
         params = {
             "direction": "right",
             "percent": percentage,
@@ -137,11 +160,23 @@ class BaseAppiumGestures(BasePage):
     ) -> None:
         """Perform swipe up gesture.
         Uses appium-gestures-plugin's mobile: swipeGesture command.
+
+        Note: When no locator is provided, swipes on a centered screen area
+        (50% of screen size, centered in the middle) rather than the full screen.
+
         Args:
             locator: Optional element locator. If None, swipes on screen center.
             percentage: Swipe distance as percentage of element/screen height (0.0-1.0).
             speed: Swipe speed in pixels per second.
+
+        Raises:
+            ValueError: If percentage is not in range 0.0-1.0 or speed is not positive.
         """
+        if not 0.0 <= percentage <= 1.0:
+            raise ValueError(f"Percentage must be between 0.0 and 1.0, got {percentage}")
+        if speed <= 0:
+            raise ValueError(f"Speed must be a positive integer, got {speed}")
+
         params = {
             "direction": "up",
             "percent": percentage,
@@ -164,11 +199,23 @@ class BaseAppiumGestures(BasePage):
     ) -> None:
         """Perform swipe down gesture.
         Uses appium-gestures-plugin's mobile: swipeGesture command.
+
+        Note: When no locator is provided, swipes on a centered screen area
+        (50% of screen size, centered in the middle) rather than the full screen.
+
         Args:
             locator: Optional element locator. If None, swipes on screen center.
             percentage: Swipe distance as percentage of element/screen height (0.0-1.0).
             speed: Swipe speed in pixels per second.
+
+        Raises:
+            ValueError: If percentage is not in range 0.0-1.0 or speed is not positive.
         """
+        if not 0.0 <= percentage <= 1.0:
+            raise ValueError(f"Percentage must be between 0.0 and 1.0, got {percentage}")
+        if speed <= 0:
+            raise ValueError(f"Speed must be a positive integer, got {speed}")
+
         params = {
             "direction": "down",
             "percent": percentage,
@@ -247,7 +294,13 @@ class BaseAppiumGestures(BasePage):
             source_locator: Source element locator tuple.
             target_locator: Target element locator tuple.
             speed: Drag speed in pixels per second.
+
+        Raises:
+            ValueError: If speed is not positive.
         """
+        if speed <= 0:
+            raise ValueError(f"Speed must be a positive integer, got {speed}")
+
         source_element = self.wait_for_element(locator=source_locator, timeout=self._short_timeout)
         target_element = self.wait_for_element(locator=target_locator, timeout=self._short_timeout)
 
@@ -282,7 +335,13 @@ class BaseAppiumGestures(BasePage):
             end_x: Target X coordinate.
             end_y: Target Y coordinate.
             speed: Drag speed in pixels per second.
+
+        Raises:
+            ValueError: If speed is not positive.
         """
+        if speed <= 0:
+            raise ValueError(f"Speed must be a positive integer, got {speed}")
+
         source_element = self.wait_for_element(locator=source_locator, timeout=self._short_timeout)
 
         params = {
@@ -395,7 +454,13 @@ class BaseAppiumGestures(BasePage):
 
         Returns:
             bool: True if fling can continue (more content), False if at the end.
+
+        Raises:
+            ValueError: If speed is not positive.
         """
+        if speed <= 0:
+            raise ValueError(f"Speed must be a positive integer, got {speed}")
+
         params = {
             "direction": direction,
             "speed": speed,
@@ -406,9 +471,23 @@ class BaseAppiumGestures(BasePage):
         else:
             params.update(self._get_screen_center_bounds())
 
+        # Per appium-gestures-plugin docs, this is expected to return a boolean
+        # indicating whether the fling can continue (i.e. more content available).
         result = self._driver.execute_script("mobile: flingGesture", params)
         logger.info(f"✅ Performed fling {direction} gesture with params: {params}")
-        return result
+
+        if isinstance(result, bool):
+            return result
+
+        # Defensive fallback: unexpected return type from plugin.
+        logger.warning(
+            "Unexpected return value from 'mobile: flingGesture': %r (type %s). "
+            "Expected bool as per appium-gestures-plugin contract. "
+            "Returning False as a safe default.",
+            result,
+            type(result).__name__,
+        )
+        return False
 
     @allure.step("the user flings element in specified direction")
     def fling_element(
@@ -457,7 +536,15 @@ class BaseAppiumGestures(BasePage):
             locator: Optional element locator. If None, pinches on screen center.
             percentage: Pinch distance as percentage of element/screen size (0.0-1.0).
             speed: Pinch speed in pixels per second.
+
+        Raises:
+            ValueError: If percentage is not in range 0.0-1.0 or speed is not positive.
         """
+        if not 0.0 <= percentage <= 1.0:
+            raise ValueError(f"Percentage must be between 0.0 and 1.0, got {percentage}")
+        if speed <= 0:
+            raise ValueError(f"Speed must be a positive integer, got {speed}")
+
         params = {
             "percent": percentage,
             "speed": speed,
@@ -487,7 +574,15 @@ class BaseAppiumGestures(BasePage):
             locator: Optional element locator. If None, pinches on screen center.
             percentage: Pinch distance as percentage of element/screen size (0.0-1.0).
             speed: Pinch speed in pixels per second.
+
+        Raises:
+            ValueError: If percentage is not in range 0.0-1.0 or speed is not positive.
         """
+        if not 0.0 <= percentage <= 1.0:
+            raise ValueError(f"Percentage must be between 0.0 and 1.0, got {percentage}")
+        if speed <= 0:
+            raise ValueError(f"Speed must be a positive integer, got {speed}")
+
         params = {
             "percent": percentage,
             "speed": speed,
@@ -523,7 +618,15 @@ class BaseAppiumGestures(BasePage):
 
         Returns:
             bool: True if scroll can continue (more content), False if at the end.
+
+        Raises:
+            ValueError: If percentage is not in range 0.0-1.0 or speed is not positive.
         """
+        if not 0.0 <= percentage <= 1.0:
+            raise ValueError(f"Percentage must be between 0.0 and 1.0, got {percentage}")
+        if speed <= 0:
+            raise ValueError(f"Speed must be a positive integer, got {speed}")
+
         params = {
             "direction": direction,
             "percent": percentage,
@@ -535,9 +638,23 @@ class BaseAppiumGestures(BasePage):
         else:
             params.update(self._get_screen_center_bounds())
 
+        # Per appium-gestures-plugin docs, this is expected to return a boolean
+        # indicating whether the scroll can continue (i.e. more content available).
         result = self._driver.execute_script("mobile: scrollGesture", params)
         logger.info(f"✅ Performed scroll {direction} gesture with params: {params}")
-        return result
+
+        if isinstance(result, bool):
+            return result
+
+        # Defensive fallback: unexpected return type from plugin.
+        logger.warning(
+            "Unexpected return value from 'mobile: scrollGesture': %r (type %s). "
+            "Expected bool as per appium-gestures-plugin contract. "
+            "Returning False as a safe default.",
+            result,
+            type(result).__name__,
+        )
+        return False
 
     @allure.step("the user scrolls element in specified direction")
     def scroll_element(
