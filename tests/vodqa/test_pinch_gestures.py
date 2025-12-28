@@ -23,12 +23,13 @@ class TestPinchGestures:
         Expected:
             - pinch_open method executes successfully
             - Pinch open gesture is performed on screen center
+            - Photo image remains displayed after gesture
         """
         # Act - perform pinch open on screen center
         photo_view_page.pinch_open_on_screen()
 
-        # Assert - no exception raised means success
-        assert True, "pinch_open should execute without error"
+        # Assert - verify photo is still displayed after gesture
+        assert photo_view_page.is_photo_displayed, "Photo should be displayed after pinch_open gesture"
 
     @pytest.mark.tcid("TC-09-02")
     @allure.severity(allure.severity_level.NORMAL)
@@ -39,12 +40,13 @@ class TestPinchGestures:
         Expected:
             - pinch_close method executes successfully
             - Pinch close gesture is performed on screen center
+            - Photo image remains displayed after gesture
         """
         # Act - perform pinch close on screen center
         photo_view_page.pinch_close_on_screen()
 
-        # Assert - no exception raised means success
-        assert True, "pinch_close should execute without error"
+        # Assert - verify photo is still displayed after gesture
+        assert photo_view_page.is_photo_displayed, "Photo should be displayed after pinch_close gesture"
 
     @pytest.mark.tcid("TC-09-03")
     @allure.severity(allure.severity_level.NORMAL)
@@ -59,12 +61,15 @@ class TestPinchGestures:
         Expected:
             - Pinch open methods work with different percentages
             - Operations complete successfully regardless of percentage used
+            - Photo image remains displayed and has valid dimensions
         """
         # Act - pinch open with specified percentage
         photo_view_page.pinch_open_on_photo(percentage=percentage)
 
-        # Assert - no exception raised means success
-        assert True, f"pinch_open should execute without error for {percentage*100}%"
+        # Assert - verify photo is displayed and has valid size
+        assert photo_view_page.is_photo_displayed, f"Photo should be displayed after pinch_open with {percentage*100}%"
+        size = photo_view_page.photo_image_size
+        assert size["width"] > 0 and size["height"] > 0, f"Photo should have valid dimensions for {percentage*100}%"
 
     @pytest.mark.tcid("TC-09-04")
     @allure.severity(allure.severity_level.NORMAL)
@@ -79,12 +84,15 @@ class TestPinchGestures:
         Expected:
             - Pinch close methods work with different percentages
             - Operations complete successfully regardless of percentage used
+            - Photo image remains displayed and has valid dimensions
         """
         # Act - pinch close with specified percentage
         photo_view_page.pinch_close_on_photo(percentage=percentage)
 
-        # Assert - no exception raised means success
-        assert True, f"pinch_close should execute without error for {percentage*100}%"
+        # Assert - verify photo is displayed and has valid size
+        assert photo_view_page.is_photo_displayed, f"Photo should be displayed after pinch_close with {percentage*100}%"
+        size = photo_view_page.photo_image_size
+        assert size["width"] > 0 and size["height"] > 0, f"Photo should have valid dimensions for {percentage*100}%"
 
     @pytest.mark.tcid("TC-09-05")
     @allure.severity(allure.severity_level.NORMAL)
@@ -99,12 +107,13 @@ class TestPinchGestures:
         Expected:
             - Pinch open methods work with different speeds
             - Operations complete successfully regardless of speed used
+            - Photo image remains displayed after gesture
         """
         # Act - pinch open with specified speed
         photo_view_page.pinch_open_on_photo(speed=speed)
 
-        # Assert - no exception raised means success
-        assert True, f"pinch_open should execute without error for speed {speed}"
+        # Assert - verify photo is still displayed after gesture
+        assert photo_view_page.is_photo_displayed, f"Photo should be displayed after pinch_open at speed {speed}"
 
     @pytest.mark.tcid("TC-09-06")
     @allure.severity(allure.severity_level.NORMAL)
@@ -119,12 +128,13 @@ class TestPinchGestures:
         Expected:
             - Pinch close methods work with different speeds
             - Operations complete successfully regardless of speed used
+            - Photo image remains displayed after gesture
         """
         # Act - pinch close with specified speed
         photo_view_page.pinch_close_on_photo(speed=speed)
 
-        # Assert - no exception raised means success
-        assert True, f"pinch_close should execute without error for speed {speed}"
+        # Assert - verify photo is still displayed after gesture
+        assert photo_view_page.is_photo_displayed, f"Photo should be displayed after pinch_close at speed {speed}"
 
     @pytest.mark.tcid("TC-09-07")
     @allure.severity(allure.severity_level.NORMAL)
