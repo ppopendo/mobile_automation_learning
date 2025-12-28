@@ -158,6 +158,7 @@ def carousel_page(driver: Any, samples_list_page: SamplesListPage) -> Generator[
     Yields:
         CarouselPage: Page object for Carousel screen.
     """
+    samples_list_page.swipe_to_sample("Carousel")
     samples_list_page.tap_carousel()
     page = CarouselPage(driver)
     page.wait_until_page_is_loaded()

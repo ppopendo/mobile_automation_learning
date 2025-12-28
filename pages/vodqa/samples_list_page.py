@@ -21,6 +21,18 @@ class SamplesListLocators:
     WEB_VIEW: Tuple[str, str] = field(default=(AppiumBy.ACCESSIBILITY_ID, "webView"), init=False)
     CAROUSEL: Tuple[str, str] = field(default=(AppiumBy.ACCESSIBILITY_ID, "carousel"), init=False)
     WHEEL_PICKER: Tuple[str, str] = field(default=(AppiumBy.ACCESSIBILITY_ID, "wheelPicker"), init=False)
+    SAMPLES = {
+        "Carousel": CAROUSEL,
+        "Wheel Picker": WHEEL_PICKER,
+        "Web View": WEB_VIEW,
+        "Photo View": PHOTO_VIEW,
+        "Long Press": LONG_PRESS,
+        "Double Tap": DOUBLE_TAP,
+        "Drag & Drop": DRAG_AND_DROP,
+        "Vertical swiping": VERTICAL_SWIPING,
+        "Slider": SLIDER,
+        "Native View": NATIVE_VIEW,
+    }
 
 
 class SamplesListPage(BaseAppiumGestures, HeaderBarComponent):
@@ -68,3 +80,12 @@ class SamplesListPage(BaseAppiumGestures, HeaderBarComponent):
     def tap_carousel(self) -> None:
         """Taps on the 'Carousel' sample in the samples list."""
         self.tap_element(SamplesListLocators.CAROUSEL)
+
+    def swipe_to_sample(self, sample_name: str) -> None:
+        """Swipes to the specified sample in the samples list.
+        Args:
+            sample_name: The name of the sample to swipe to.
+        """
+        if sample_name not in SamplesListLocators.SAMPLES:
+            raise ValueError(f"Sample '{sample_name}' not found in SamplesListLocators.")
+        self.swipe_up()
