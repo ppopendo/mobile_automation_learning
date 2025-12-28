@@ -13,9 +13,7 @@ from pages.vodqa.header_bar_component import HeaderBarComponent
 class PhotoViewPageLocators:
     """Locators for Photo View page elements."""
 
-    PHOTO_IMAGE: Tuple[str, str] = field(
-        default=(AppiumBy.XPATH, "//android.widget.ImageView[@content-desc='photo']"), init=False
-    )
+    PHOTO_IMAGE: Tuple[str, str] = field(default=(AppiumBy.XPATH, "//android.widget.ImageView"), init=False)
 
 
 class PhotoViewPage(BaseAppiumGestures, HeaderBarComponent):
@@ -27,7 +25,7 @@ class PhotoViewPage(BaseAppiumGestures, HeaderBarComponent):
     @allure.step("the user waits until the photo view page is loaded")
     def wait_until_page_is_loaded(self) -> None:
         """Wait for photo view page to be fully loaded."""
-        self.wait_until_component_is_loaded(title="Photo View")
+        self.wait_until_component_is_loaded(title="Photos - Ping & Zoom")
 
     @property
     @allure.step("checking if photo image is displayed")
@@ -74,3 +72,14 @@ class PhotoViewPage(BaseAppiumGestures, HeaderBarComponent):
             speed: Pinch speed in pixels per second.
         """
         self.pinch_close(percentage=percentage, speed=speed)
+
+    @property
+    @allure.step("retrieving photo image size")
+    def photo_image_size(self) -> dict:
+        """Get the current size of the photo image element.
+
+        Returns:
+            dict: Dictionary with 'width' and 'height' keys.
+        """
+        element = self.wait_for_element(PhotoViewPageLocators.PHOTO_IMAGE)
+        return element.size

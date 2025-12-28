@@ -26,7 +26,7 @@ class TestHorizontalFlingGestures:
             - Fling gesture is performed in left direction
         """
         # Act - perform fling left gesture
-        can_continue = carousel_page.fling_left_on_carousel()
+        can_continue = carousel_page.fling_on_carousel(direction="left")
 
         # Assert - verify method returns boolean
         assert isinstance(can_continue, bool), "fling_element should return boolean"
@@ -43,81 +43,41 @@ class TestHorizontalFlingGestures:
             - Fling gesture is performed in right direction
         """
         # Act - perform fling right gesture
-        can_continue = carousel_page.fling_right_on_carousel()
+        can_continue = carousel_page.fling_on_carousel(direction="right")
 
         # Assert - verify method returns boolean
         assert isinstance(can_continue, bool), "fling_element should return boolean"
 
     @pytest.mark.tcid("TC-10-03")
     @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test fling_element left with different speeds")
-    @pytest.mark.parametrize("speed", [3000, 5000, 7000], ids=["slow", "medium", "fast"])
-    def test_fling_left_with_different_speeds(self, carousel_page: CarouselPage, speed: int) -> None:
-        """Test fling left gestures with different speed values.
+    @allure.title("Test fling_element with different directions and speeds")
+    @pytest.mark.parametrize(
+        "direction,speed",
+        [
+            ("left", 3000),
+            ("left", 5000),
+            ("left", 7000),
+            ("right", 3000),
+            ("right", 5000),
+            ("right", 7000),
+        ],
+        ids=["left-slow", "left-medium", "left-fast", "right-slow", "right-medium", "right-fast"],
+    )
+    def test_fling_with_different_directions_and_speeds(
+        self, carousel_page: CarouselPage, direction: str, speed: int
+    ) -> None:
+        """Test fling gestures with different directions and speed values.
 
         Args:
+            direction: Fling direction ('left' or 'right').
             speed: Fling speed in pixels per second.
 
         Expected:
-            - Fling methods work with different speeds
-            - Operations complete successfully regardless of speed used
+            - Fling methods work with different directions and speeds
+            - Operations complete successfully regardless of parameters used
         """
-        # Act - fling left with specified speed
-        can_continue = carousel_page.fling_left_on_carousel(speed=speed)
+        # Act - fling with specified direction and speed
+        can_continue = carousel_page.fling_on_carousel(direction=direction, speed=speed)
 
         # Assert - verify method returns boolean
-        assert isinstance(can_continue, bool), f"fling_element should return boolean for speed {speed}"
-
-    @pytest.mark.tcid("TC-10-04")
-    @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test fling_element right with different speeds")
-    @pytest.mark.parametrize("speed", [3000, 5000, 7000], ids=["slow", "medium", "fast"])
-    def test_fling_right_with_different_speeds(self, carousel_page: CarouselPage, speed: int) -> None:
-        """Test fling right gestures with different speed values.
-
-        Args:
-            speed: Fling speed in pixels per second.
-
-        Expected:
-            - Fling methods work with different speeds
-            - Operations complete successfully regardless of speed used
-        """
-        # Act - fling right with specified speed
-        can_continue = carousel_page.fling_right_on_carousel(speed=speed)
-
-        # Assert - verify method returns boolean
-        assert isinstance(can_continue, bool), f"fling_element should return boolean for speed {speed}"
-
-    @pytest.mark.tcid("TC-10-05")
-    @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test fling_element left on carousel container element")
-    def test_fling_left_on_container(self, carousel_page: CarouselPage) -> None:
-        """Verify that fling_element left gesture works on specific carousel container.
-
-        Expected:
-            - fling_element method executes successfully with element locator
-            - Method returns boolean indicating if more content is available
-            - Fling gesture is performed on the container element
-        """
-        # Act - perform fling left on container
-        can_continue = carousel_page.fling_left_on_container()
-
-        # Assert - verify method returns boolean
-        assert isinstance(can_continue, bool), "fling_element should return boolean"
-
-    @pytest.mark.tcid("TC-10-06")
-    @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test fling_element right on carousel container element")
-    def test_fling_right_on_container(self, carousel_page: CarouselPage) -> None:
-        """Verify that fling_element right gesture works on specific carousel container.
-
-        Expected:
-            - fling_element method executes successfully with element locator
-            - Method returns boolean indicating if more content is available
-            - Fling gesture is performed on the container element
-        """
-        # Act - perform fling right on container
-        can_continue = carousel_page.fling_right_on_container()
-
-        # Assert - verify method returns boolean
-        assert isinstance(can_continue, bool), "fling_element should return boolean"
+        assert isinstance(can_continue, bool), f"fling_element should return boolean for {direction} at {speed}"
