@@ -42,12 +42,12 @@
 | **6. Long Press** | ✅ **Automated** | **2** | ✅ `LongPressPage` | TC-06-01, TC-06-02 complete |
 | **7. Photo View** | ✅ **Automated** | **8** | ✅ `PhotoViewPage` | TC-09-01 to TC-09-08 complete (Pinch gestures with validation) |
 | 8. Web View | 🔲 Not Started | 0 | 🔲 - | - |
-| **9. Carousel** | ✅ **Automated** | **3** | ✅ `CarouselPage` | TC-10-01 to TC-10-03 complete (Horizontal fling, consolidated) |
+| **9. Carousel** | ✅ **Automated** | **4** | ✅ `CarouselPage` | TC-10-01 to TC-10-04 complete (Horizontal fling with ID validation) |
 | 10. Wheel Picker | 🔲 Not Started | 0 | 🔲 - | - |
 | **11. Swipe Gestures** | ✅ **Automated** | **6** | ✅ `SliderPage` | TC-07-01, TC-07-02, TC-07-04, TC-07-05 complete |
 | **12. Fling & Scroll Gestures** | ✅ **Automated** | **9** | ✅ `VerticalSwipingPage` | TC-08-01 to TC-08-09 complete (W3C gestures, vertical) |
 
-**Total Automated Tests:** 45  
+**Total Automated Tests:** 46  
 **Last Updated:** 2025-12-28
 
 ---
@@ -662,6 +662,17 @@ WHEEL_PICKER_BUTTON = (AppiumBy.XPATH, "//android.widget.TextView[@content-desc=
 ---
 
 ## Recent Updates
+
+### 2025-12-28: Enhanced Carousel Tests with ID Validation
+- Simplified CarouselPage locators to use content-desc and text-based XPaths
+  - `CAROUSEL_ITEM`: `//*[@content-desc]` for carousel items
+  - `CAROUSEL_ID`: `//*[contains(@text," / ")]` for carousel ID indicator
+- Renamed method to `fling_on_carousel_item()` for clarity
+- Added `carousel_id` property to retrieve current carousel position
+- Enhanced tests to validate carousel ID changes after fling gestures
+- Added TC-10-01 test that specifically validates carousel ID is one of "1 / 3", "2 / 3", "3 / 3"
+- Updated TC-10-02, TC-10-03 to verify carousel ID after fling operations
+- Total test count: 45 → 46 tests
 
 ### 2025-12-28: Refinement of Page Objects and Test Consolidation
 - Updated CarouselPage locators to use dynamic XPath for carousel indicators and views
