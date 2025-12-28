@@ -15,6 +15,8 @@ from pages.vodqa.long_press_page import LongPressPage
 from pages.vodqa.samples_list_page import SamplesListPage
 from pages.vodqa.slider_page import SliderPage
 from pages.vodqa.vertical_swiping_page import VerticalSwipingPage
+from pages.vodqa.photo_view_page import PhotoViewPage
+from pages.vodqa.carousel_page import CarouselPage
 
 
 @pytest.fixture(scope="session")
@@ -128,5 +130,39 @@ def long_press_page(driver: Any, samples_list_page: SamplesListPage) -> Generato
     with allure.step("Teardown: navigating back to Samples List"):
         if page.is_long_press_modal_displayed:
             page.tap_ok_button()
+        page.tap_back_button()
+        samples_list_page.wait_until_page_is_loaded()
+
+
+@pytest.fixture
+def photo_view_page(driver: Any, samples_list_page: SamplesListPage) -> Generator[PhotoViewPage, None, None]:
+    """Navigate to Photo View page and return page object.
+    Handles teardown by navigating back to Samples List.
+    Yields:
+        PhotoViewPage: Page object for Photo View screen.
+    """
+    samples_list_page.tap_photo_view()
+    page = PhotoViewPage(driver)
+    page.wait_until_page_is_loaded()
+    yield page
+    # Teardown: Navigate back to Samples List
+    with allure.step("Teardown: navigating back to Samples List"):
+        page.tap_back_button()
+        samples_list_page.wait_until_page_is_loaded()
+
+
+@pytest.fixture
+def carousel_page(driver: Any, samples_list_page: SamplesListPage) -> Generator[CarouselPage, None, None]:
+    """Navigate to Carousel page and return page object.
+    Handles teardown by navigating back to Samples List.
+    Yields:
+        CarouselPage: Page object for Carousel screen.
+    """
+    samples_list_page.tap_carousel()
+    page = CarouselPage(driver)
+    page.wait_until_page_is_loaded()
+    yield page
+    # Teardown: Navigate back to Samples List
+    with allure.step("Teardown: navigating back to Samples List"):
         page.tap_back_button()
         samples_list_page.wait_until_page_is_loaded()

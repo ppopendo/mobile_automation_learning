@@ -40,14 +40,15 @@
 | **4. Drag and Drop** | ✅ **Automated** | **6** | ✅ `DragAndDropPage` | TC-04-01 to TC-04-04 complete |
 | **5. Double Tap** | ✅ **Automated** | **2** | ✅ `DoubleTapPage` | TC-05-01, TC-05-02 complete |
 | **6. Long Press** | ✅ **Automated** | **2** | ✅ `LongPressPage` | TC-06-01, TC-06-02 complete |
-| 7. Photo View | 🔲 Not Started | 0 | 🔲 - | - |
+| **7. Photo View** | ✅ **Automated** | **8** | ✅ `PhotoViewPage` | TC-09-01 to TC-09-08 complete (Pinch gestures with validation) |
 | 8. Web View | 🔲 Not Started | 0 | 🔲 - | - |
-| 9. Carousel | 🔲 Not Started | 0 | 🔲 - | - |
+| **9. Carousel** | ✅ **Automated** | **4** | ✅ `CarouselPage` | TC-10-01 to TC-10-04 complete (Horizontal fling with ID validation) |
 | 10. Wheel Picker | 🔲 Not Started | 0 | 🔲 - | - |
 | **11. Swipe Gestures** | ✅ **Automated** | **6** | ✅ `SliderPage` | TC-07-01, TC-07-02, TC-07-04, TC-07-05 complete |
+| **12. Fling & Scroll Gestures** | ✅ **Automated** | **9** | ✅ `VerticalSwipingPage` | TC-08-01 to TC-08-09 complete (W3C gestures, vertical) |
 
-**Total Automated Tests:** 26  
-**Last Updated:** 2025-12-23
+**Total Automated Tests:** 46  
+**Last Updated:** 2025-12-28
 
 ---
 
@@ -656,10 +657,48 @@ WHEEL_PICKER_BUTTON = (AppiumBy.XPATH, "//android.widget.TextView[@content-desc=
 3. **App State:** Application should be installed and accessible
 4. **Capabilities:** Use correct `platformVersion` and `deviceName` from `.env` file
 5. **Gesture Timing:** Some gestures may require timing adjustments based on device performance
+6. **W3C Gesture Commands:** Fling, scroll, and pinch gestures use the appium-gestures-plugin which must be installed and enabled on the Appium server
 
 ---
 
-**Document Version:** 1.0  
-**Last Updated:** 2025-12-11  
+## Recent Updates
+
+### 2025-12-28: Enhanced Carousel Tests with ID Validation
+- Simplified CarouselPage locators to use content-desc and text-based XPaths
+  - `CAROUSEL_ITEM`: `//*[@content-desc]` for carousel items
+  - `CAROUSEL_ID`: `//*[contains(@text," / ")]` for carousel ID indicator
+- Renamed method to `fling_on_carousel_item()` for clarity
+- Added `carousel_id` property to retrieve current carousel position
+- Enhanced tests to validate carousel ID changes after fling gestures
+- Added TC-10-01 test that specifically validates carousel ID is one of "1 / 3", "2 / 3", "3 / 3"
+- Updated TC-10-02, TC-10-03 to verify carousel ID after fling operations
+- Total test count: 45 → 46 tests
+
+### 2025-12-28: Refinement of Page Objects and Test Consolidation
+- Updated CarouselPage locators to use dynamic XPath for carousel indicators and views
+- Consolidated carousel fling methods into single `fling_on_carousel(direction, speed)` method
+- Updated PhotoViewPage title to "Photos - Ping & Zoom" and simplified image locator
+- Added `photo_image_size` property to PhotoViewPage for validation
+- Added TC-09-08 test to verify image enlargement after pinch gesture
+- Consolidated horizontal fling tests from 6 to 3 using pytest parametrize
+- Total test count adjusted: 50 → 45 tests (through consolidation)
+
+### 2025-12-27: W3C Gesture Methods and New Page Objects
+- Added comprehensive parameter validation for all gesture methods (percentage 0.0-1.0, speed > 0)
+- Implemented new W3C gesture commands: `fling_element`, `scroll_element`, `pinch_open`, `pinch_close`
+- Created PhotoViewPage for pinch gesture testing (zoom in/out functionality)
+- Created CarouselPage for horizontal fling gesture testing
+- Added 13 new test cases:
+  - 9 for vertical fling/scroll gestures (consolidated validation tests)
+  - 7 for pinch gestures on Photo View
+  - 6 for horizontal fling gestures on Carousel
+- Refactored duplicate code using `_validate_gesture_result()` helper method
+- Updated documentation to clarify behavior changes and method distinctions
+- Consolidated parameter validation tests using pytest parametrize
+
+---
+
+**Document Version:** 1.1  
+**Last Updated:** 2025-12-27  
 **Status:** Ready for Implementation
 

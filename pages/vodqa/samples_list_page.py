@@ -58,3 +58,13 @@ class SamplesListPage(BaseAppiumGestures, HeaderBarComponent):
     def tap_long_press(self) -> None:
         """Taps on the 'Long Press' sample in the samples list."""
         self.tap_element(SamplesListLocators.LONG_PRESS)
+
+    @allure.step("the user taps on the 'Photo View' sample")
+    def tap_photo_view(self) -> None:
+        """Taps on the 'Photo View' sample in the samples list."""
+        self.tap_element(SamplesListLocators.PHOTO_VIEW)
+
+    @allure.step("the user taps on the 'Carousel' sample")
+    def tap_carousel(self) -> None:
+        """Taps on the 'Carousel' sample in the samples list."""
+        self.tap_element(SamplesListLocators.CAROUSEL)
