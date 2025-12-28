@@ -26,9 +26,7 @@ class TestHorizontalFlingGestures:
         3. Verify ID is one of the expected values (assert)
 
         Expected:
-            - fling_element method executes successfully
             - Carousel ID is one of: "1 / 3", "2 / 3", "3 / 3"
-            - Fling gesture navigates through carousel items
         """
         # Arrange & Act - perform fling gesture on carousel item
         carousel_page.fling_on_carousel_item(direction="left")
@@ -42,53 +40,37 @@ class TestHorizontalFlingGestures:
 
     @pytest.mark.tcid("TC-10-02")
     @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test fling left gesture on carousel")
-    def test_fling_left_on_carousel(self, carousel_page: CarouselPage) -> None:
-        """Verify that fling_element left gesture works on carousel.
+    @allure.title("Test fling left returns boolean")
+    def test_fling_left_returns_boolean(self, carousel_page: CarouselPage) -> None:
+        """Verify that fling_element left gesture returns boolean.
 
         Expected:
-            - fling_element method executes successfully
             - Method returns boolean indicating if more content is available
-            - Carousel ID changes after fling
         """
-        # Arrange - get initial ID
-        initial_id = carousel_page.carousel_id
-
         # Act - perform fling left gesture
         can_continue = carousel_page.fling_on_carousel_item(direction="left")
 
-        # Assert - verify method returns boolean and ID is valid
+        # Assert - verify method returns boolean
         assert isinstance(can_continue, bool), "fling_element should return boolean"
-        current_id = carousel_page.carousel_id
-        expected_ids = ["1 / 3", "2 / 3", "3 / 3"]
-        assert current_id in expected_ids, f"Carousel ID should be one of {expected_ids}"
 
     @pytest.mark.tcid("TC-10-03")
     @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test fling right gesture on carousel")
-    def test_fling_right_on_carousel(self, carousel_page: CarouselPage) -> None:
-        """Verify that fling_element right gesture works on carousel.
+    @allure.title("Test fling right returns boolean")
+    def test_fling_right_returns_boolean(self, carousel_page: CarouselPage) -> None:
+        """Verify that fling_element right gesture returns boolean.
 
         Expected:
-            - fling_element method executes successfully
             - Method returns boolean indicating if more content is available
-            - Carousel ID changes after fling
         """
-        # Arrange - get initial ID
-        initial_id = carousel_page.carousel_id
-
         # Act - perform fling right gesture
         can_continue = carousel_page.fling_on_carousel_item(direction="right")
 
-        # Assert - verify method returns boolean and ID is valid
+        # Assert - verify method returns boolean
         assert isinstance(can_continue, bool), "fling_element should return boolean"
-        current_id = carousel_page.carousel_id
-        expected_ids = ["1 / 3", "2 / 3", "3 / 3"]
-        assert current_id in expected_ids, f"Carousel ID should be one of {expected_ids}"
 
     @pytest.mark.tcid("TC-10-04")
     @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test fling with different directions and speeds")
+    @allure.title("Test fling validates carousel ID after operation")
     @pytest.mark.parametrize(
         "direction,speed",
         [
@@ -101,24 +83,22 @@ class TestHorizontalFlingGestures:
         ],
         ids=["left-slow", "left-medium", "left-fast", "right-slow", "right-medium", "right-fast"],
     )
-    def test_fling_with_different_directions_and_speeds(
-        self, carousel_page: CarouselPage, direction: str, speed: int
-    ) -> None:
-        """Test fling gestures with different directions and speed values.
+    def test_fling_validates_carousel_id(self, carousel_page: CarouselPage, direction: str, speed: int) -> None:
+        """Test carousel ID remains valid after fling with different directions and speeds.
 
         Args:
             direction: Fling direction ('left' or 'right').
             speed: Fling speed in pixels per second.
 
         Expected:
-            - Fling methods work with different directions and speeds
-            - Carousel ID remains valid after fling
+            - Carousel ID remains valid after fling operation
         """
         # Act - fling with specified direction and speed
-        can_continue = carousel_page.fling_on_carousel_item(direction=direction, speed=speed)
+        carousel_page.fling_on_carousel_item(direction=direction, speed=speed)
 
-        # Assert - verify method returns boolean and ID is valid
-        assert isinstance(can_continue, bool), f"fling_element should return boolean for {direction} at {speed}"
+        # Assert - verify carousel ID is valid
         current_id = carousel_page.carousel_id
         expected_ids = ["1 / 3", "2 / 3", "3 / 3"]
-        assert current_id in expected_ids, f"Carousel ID should be one of {expected_ids} after fling"
+        assert (
+            current_id in expected_ids
+        ), f"Carousel ID should be one of {expected_ids} after {direction} fling at {speed}px/s"
