@@ -456,7 +456,7 @@ class BaseAppiumGestures(BasePage):
     ) -> bool:
         """Private method to perform fling gesture in specified direction.
 
-        Uses W3C mobile: flingGesture command. Fling is a fast swipe
+        Uses appium-gestures-plugin's mobile: flingGesture command. Fling is a fast swipe
         that continues scrolling after the gesture ends.
 
         Args:
@@ -496,7 +496,7 @@ class BaseAppiumGestures(BasePage):
     ) -> bool:
         """Perform fling gesture in specified direction.
 
-        Uses W3C mobile: flingGesture command. Fling is a fast swipe
+        Uses appium-gestures-plugin's mobile: flingGesture command. Fling is a fast swipe
         that continues scrolling after the gesture ends.
 
         Args:
@@ -527,7 +527,7 @@ class BaseAppiumGestures(BasePage):
     ) -> None:
         """Perform pinch open (zoom in) gesture.
 
-        Uses W3C mobile: pinchOpenGesture command.
+        Uses appium-gestures-plugin's mobile: pinchOpenGesture command.
         Pinch open spreads two fingers apart to zoom in.
 
         Args:
@@ -565,7 +565,7 @@ class BaseAppiumGestures(BasePage):
     ) -> None:
         """Perform pinch close (zoom out) gesture.
 
-        Uses W3C mobile: pinchCloseGesture command.
+        Uses appium-gestures-plugin's mobile: pinchCloseGesture command.
         Pinch close brings two fingers together to zoom out.
 
         Args:
@@ -605,7 +605,7 @@ class BaseAppiumGestures(BasePage):
     ) -> bool:
         """Private method to perform scroll gesture in specified direction.
 
-        Uses W3C mobile: scrollGesture command.
+        Uses appium-gestures-plugin's mobile: scrollGesture command.
         Unlike fling, scroll stops immediately when the gesture ends.
 
         Args:
@@ -650,7 +650,7 @@ class BaseAppiumGestures(BasePage):
     ) -> bool:
         """Perform scroll gesture in specified direction.
 
-        Uses W3C mobile: scrollGesture command.
+        Uses appium-gestures-plugin's mobile: scrollGesture command.
         Unlike fling, scroll stops immediately when the gesture ends.
 
         Note: This method performs a single scroll gesture and returns whether more
