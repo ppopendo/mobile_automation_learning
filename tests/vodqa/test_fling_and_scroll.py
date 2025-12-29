@@ -7,6 +7,7 @@ from typing import Any
 
 import allure
 import pytest
+
 from pages.vodqa.vertical_swiping_page import VerticalSwipingPage
 
 
@@ -151,7 +152,7 @@ class TestFlingAndScrollGestures:
         can_continue = vertical_swiping_page.scroll_down(percentage=percentage)
 
         # Assert - verify method returns boolean
-        assert isinstance(can_continue, bool), f"scroll_down should return boolean for {percentage*100}%"
+        assert isinstance(can_continue, bool), f"scroll_down should return boolean for {percentage * 100}%"
 
     @pytest.mark.tcid("TC-08-09")
     @allure.severity(allure.severity_level.NORMAL)

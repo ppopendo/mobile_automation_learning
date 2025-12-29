@@ -8,6 +8,7 @@ from typing import Union
 
 import allure
 import pytest
+
 from pages.vodqa.photo_view_page import PhotoViewPage
 
 
@@ -82,7 +83,7 @@ class TestPinchGestures:
             "height_valid": True,
         }
 
-        assert actual == expected, f"Photo state check failed for {percentage*100}% pinch_open: {actual}"
+        assert actual == expected, f"Photo state check failed for {percentage * 100}% pinch_open: {actual}"
 
     @pytest.mark.tcid("TC-09-04")
     @allure.severity(allure.severity_level.NORMAL)
@@ -116,7 +117,7 @@ class TestPinchGestures:
             "height_valid": True,
         }
 
-        assert actual == expected, f"Photo state check failed for {percentage*100}% pinch_close: {actual}"
+        assert actual == expected, f"Photo state check failed for {percentage * 100}% pinch_close: {actual}"
 
     @pytest.mark.tcid("TC-09-05")
     @allure.severity(allure.severity_level.NORMAL)
@@ -187,6 +188,31 @@ class TestPinchGestures:
         with pytest.raises(ValueError, match=error_match):
             getattr(photo_view_page, method)(**kwargs)
 
+    @pytest.mark.tcid("TC-09-08")
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.title("Test pinch_open enlarges the photo image")
+    def test_pinch_open_enlarges_image(self, photo_view_page: PhotoViewPage) -> None:
+        """Verify that pinch_open gesture enlarges the photo image.
+
+        Expected:
+            - Image size is recorded before pinch
+            - pinch_open method executes successfully
+            - Image size increases after pinch (zoom in effect)
+
+        Note: Due to platform limitations, we validate that the gesture executes
+        without errors. Actual size verification may not be possible on all devices.
+        """
+        # Arrange - get initial size
+        initial_size = photo_view_page.photo_image_size
+        initial_area = initial_size["width"] * initial_size["height"]
+
+        # Act - perform pinch open (zoom in)
+        photo_view_page.pinch_open_on_photo(percentage=0.9, speed=2500)
+
+        # Assert - verify initial state was valid
+        # Note: Size verification is challenging due to platform behavior
+        assert initial_area > 0, "Initial image area should be positive"
+
     @pytest.mark.tcid("TC-09-09")
     @allure.severity(allure.severity_level.NORMAL)
     @allure.title("Test pinch gestures with boundary values")
@@ -216,29 +242,3 @@ class TestPinchGestures:
 
         # Assert - verify the photo is still displayed after gesture
         assert photo_view_page.is_photo_displayed, f"{method} with {param}={value} should complete successfully"
-
-
-    @pytest.mark.tcid("TC-09-08")
-    @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test pinch_open enlarges the photo image")
-    def test_pinch_open_enlarges_image(self, photo_view_page: PhotoViewPage) -> None:
-        """Verify that pinch_open gesture enlarges the photo image.
-
-        Expected:
-            - Image size is recorded before pinch
-            - pinch_open method executes successfully
-            - Image size increases after pinch (zoom in effect)
-
-        Note: Due to platform limitations, we validate that the gesture executes
-        without errors. Actual size verification may not be possible on all devices.
-        """
-        # Arrange - get initial size
-        initial_size = photo_view_page.photo_image_size
-        initial_area = initial_size["width"] * initial_size["height"]
-
-        # Act - perform pinch open (zoom in)
-        photo_view_page.pinch_open_on_photo(percentage=0.9, speed=2500)
-
-        # Assert - verify initial state was valid
-        # Note: Size verification is challenging due to platform behavior
-        assert initial_area > 0, "Initial image area should be positive"

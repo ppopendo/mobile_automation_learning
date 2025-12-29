@@ -2,8 +2,10 @@
 
 from dataclasses import dataclass, field
 from typing import Tuple
+
 import allure
 from appium.webdriver.common.appiumby import AppiumBy
+
 from pages.base_appium_gestures import BaseAppiumGestures
 from pages.vodqa.header_bar_component import HeaderBarComponent
 
@@ -79,7 +81,9 @@ class VerticalSwipingPage(BaseAppiumGestures, HeaderBarComponent):
             bool: True if more content is available, False if at the end.
         """
         return self.fling_element(
-            locator=VerticalSwipingPageLocators.SCROLLABLE_CONTAINER, direction="down", speed=speed
+            locator=VerticalSwipingPageLocators.SCROLLABLE_CONTAINER,
+            direction="down",
+            speed=speed,
         )
 
     @allure.step("the user flings up on the scrollable container")
@@ -93,7 +97,9 @@ class VerticalSwipingPage(BaseAppiumGestures, HeaderBarComponent):
             bool: True if more content is available, False if at the end.
         """
         return self.fling_element(
-            locator=VerticalSwipingPageLocators.SCROLLABLE_CONTAINER, direction="up", speed=speed
+            locator=VerticalSwipingPageLocators.SCROLLABLE_CONTAINER,
+            direction="up",
+            speed=speed,
         )
 
     @allure.step("the user scrolls down on the scrollable container")
@@ -108,7 +114,10 @@ class VerticalSwipingPage(BaseAppiumGestures, HeaderBarComponent):
             bool: True if more content is available, False if at the end.
         """
         return self.scroll_element(
-            locator=VerticalSwipingPageLocators.SCROLLABLE_CONTAINER, direction="down", percentage=percentage, speed=speed
+            locator=VerticalSwipingPageLocators.SCROLLABLE_CONTAINER,
+            direction="down",
+            percentage=percentage,
+            speed=speed,
         )
 
     @allure.step("the user scrolls up on the scrollable container")
@@ -123,5 +132,8 @@ class VerticalSwipingPage(BaseAppiumGestures, HeaderBarComponent):
             bool: True if more content is available, False if at the end.
         """
         return self.scroll_element(
-            locator=VerticalSwipingPageLocators.SCROLLABLE_CONTAINER, direction="up", percentage=percentage, speed=speed
+            locator=VerticalSwipingPageLocators.SCROLLABLE_CONTAINER,
+            direction="up",
+            percentage=percentage,
+            speed=speed,
         )
