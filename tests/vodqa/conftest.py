@@ -141,7 +141,7 @@ def photo_view_page(driver: Any, samples_list_page: SamplesListPage) -> Generato
     Yields:
         PhotoViewPage: Page object for Photo View screen.
     """
-    samples_list_page.tap_photo_view()
+    samples_list_page.swipe_up()
     page = PhotoViewPage(driver)
     page.wait_until_page_is_loaded()
     yield page
@@ -158,7 +158,7 @@ def carousel_page(driver: Any, samples_list_page: SamplesListPage) -> Generator[
     Yields:
         CarouselPage: Page object for Carousel screen.
     """
-    samples_list_page.swipe_to_sample("Carousel")
+    samples_list_page.swipe_up_and_validate_sample_name("Carousel")
     samples_list_page.tap_carousel()
     page = CarouselPage(driver)
     page.wait_until_page_is_loaded()

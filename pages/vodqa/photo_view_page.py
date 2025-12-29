@@ -1,7 +1,7 @@
 """Page Object for Photo View feature in VodQA application."""
 
 from dataclasses import dataclass, field
-from typing import Tuple
+from typing import Tuple, Dict
 import allure
 from appium.webdriver.common.appiumby import AppiumBy
 from pages.base_appium_gestures import BaseAppiumGestures
@@ -24,7 +24,7 @@ class PhotoViewPage(BaseAppiumGestures, HeaderBarComponent):
     @allure.step("the user waits until the photo view page is loaded")
     def wait_until_page_is_loaded(self) -> None:
         """Wait for photo view page to be fully loaded."""
-        self.wait_until_component_is_loaded(title="Photos - Ping & Zoom")
+        self.wait_until_component_is_loaded(title="Photos - Pinch & Zoom")
 
     @property
     @allure.step("checking if photo image is displayed")
@@ -74,7 +74,7 @@ class PhotoViewPage(BaseAppiumGestures, HeaderBarComponent):
 
     @property
     @allure.step("retrieving photo image size")
-    def photo_image_size(self) -> dict:
+    def photo_image_size(self) -> Dict[str, int]:
         """Get the current size of the photo image element.
 
         Returns:
