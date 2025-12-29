@@ -29,7 +29,7 @@ class CarouselPage(BaseAppiumGestures, HeaderBarComponent):
         self.wait_until_component_is_loaded(title="Carousel - Swipe left/right")
 
     @property
-    @allure.step("checking if carousel is displayed")
+    @allure.step("retrieving carousel display status")
     def is_carousel_displayed(self) -> bool:
         """Check if carousel is displayed on screen."""
         return self.is_element_displayed(CarouselPageLocators.CAROUSEL_ITEM)

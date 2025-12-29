@@ -29,7 +29,7 @@ class SamplesListPage(BaseAppiumGestures, HeaderBarComponent):
     drag and drop, double tap, long press, and other interactive examples within the app.
     """
 
-    SAMPLES = {
+    _SAMPLE_MAPPING = {
         "Carousel": SamplesListLocators.CAROUSEL,
         "Wheel Picker": SamplesListLocators.WHEEL_PICKER,
         "Web View": SamplesListLocators.WEB_VIEW,
@@ -84,16 +84,16 @@ class SamplesListPage(BaseAppiumGestures, HeaderBarComponent):
 
     @allure.step("the user swipes to sample '{sample_name}'")
     def swipe_up_and_validate_sample_name(self, sample_name: str) -> None:
-        """Scrolls to and validates a sample by name using the SAMPLES mapping.
+        """Scrolls to and validates a sample by name using the _SAMPLE_MAPPING.
 
         Args:
             sample_name: The name of the sample to scroll to (e.g., "Carousel", "Photo View").
 
         Raises:
-            ValueError: If the sample_name is not found in the SAMPLES dictionary.
+            ValueError: If the sample_name is not found in the _SAMPLE_MAPPING dictionary.
         """
-        if sample_name not in self.SAMPLES:
-            raise ValueError(f"Sample '{sample_name}' not found in SAMPLES dictionary.")
+        if sample_name not in self._SAMPLE_MAPPING:
+            raise ValueError(f"Sample '{sample_name}' not found in _SAMPLE_MAPPING dictionary.")
 
-        locator = self.SAMPLES[sample_name]
+        locator = self._SAMPLE_MAPPING[sample_name]
         self.scroll_element_into_view(locator)
