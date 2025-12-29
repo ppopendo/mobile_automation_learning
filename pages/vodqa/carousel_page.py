@@ -48,8 +48,9 @@ class CarouselPage(BaseAppiumGestures, HeaderBarComponent):
         Raises:
             ValueError: If direction is not 'left' or 'right'.
         """
-        if direction not in ("left", "right"):
-            raise ValueError(f"Invalid direction '{direction}'. Must be 'left' or 'right'.")
+        valid_directions = ("left", "right")
+        if direction not in valid_directions:
+            raise ValueError(f"Invalid direction '{direction}'. Must be one of: {valid_directions}")
         return self.fling_element(direction=direction, locator=CarouselPageLocators.CAROUSEL_ITEM, speed=speed)
 
     @property
