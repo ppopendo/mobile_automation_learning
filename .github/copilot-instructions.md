@@ -52,6 +52,23 @@ This is a mobile automation testing project using Python with Appium for Android
 - Use pytest fixtures defined in `conftest.py`
 - Test function names should be descriptive: `test_{feature}_{scenario}`
 - Use Allure decorators for test metadata: `@allure.feature()`, `@allure.story()`, `@allure.severity()`
+- **One assertion per test**: Each test should have only one assert statement for better readability and clearer failure messages
+- **Multiple value validation**: When checking multiple values, use an actual/expected dictionary pattern:
+  ```python
+  actual = {
+      "is_displayed": element.is_displayed(),
+      "width": element.size["width"],
+      "height": element.size["height"],
+  }
+  
+  expected = {
+      "is_displayed": True,
+      "width": 100,
+      "height": 200,
+  }
+  
+  assert actual == expected, f"Element state mismatch: {actual}"
+  ```
 
 ## File Structure
 
