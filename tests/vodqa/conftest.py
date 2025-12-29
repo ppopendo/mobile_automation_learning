@@ -142,7 +142,7 @@ def photo_view_page(driver: Any, samples_list_page: SamplesListPage) -> Generato
     Yields:
         PhotoViewPage: Page object for Photo View screen.
     """
-    samples_list_page.swipe_up()
+    samples_list_page.swipe_up_and_validate_sample_name("Photo View")
     samples_list_page.tap_photo_view()
     page = PhotoViewPage(driver)
     page.wait_until_page_is_loaded()

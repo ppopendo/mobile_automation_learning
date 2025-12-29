@@ -67,3 +67,61 @@ class VerticalSwipingPage(BaseAppiumGestures, HeaderBarComponent):
             direction=direction,
             percentage=percentage,
         )
+
+    @allure.step("the user flings down on the scrollable container")
+    def fling_down(self, speed: int = 5000) -> bool:
+        """Perform a fling down gesture on the scrollable container.
+
+        Args:
+            speed: Speed of the fling gesture in pixels per second (default: 5000).
+
+        Returns:
+            bool: True if more content is available, False if at the end.
+        """
+        return self.fling_element(
+            locator=VerticalSwipingPageLocators.SCROLLABLE_CONTAINER, direction="down", speed=speed
+        )
+
+    @allure.step("the user flings up on the scrollable container")
+    def fling_up(self, speed: int = 5000) -> bool:
+        """Perform a fling up gesture on the scrollable container.
+
+        Args:
+            speed: Speed of the fling gesture in pixels per second (default: 5000).
+
+        Returns:
+            bool: True if more content is available, False if at the end.
+        """
+        return self.fling_element(
+            locator=VerticalSwipingPageLocators.SCROLLABLE_CONTAINER, direction="up", speed=speed
+        )
+
+    @allure.step("the user scrolls down on the scrollable container")
+    def scroll_down(self, percentage: float = 0.75, speed: int = 2500) -> bool:
+        """Perform a scroll down gesture on the scrollable container.
+
+        Args:
+            percentage: The percentage of the screen to scroll (0.0-1.0, default: 0.75).
+            speed: Speed of the scroll gesture in pixels per second (default: 2500).
+
+        Returns:
+            bool: True if more content is available, False if at the end.
+        """
+        return self.scroll_element(
+            locator=VerticalSwipingPageLocators.SCROLLABLE_CONTAINER, direction="down", percentage=percentage, speed=speed
+        )
+
+    @allure.step("the user scrolls up on the scrollable container")
+    def scroll_up(self, percentage: float = 0.75, speed: int = 2500) -> bool:
+        """Perform a scroll up gesture on the scrollable container.
+
+        Args:
+            percentage: The percentage of the screen to scroll (0.0-1.0, default: 0.75).
+            speed: Speed of the scroll gesture in pixels per second (default: 2500).
+
+        Returns:
+            bool: True if more content is available, False if at the end.
+        """
+        return self.scroll_element(
+            locator=VerticalSwipingPageLocators.SCROLLABLE_CONTAINER, direction="up", percentage=percentage, speed=speed
+        )

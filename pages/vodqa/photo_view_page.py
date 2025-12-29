@@ -1,9 +1,11 @@
 """Page Object for Photo View feature in VodQA application."""
 
 from dataclasses import dataclass, field
-from typing import Tuple, Dict
+from typing import Dict, Tuple
+
 import allure
 from appium.webdriver.common.appiumby import AppiumBy
+
 from pages.base_appium_gestures import BaseAppiumGestures
 from pages.vodqa.header_bar_component import HeaderBarComponent
 

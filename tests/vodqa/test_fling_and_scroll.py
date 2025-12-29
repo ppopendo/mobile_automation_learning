@@ -27,10 +27,10 @@ class TestFlingAndScrollGestures:
             - Fling gesture is performed in down direction
         """
         # Act - perform fling down gesture
-        can_continue = vertical_swiping_page.fling_element(direction="down")
+        can_continue = vertical_swiping_page.fling_down()
 
         # Assert - verify method returns boolean
-        assert isinstance(can_continue, bool), "fling_element should return boolean"
+        assert isinstance(can_continue, bool), "fling_down should return boolean"
 
     @pytest.mark.tcid("TC-08-02")
     @allure.severity(allure.severity_level.NORMAL)
@@ -44,10 +44,10 @@ class TestFlingAndScrollGestures:
             - Fling gesture is performed in up direction
         """
         # Act - perform fling up gesture
-        can_continue = vertical_swiping_page.fling_element(direction="up")
+        can_continue = vertical_swiping_page.fling_up()
 
         # Assert - verify method returns boolean
-        assert isinstance(can_continue, bool), "fling_element should return boolean"
+        assert isinstance(can_continue, bool), "fling_up should return boolean"
 
     @pytest.mark.tcid("TC-08-03")
     @allure.severity(allure.severity_level.NORMAL)
@@ -64,10 +64,10 @@ class TestFlingAndScrollGestures:
             - Operations complete successfully regardless of speed used
         """
         # Act - fling down with specified speed
-        can_continue = vertical_swiping_page.fling_element(direction="down", speed=speed)
+        can_continue = vertical_swiping_page.fling_down(speed=speed)
 
         # Assert - verify method returns boolean
-        assert isinstance(can_continue, bool), f"fling_element should return boolean for speed {speed}"
+        assert isinstance(can_continue, bool), f"fling_down should return boolean for speed {speed}"
 
     @pytest.mark.tcid("TC-08-04")
     @allure.severity(allure.severity_level.NORMAL)
@@ -109,10 +109,10 @@ class TestFlingAndScrollGestures:
             - Scroll gesture is performed in down direction
         """
         # Act - perform scroll down gesture
-        can_continue = vertical_swiping_page.scroll_element(direction="down")
+        can_continue = vertical_swiping_page.scroll_down()
 
         # Assert - verify method returns boolean
-        assert isinstance(can_continue, bool), "scroll_element should return boolean"
+        assert isinstance(can_continue, bool), "scroll_down should return boolean"
 
     @pytest.mark.tcid("TC-08-07")
     @allure.severity(allure.severity_level.NORMAL)
@@ -126,10 +126,10 @@ class TestFlingAndScrollGestures:
             - Scroll gesture is performed in up direction
         """
         # Act - perform scroll up gesture
-        can_continue = vertical_swiping_page.scroll_element(direction="up")
+        can_continue = vertical_swiping_page.scroll_up()
 
         # Assert - verify method returns boolean
-        assert isinstance(can_continue, bool), "scroll_element should return boolean"
+        assert isinstance(can_continue, bool), "scroll_up should return boolean"
 
     @pytest.mark.tcid("TC-08-08")
     @allure.severity(allure.severity_level.NORMAL)
@@ -148,10 +148,10 @@ class TestFlingAndScrollGestures:
             - Operations complete successfully regardless of percentage used
         """
         # Act - scroll down with specified percentage
-        can_continue = vertical_swiping_page.scroll_element(direction="down", percentage=percentage)
+        can_continue = vertical_swiping_page.scroll_down(percentage=percentage)
 
         # Assert - verify method returns boolean
-        assert isinstance(can_continue, bool), f"scroll_element should return boolean for {percentage*100}%"
+        assert isinstance(can_continue, bool), f"scroll_down should return boolean for {percentage*100}%"
 
     @pytest.mark.tcid("TC-08-09")
     @allure.severity(allure.severity_level.NORMAL)

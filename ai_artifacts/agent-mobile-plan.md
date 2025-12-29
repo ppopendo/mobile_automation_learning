@@ -688,10 +688,10 @@ WHEEL_PICKER_BUTTON = (AppiumBy.XPATH, "//android.widget.TextView[@content-desc=
 - Implemented new W3C gesture commands: `fling_element`, `scroll_element`, `pinch_open`, `pinch_close`
 - Created PhotoViewPage for pinch gesture testing (zoom in/out functionality)
 - Created CarouselPage for horizontal fling gesture testing
-- Added 13 new test cases:
+- Added 21 new test cases:
   - 9 for vertical fling/scroll gestures (consolidated validation tests)
-  - 7 for pinch gestures on Photo View
-  - 6 for horizontal fling gestures on Carousel
+  - 8 for pinch gestures on Photo View
+  - 4 for horizontal fling gestures on Carousel
 - Refactored duplicate code using `_validate_gesture_result()` helper method
 - Updated documentation to clarify behavior changes and method distinctions
 - Consolidated parameter validation tests using pytest parametrize
