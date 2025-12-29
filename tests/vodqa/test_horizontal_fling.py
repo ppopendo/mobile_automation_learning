@@ -1,7 +1,7 @@
 """Test suite for Horizontal Fling Gestures in VodQA application.
 
-This module contains tests for fling_element method (left/right directions)
-from BaseAppiumGestures using the Carousel page.
+This module contains tests for fling_on_carousel_item method (left/right directions)
+from CarouselPage using the Carousel page.
 """
 
 import allure
@@ -42,7 +42,7 @@ class TestHorizontalFlingGestures:
     @allure.severity(allure.severity_level.NORMAL)
     @allure.title("Test fling left returns boolean")
     def test_fling_left_returns_boolean(self, carousel_page: CarouselPage) -> None:
-        """Verify that fling_element left gesture returns boolean.
+        """Verify that fling_on_carousel_item left gesture returns boolean.
 
         Expected:
             - Method returns boolean indicating if more content is available
@@ -51,13 +51,13 @@ class TestHorizontalFlingGestures:
         can_continue = carousel_page.fling_on_carousel_item(direction="left")
 
         # Assert - verify method returns boolean
-        assert isinstance(can_continue, bool), "fling_element should return boolean"
+        assert isinstance(can_continue, bool), "fling_on_carousel_item should return boolean"
 
     @pytest.mark.tcid("TC-10-03")
     @allure.severity(allure.severity_level.NORMAL)
     @allure.title("Test fling right returns boolean")
     def test_fling_right_returns_boolean(self, carousel_page: CarouselPage) -> None:
-        """Verify that fling_element right gesture returns boolean.
+        """Verify that fling_on_carousel_item right gesture returns boolean.
 
         Expected:
             - Method returns boolean indicating if more content is available
@@ -66,7 +66,7 @@ class TestHorizontalFlingGestures:
         can_continue = carousel_page.fling_on_carousel_item(direction="right")
 
         # Assert - verify method returns boolean
-        assert isinstance(can_continue, bool), "fling_element should return boolean"
+        assert isinstance(can_continue, bool), "fling_on_carousel_item should return boolean"
 
     @pytest.mark.tcid("TC-10-04")
     @allure.severity(allure.severity_level.NORMAL)
