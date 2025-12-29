@@ -40,14 +40,14 @@
 | **4. Drag and Drop** | ✅ **Automated** | **6** | ✅ `DragAndDropPage` | TC-04-01 to TC-04-04 complete |
 | **5. Double Tap** | ✅ **Automated** | **2** | ✅ `DoubleTapPage` | TC-05-01, TC-05-02 complete |
 | **6. Long Press** | ✅ **Automated** | **2** | ✅ `LongPressPage` | TC-06-01, TC-06-02 complete |
-| **7. Photo View** | ✅ **Automated** | **8** | ✅ `PhotoViewPage` | TC-09-01 to TC-09-08 complete (Pinch gestures with validation) |
+| **7. Photo View** | ✅ **Automated** | **9** | ✅ `PhotoViewPage` | TC-09-01 to TC-09-09 complete (Pinch gestures with validation) |
 | 8. Web View | 🔲 Not Started | 0 | 🔲 - | - |
 | **9. Carousel** | ✅ **Automated** | **4** | ✅ `CarouselPage` | TC-10-01 to TC-10-04 complete (Horizontal fling with ID validation) |
 | 10. Wheel Picker | 🔲 Not Started | 0 | 🔲 - | - |
 | **11. Swipe Gestures** | ✅ **Automated** | **6** | ✅ `SliderPage` | TC-07-01, TC-07-02, TC-07-04, TC-07-05 complete |
 | **12. Fling & Scroll Gestures** | ✅ **Automated** | **9** | ✅ `VerticalSwipingPage` | TC-08-01 to TC-08-09 complete (W3C gestures, vertical) |
 
-**Total Automated Tests:** 46  
+**Total Automated Tests:** 41  
 **Last Updated:** 2025-12-29
 
 ---

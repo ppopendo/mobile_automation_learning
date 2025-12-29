@@ -42,7 +42,7 @@ class TestHorizontalFlingGestures:
     @allure.severity(allure.severity_level.NORMAL)
     @allure.title("Test fling left returns boolean")
     def test_fling_left_returns_boolean(self, carousel_page: CarouselPage) -> None:
-        """Verify that fling_element left gesture returns boolean.
+        """Verify that fling_on_carousel_item left gesture returns boolean.
 
         Expected:
             - Method returns boolean indicating if more content is available
@@ -57,7 +57,7 @@ class TestHorizontalFlingGestures:
     @allure.severity(allure.severity_level.NORMAL)
     @allure.title("Test fling right returns boolean")
     def test_fling_right_returns_boolean(self, carousel_page: CarouselPage) -> None:
-        """Verify that fling_element right gesture returns boolean.
+        """Verify that fling_on_carousel_item right gesture returns boolean.
 
         Expected:
             - Method returns boolean indicating if more content is available
