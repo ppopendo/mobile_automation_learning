@@ -21,18 +21,6 @@ class SamplesListLocators:
     WEB_VIEW: Tuple[str, str] = field(default=(AppiumBy.ACCESSIBILITY_ID, "webView"), init=False)
     CAROUSEL: Tuple[str, str] = field(default=(AppiumBy.ACCESSIBILITY_ID, "carousel"), init=False)
     WHEEL_PICKER: Tuple[str, str] = field(default=(AppiumBy.ACCESSIBILITY_ID, "wheelPicker"), init=False)
-    SAMPLES = {
-        "Carousel": CAROUSEL,
-        "Wheel Picker": WHEEL_PICKER,
-        "Web View": WEB_VIEW,
-        "Photo View": PHOTO_VIEW,
-        "Long Press": LONG_PRESS,
-        "Double Tap": DOUBLE_TAP,
-        "Drag & Drop": DRAG_AND_DROP,
-        "Vertical swiping": VERTICAL_SWIPING,
-        "Slider": SLIDER,
-        "Native View": NATIVE_VIEW,
-    }
 
 
 class SamplesListPage(BaseAppiumGestures, HeaderBarComponent):
@@ -40,6 +28,19 @@ class SamplesListPage(BaseAppiumGestures, HeaderBarComponent):
     This page provides entry points to various sample flows such as sliders, vertical swiping,
     drag and drop, double tap, long press, and other interactive examples within the app.
     """
+
+    SAMPLES = {
+        "Carousel": SamplesListLocators.CAROUSEL,
+        "Wheel Picker": SamplesListLocators.WHEEL_PICKER,
+        "Web View": SamplesListLocators.WEB_VIEW,
+        "Photo View": SamplesListLocators.PHOTO_VIEW,
+        "Long Press": SamplesListLocators.LONG_PRESS,
+        "Double Tap": SamplesListLocators.DOUBLE_TAP,
+        "Drag & Drop": SamplesListLocators.DRAG_AND_DROP,
+        "Vertical swiping": SamplesListLocators.VERTICAL_SWIPING,
+        "Slider": SamplesListLocators.SLIDER,
+        "Native View": SamplesListLocators.NATIVE_VIEW,
+    }
 
     @allure.step("the user waits until the samples list page is displayed")
     def wait_until_page_is_loaded(self) -> None:
@@ -86,6 +87,6 @@ class SamplesListPage(BaseAppiumGestures, HeaderBarComponent):
         Args:
             sample_name: The name of the sample to swipe to.
         """
-        if sample_name not in SamplesListLocators.SAMPLES:
+        if sample_name not in self.SAMPLES:
             raise ValueError(f"Sample '{sample_name}' not found in SamplesListLocators.")
         self.swipe_up()

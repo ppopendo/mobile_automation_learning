@@ -1,8 +1,7 @@
 """Page Object for Photo View feature in VodQA application."""
 
 from dataclasses import dataclass, field
-from typing import Optional, Tuple
-
+from typing import Tuple
 import allure
 from appium.webdriver.common.appiumby import AppiumBy
 from pages.base_appium_gestures import BaseAppiumGestures

@@ -45,7 +45,7 @@ class BaseAppiumGestures(BasePage):
         element = self.wait_for_element(locator=locator, timeout=self._short_timeout)
         return element.id
 
-    def _get_screen_center_bounds(self) -> dict:
+    def _get_screen_center_bounds(self) -> Dict[str, int]:
         """Get bounds for screen center area.
 
         Returns a dictionary with coordinates defining a centered area
