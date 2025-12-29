@@ -27,7 +27,7 @@ class PhotoViewPage(BaseAppiumGestures, HeaderBarComponent):
         self.wait_until_component_is_loaded(title="Photos - Pinch & Zoom")
 
     @property
-    @allure.step("checking if photo image is displayed")
+    @allure.step("retrieving photo display status")
     def is_photo_displayed(self) -> bool:
         """Check if photo image is displayed on screen."""
         return self.is_element_displayed(PhotoViewPageLocators.PHOTO_IMAGE)
