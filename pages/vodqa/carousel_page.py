@@ -5,6 +5,7 @@ from typing import Tuple
 
 import allure
 from appium.webdriver.common.appiumby import AppiumBy
+
 from pages.base_appium_gestures import BaseAppiumGestures
 from pages.vodqa.header_bar_component import HeaderBarComponent
 

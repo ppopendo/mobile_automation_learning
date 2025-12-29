@@ -82,7 +82,7 @@ class TestFlingAndScrollGestures:
         """
         # Act & Assert - attempt to fling with invalid direction
         with pytest.raises(ValueError, match="Invalid direction"):
-            vertical_swiping_page.fling_element(direction="invalid")
+            vertical_swiping_page.fling_with_direction(direction="invalid")
 
     @pytest.mark.tcid("TC-08-05")
     @allure.severity(allure.severity_level.NORMAL)
@@ -96,7 +96,7 @@ class TestFlingAndScrollGestures:
         """
         # Act & Assert - attempt to fling with invalid speed
         with pytest.raises(ValueError, match="Speed must be a positive integer"):
-            vertical_swiping_page.fling_element(direction="down", speed=-100)
+            vertical_swiping_page.fling_with_params(direction="down", speed=-100)
 
     @pytest.mark.tcid("TC-08-06")
     @allure.severity(allure.severity_level.NORMAL)
@@ -178,4 +178,4 @@ class TestFlingAndScrollGestures:
         # Act & Assert - attempt to call method with invalid parameter
         kwargs = {"direction": "down", "percentage": 0.75, "speed": 2500, param: value}
         with pytest.raises(ValueError, match=error_match):
-            vertical_swiping_page.scroll_element(**kwargs)
+            vertical_swiping_page.scroll_with_params(**kwargs)

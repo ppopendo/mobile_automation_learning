@@ -137,3 +137,63 @@ class VerticalSwipingPage(BaseAppiumGestures, HeaderBarComponent):
             percentage=percentage,
             speed=speed,
         )
+
+    @allure.step("the user flings in direction '{direction}' on the scrollable container")
+    def fling_with_direction(self, direction: str) -> bool:
+        """Perform a fling gesture in specified direction for validation testing.
+
+        Args:
+            direction: Direction to fling ('up', 'down', 'left', or 'right').
+
+        Returns:
+            bool: True if more content is available, False if at the end.
+
+        Raises:
+            ValueError: If direction is invalid.
+        """
+        return self.fling_element(
+            locator=VerticalSwipingPageLocators.SCROLLABLE_CONTAINER,
+            direction=direction,
+        )
+
+    @allure.step("the user flings in direction '{direction}' with speed {speed} on the scrollable container")
+    def fling_with_params(self, direction: str, speed: int) -> bool:
+        """Perform a fling gesture with custom parameters for validation testing.
+
+        Args:
+            direction: Direction to fling ('up', 'down', 'left', or 'right').
+            speed: Speed of the fling gesture in pixels per second.
+
+        Returns:
+            bool: True if more content is available, False if at the end.
+
+        Raises:
+            ValueError: If parameters are invalid.
+        """
+        return self.fling_element(
+            locator=VerticalSwipingPageLocators.SCROLLABLE_CONTAINER,
+            direction=direction,
+            speed=speed,
+        )
+
+    @allure.step("the user scrolls with custom parameters on the scrollable container")
+    def scroll_with_params(self, direction: str, percentage: float = 0.75, speed: int = 2500) -> bool:
+        """Perform a scroll gesture with custom parameters for validation testing.
+
+        Args:
+            direction: Direction to scroll ('up', 'down', 'left', or 'right').
+            percentage: The percentage of the screen to scroll (0.0-1.0, default: 0.75).
+            speed: Speed of the scroll gesture in pixels per second (default: 2500).
+
+        Returns:
+            bool: True if more content is available, False if at the end.
+
+        Raises:
+            ValueError: If parameters are invalid.
+        """
+        return self.scroll_element(
+            locator=VerticalSwipingPageLocators.SCROLLABLE_CONTAINER,
+            direction=direction,
+            percentage=percentage,
+            speed=speed,
+        )
