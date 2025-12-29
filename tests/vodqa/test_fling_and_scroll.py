@@ -1,8 +1,9 @@
 """Test suite for Fling and Scroll Gestures in VodQA application.
-
 This module contains tests for fling_element and scroll_element methods
 from BaseAppiumGestures using the Vertical Swiping page.
 """
+
+from typing import Any
 
 import allure
 import pytest
@@ -165,7 +166,7 @@ class TestFlingAndScrollGestures:
         ids=["invalid-direction", "invalid-percentage", "invalid-speed"],
     )
     def test_scroll_element_invalid_parameters(
-        self, vertical_swiping_page: VerticalSwipingPage, param: str, value: any, error_match: str
+        self, vertical_swiping_page: VerticalSwipingPage, param: str, value: Any, error_match: str
     ) -> None:
         """Verify that scroll_element validates parameters.
 
@@ -174,7 +175,6 @@ class TestFlingAndScrollGestures:
             - Error message is descriptive
         """
         # Act & Assert - attempt to call method with invalid parameter
-        kwargs = {"direction": "down", "percentage": 0.75, "speed": 2500}
-        kwargs[param] = value
+        kwargs = {"direction": "down", "percentage": 0.75, "speed": 2500, param: value}
         with pytest.raises(ValueError, match=error_match):
             vertical_swiping_page.scroll_element(**kwargs)

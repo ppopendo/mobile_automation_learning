@@ -677,7 +677,7 @@ WHEEL_PICKER_BUTTON = (AppiumBy.XPATH, "//android.widget.TextView[@content-desc=
 ### 2025-12-28: Refinement of Page Objects and Test Consolidation
 - Updated CarouselPage locators to use dynamic XPath for carousel indicators and views
 - Consolidated carousel fling methods into single `fling_on_carousel(direction, speed)` method
-- Updated PhotoViewPage title to "Photos - Ping & Zoom" and simplified image locator
+- Updated PhotoViewPage title to "Photos - Pinch & Zoom" and simplified image locator
 - Added `photo_image_size` property to PhotoViewPage for validation
 - Added TC-09-08 test to verify image enlargement after pinch gesture
 - Consolidated horizontal fling tests from 6 to 3 using pytest parametrize
@@ -698,7 +698,7 @@ WHEEL_PICKER_BUTTON = (AppiumBy.XPATH, "//android.widget.TextView[@content-desc=
 
 ---
 
-**Document Version:** 1.1  
-**Last Updated:** 2025-12-27  
+**Document Version:** 1.2
+**Last Updated:** 2025-12-29  
 **Status:** Ready for Implementation
 

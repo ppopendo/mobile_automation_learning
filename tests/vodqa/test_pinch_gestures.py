@@ -4,6 +4,8 @@ This module contains tests for pinch_open and pinch_close methods
 from BaseAppiumGestures using the Photo View page.
 """
 
+from typing import Union
+
 import allure
 import pytest
 from pages.vodqa.photo_view_page import PhotoViewPage
@@ -172,7 +174,7 @@ class TestPinchGestures:
         ids=["open-invalid-percentage", "close-invalid-percentage", "open-invalid-speed", "close-invalid-speed"],
     )
     def test_pinch_gestures_invalid_parameters(
-        self, photo_view_page: PhotoViewPage, method: str, param: str, value: int, error_match: str
+        self, photo_view_page: PhotoViewPage, method: str, param: str, value: Union[int, float], error_match: str
     ) -> None:
         """Verify that pinch gestures validate parameters.
 

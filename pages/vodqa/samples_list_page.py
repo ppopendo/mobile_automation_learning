@@ -82,6 +82,7 @@ class SamplesListPage(BaseAppiumGestures, HeaderBarComponent):
         """Taps on the 'Carousel' sample in the samples list."""
         self.tap_element(SamplesListLocators.CAROUSEL)
 
+    @allure.step("the user swipes to the '{sample_name}' sample")
     def swipe_to_sample(self, sample_name: str) -> None:
         """Swipes to the specified sample in the samples list.
         Args:
