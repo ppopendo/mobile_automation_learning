@@ -67,9 +67,20 @@ class TestPinchGestures:
         photo_view_page.pinch_open_on_photo(percentage=percentage)
 
         # Assert - verify photo is displayed and has valid size
-        assert photo_view_page.is_photo_displayed, f"Photo should be displayed after pinch_open with {percentage*100}%"
         size = photo_view_page.photo_image_size
-        assert size["width"] > 0 and size["height"] > 0, f"Photo should have valid dimensions for {percentage*100}%"
+        actual = {
+            "is_displayed": photo_view_page.is_photo_displayed,
+            "width_valid": size["width"] > 0,
+            "height_valid": size["height"] > 0,
+        }
+
+        expected = {
+            "is_displayed": True,
+            "width_valid": True,
+            "height_valid": True,
+        }
+
+        assert actual == expected, f"Photo state check failed for {percentage*100}% pinch_open: {actual}"
 
     @pytest.mark.tcid("TC-09-04")
     @allure.severity(allure.severity_level.NORMAL)
@@ -90,9 +101,20 @@ class TestPinchGestures:
         photo_view_page.pinch_close_on_photo(percentage=percentage)
 
         # Assert - verify photo is displayed and has valid size
-        assert photo_view_page.is_photo_displayed, f"Photo should be displayed after pinch_close with {percentage*100}%"
         size = photo_view_page.photo_image_size
-        assert size["width"] > 0 and size["height"] > 0, f"Photo should have valid dimensions for {percentage*100}%"
+        actual = {
+            "is_displayed": photo_view_page.is_photo_displayed,
+            "width_valid": size["width"] > 0,
+            "height_valid": size["height"] > 0,
+        }
+
+        expected = {
+            "is_displayed": True,
+            "width_valid": True,
+            "height_valid": True,
+        }
+
+        assert actual == expected, f"Photo state check failed for {percentage*100}% pinch_close: {actual}"
 
     @pytest.mark.tcid("TC-09-05")
     @allure.severity(allure.severity_level.NORMAL)
