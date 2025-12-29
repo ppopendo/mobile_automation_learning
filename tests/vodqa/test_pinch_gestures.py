@@ -187,6 +187,37 @@ class TestPinchGestures:
         with pytest.raises(ValueError, match=error_match):
             getattr(photo_view_page, method)(**kwargs)
 
+    @pytest.mark.tcid("TC-09-09")
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.title("Test pinch gestures with boundary values")
+    @pytest.mark.parametrize(
+        "method,param,value",
+        [
+            ("pinch_open_on_photo", "percentage", 0.0),
+            ("pinch_close_on_photo", "percentage", 1.0),
+            ("pinch_open_on_photo", "speed", 1),
+            ("pinch_close_on_photo", "speed", 1),
+        ],
+        ids=["open-min-percentage", "close-max-percentage", "open-min-speed", "close-min-speed"],
+    )
+    def test_pinch_gestures_boundary_values(
+        self, photo_view_page: PhotoViewPage, method: str, param: str, value: Union[int, float]
+    ) -> None:
+        """Verify that pinch gestures accept boundary parameter values.
+
+        Expected:
+            - Method accepts minimum valid percentage (0.0) and maximum (1.0)
+            - Method accepts minimum valid speed (1)
+            - Gestures execute successfully with boundary values
+        """
+        # Act - call method with boundary value parameter
+        kwargs = {param: value}
+        getattr(photo_view_page, method)(**kwargs)
+
+        # Assert - verify the photo is still displayed after gesture
+        assert photo_view_page.is_photo_displayed, f"{method} with {param}={value} should complete successfully"
+
+
     @pytest.mark.tcid("TC-09-08")
     @allure.severity(allure.severity_level.NORMAL)
     @allure.title("Test pinch_open enlarges the photo image")

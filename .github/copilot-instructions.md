@@ -52,7 +52,7 @@ This is a mobile automation testing project using Python with Appium for Android
 - Use pytest fixtures defined in `conftest.py`
 - Test function names should be descriptive: `test_{feature}_{scenario}`
 - Use Allure decorators for test metadata: `@allure.feature()`, `@allure.story()`, `@allure.severity()`
-- **One assertion per test**: Each test should have only one assert statement for better readability and clearer failure messages
+- **One assertion per test**: Each test should have only one assert statement for better readability and clearer failure messages. When validating multiple related values, use a single assertion with the actual/expected dictionary pattern rather than multiple separate assertion statements.
 - **Multiple value validation**: When checking multiple values, use an actual/expected dictionary pattern:
   ```python
   actual = {
