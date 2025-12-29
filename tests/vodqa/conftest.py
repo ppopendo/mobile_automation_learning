@@ -138,6 +138,7 @@ def long_press_page(driver: Any, samples_list_page: SamplesListPage) -> Generato
 def photo_view_page(driver: Any, samples_list_page: SamplesListPage) -> Generator[PhotoViewPage, None, None]:
     """Navigate to Photo View page and return page object.
     Handles teardown by navigating back to Samples List.
+
     Yields:
         PhotoViewPage: Page object for Photo View screen.
     """
@@ -156,6 +157,7 @@ def photo_view_page(driver: Any, samples_list_page: SamplesListPage) -> Generato
 def carousel_page(driver: Any, samples_list_page: SamplesListPage) -> Generator[CarouselPage, None, None]:
     """Navigate to Carousel page and return page object.
     Handles teardown by navigating back to Samples List.
+
     Yields:
         CarouselPage: Page object for Carousel screen.
     """

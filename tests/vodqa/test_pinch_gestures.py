@@ -208,7 +208,6 @@ class TestPinchGestures:
         # Act - perform pinch open (zoom in)
         photo_view_page.pinch_open_on_photo(percentage=0.9, speed=2500)
 
-        # Assert - gesture executed successfully
+        # Assert - verify initial state was valid
         # Note: Size verification is challenging due to platform behavior
-        # The test verifies the gesture executes without errors
         assert initial_area > 0, "Initial image area should be positive"
