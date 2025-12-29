@@ -12,7 +12,7 @@ from pages.vodqa.header_bar_component import HeaderBarComponent
 class PhotoViewPageLocators:
     """Locators for Photo View page elements."""
 
-    PHOTO_IMAGE: Tuple[str, str] = field(default=(AppiumBy.XPATH, "//android.widget.ImageView"), init=False)
+    PHOTO_IMAGE: Tuple[str, str] = field(default=(AppiumBy.XPATH, "(//android.widget.ImageView)[1]"), init=False)
 
 
 class PhotoViewPage(BaseAppiumGestures, HeaderBarComponent):

@@ -81,3 +81,19 @@ class SamplesListPage(BaseAppiumGestures, HeaderBarComponent):
     def tap_carousel(self) -> None:
         """Taps on the 'Carousel' sample in the samples list."""
         self.tap_element(SamplesListLocators.CAROUSEL)
+
+    @allure.step("the user swipes to sample '{sample_name}'")
+    def swipe_up_and_validate_sample_name(self, sample_name: str) -> None:
+        """Scrolls to and validates a sample by name using the SAMPLES mapping.
+
+        Args:
+            sample_name: The name of the sample to scroll to (e.g., "Carousel", "Photo View").
+
+        Raises:
+            ValueError: If the sample_name is not found in the SAMPLES dictionary.
+        """
+        if sample_name not in self.SAMPLES:
+            raise ValueError(f"Sample '{sample_name}' not found in SAMPLES dictionary.")
+
+        locator = self.SAMPLES[sample_name]
+        self.scroll_element_into_view(locator)
