@@ -81,7 +81,9 @@ class VerticalSwipingPage(BaseAppiumGestures, HeaderBarComponent):
             bool: True if more content is available, False if at the end.
         """
         return self.fling_element(
-            locator=VerticalSwipingPageLocators.SCROLLABLE_CONTAINER, direction="down", speed=speed
+            locator=VerticalSwipingPageLocators.SCROLLABLE_CONTAINER,
+            direction="down",
+            speed=speed,
         )
 
     @allure.step("the user flings up on the scrollable container")
@@ -94,7 +96,11 @@ class VerticalSwipingPage(BaseAppiumGestures, HeaderBarComponent):
         Returns:
             bool: True if more content is available, False if at the end.
         """
-        return self.fling_element(locator=VerticalSwipingPageLocators.SCROLLABLE_CONTAINER, direction="up", speed=speed)
+        return self.fling_element(
+            locator=VerticalSwipingPageLocators.SCROLLABLE_CONTAINER,
+            direction="up",
+            speed=speed,
+        )
 
     @allure.step("the user scrolls down on the scrollable container")
     def scroll_down(self, percentage: float = 0.75, speed: int = 2500) -> bool:
