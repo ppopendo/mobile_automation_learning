@@ -1,6 +1,7 @@
-from dataclasses import field, dataclass
+from dataclasses import dataclass, field
 from typing import Tuple
 
+import allure
 from appium.webdriver.common.appiumby import AppiumBy
 
 from pages.vodqa.header_bar_component import HeaderBarComponent
@@ -14,7 +15,9 @@ class WheelPickerDemoLocators:
     CURRENT_COLOR_BOX: Tuple[str, str] = field(
         default=(
             AppiumBy.XPATH,
-            "//android.widget.FrameLayout[@resource-id='android:id/content']/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup",
+            "//android.widget.FrameLayout[@resource-id='android:id/content']"
+            "/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup[1]"
+            "/android.view.ViewGroup/android.view.ViewGroup",
         ),
         init=False,
     )
@@ -26,13 +29,16 @@ class WheelPickerDemoPage(HeaderBarComponent):
         self.wait_until_component_is_loaded(title="Wheel Picker Demo")
 
     @property
+    @allure.step("retrieving current color text")
     def current_color_text(self) -> str:
-        return self._driver.find_element(*WheelPickerDemoLocators.CURRENT_COLOR_TEXT).text
+        return self.get_element_text(WheelPickerDemoLocators.CURRENT_COLOR_TEXT)
 
     @property
+    @allure.step("retrieving current color box background color")
     def current_color_box(self) -> str:
-        return self._driver.find_element(*WheelPickerDemoLocators.CURRENT_COLOR_BOX).get_attribute("backgroundColor")
+        return self.wait_for_element(WheelPickerDemoLocators.CURRENT_COLOR_BOX).get_attribute("backgroundColor")
 
     @property
+    @allure.step("retrieving color dropdown value")
     def color_dropdown_value(self) -> str:
-        return self._driver.find_element(*WheelPickerDemoLocators.COLOR_DROPDOWN).text
+        return self.get_element_text(WheelPickerDemoLocators.COLOR_DROPDOWN)
