@@ -1,7 +1,10 @@
 import logging
 import time
 from typing import Callable, List, Optional, Tuple
+
+import allure
 from appium import webdriver
+from appium.webdriver.common.appiumby import AppiumBy
 from selenium.common.exceptions import (
     NoSuchElementException,
     StaleElementReferenceException,
@@ -11,7 +14,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from config.config_vars import TIMEOUT, SHORT_TIMEOUT, PAGE_LOAD_TIMEOUT
+from config.config_vars import PAGE_LOAD_TIMEOUT, SHORT_TIMEOUT, TIMEOUT
 
 logger = logging.getLogger(__name__)
 
@@ -183,6 +186,7 @@ class BasePage:
                 return
         raise TimeoutException(f"❌ Element {locator} not found after {max_swipes} swipe attempts.")
 
+    @allure.step("the user opens the dropdown menu")
     def open_dropdown(self, locator: Tuple[str, str]) -> None:
         """Opens a dropdown menu by tapping on its locator.
 
@@ -192,6 +196,7 @@ class BasePage:
         self.tap_element(locator)
         logger.info(f"✅ Opened dropdown menu: {locator}")
 
+    @allure.step("the user closes the dropdown menu")
     def close_dropdown(self, locator: Tuple[str, str]) -> None:
         """Closes a dropdown menu by tapping outside of it.
 
@@ -201,6 +206,7 @@ class BasePage:
         self.tap_element(locator)
         logger.info(f"✅ Closed dropdown menu: {locator}")
 
+    @allure.step("the user selects '{option_text}' from the dropdown menu")
     def select_dropdown_option(self, dropdown_locator: Tuple[str, str], option_text: str) -> None:
         """Selects an option from a dropdown menu.
 
@@ -209,6 +215,6 @@ class BasePage:
             option_text: The visible text of the option to select.
         """
         self.open_dropdown(dropdown_locator)
-        option_locator = (dropdown_locator[0], f"//android.widget.TextView[@text='{option_text}']")
+        option_locator = (AppiumBy.XPATH, f"//android.widget.TextView[@text='{option_text}']")
         self.tap_element(option_locator)
         logger.info(f"✅ Selected option '{option_text}' from dropdown: {dropdown_locator}")
