@@ -34,7 +34,7 @@
 | Feature | Status | Test Count | Page Object | Notes |
 |---------|--------|------------|-------------|-------|
 | 0. Login | ⏳ Partial | 0 | ✅ `LoginPage` | Page Object exists, no dedicated tests |
-| 1. Native View | 🔲 Not Started | 0 | 🔲 - | - |
+| **1. Native View** | ✅ **Automated** | **2** | ✅ `NativeViewDemoPage` | TC-21-01, TC-21-02 complete |
 | **2. Slider** | ✅ **Automated** | **5** | ✅ `SliderPage` | TC-02-01, TC-02-02, TC-02-03 complete |
 | **3. Vertical Swiping** | ✅ **Automated** | **5** | ✅ `VerticalSwipingPage` | TC-03-01 to TC-03-04 complete |
 | **4. Drag and Drop** | ✅ **Automated** | **6** | ✅ `DragAndDropPage` | TC-04-01 to TC-04-04 complete |
@@ -43,12 +43,12 @@
 | **7. Photo View** | ✅ **Automated** | **9** | ✅ `PhotoViewPage` | TC-09-01 to TC-09-09 complete (Pinch gestures with validation) |
 | 8. Web View | 🔲 Not Started | 0 | 🔲 - | - |
 | **9. Carousel** | ✅ **Automated** | **4** | ✅ `CarouselPage` | TC-10-01 to TC-10-04 complete (Horizontal fling with ID validation) |
-| 10. Wheel Picker | 🔲 Not Started | 0 | 🔲 - | - |
+| **10. Wheel Picker** | ✅ **Automated** | **5** | ✅ `WheelPickerDemoPage` | TC-20-01, TC-20-02 (parametrized) complete |
 | **11. Swipe Gestures** | ✅ **Automated** | **6** | ✅ `SliderPage` | TC-07-01, TC-07-02, TC-07-04, TC-07-05 complete |
 | **12. Fling & Scroll Gestures** | ✅ **Automated** | **9** | ✅ `VerticalSwipingPage` | TC-08-01 to TC-08-09 complete (W3C gestures, vertical) |
 
-**Total Automated Tests:** 41  
-**Last Updated:** 2025-12-29
+**Total Automated Tests:** 48  
+**Last Updated:** 2026-01-04
 
 ---
 
@@ -93,6 +93,13 @@ SAMPLES_LIST_HEADER = (AppiumBy.XPATH, "//android.widget.TextView[@text='Samples
 
 **Content Descriptor:** `chainedView`
 
+**Automation Status:** ✅ **AUTOMATED**
+
+| Test Case | Status | Test File | Notes |
+|-----------|--------|-----------|-------|
+| TC-21-01: Page has required elements | ✅ Automated | `tests/vodqa/test_native_view_demo.py` | Verifies container texts |
+| TC-21-02: Containers display expected text | ✅ Automated | `tests/vodqa/test_native_view_demo.py` | Verifies specific text content |
+
 **Description:** Test navigation through chained/native views within the application.
 
 **Steps to Reproduce:**
@@ -114,10 +121,12 @@ SAMPLES_LIST_HEADER = (AppiumBy.XPATH, "//android.widget.TextView[@text='Samples
 NATIVE_VIEW_BUTTON = (AppiumBy.XPATH, "//android.widget.TextView[@content-desc='chainedView']")
 ```
 
-**Automation Recommendations:**
-- Create `NativeViewPage` class in `pages/vodqa/`
-- Define `NativeViewPageLocators` dataclass
-- Implement test: `test_chainedView_navigation`
+**Page Object:** `NativeViewDemoPage` - `pages/vodqa/native_view_demo_page.py`
+
+**Implemented Methods:**
+- `container_text_1` (property)
+- `container_text_2` (property)
+- `container_text_3` (property)
 
 ---
 
@@ -461,6 +470,13 @@ CAROUSEL_BUTTON = (AppiumBy.XPATH, "//android.widget.TextView[@content-desc='car
 
 **Content Descriptor:** `wheelPicker`
 
+**Automation Status:** ✅ **AUTOMATED**
+
+| Test Case | Status | Test File | Notes |
+|-----------|--------|-----------|-------|
+| TC-20-01: Page has required elements | ✅ Automated | `tests/vodqa/test_wheel_picker_demo.py` | Verifies color text and box |
+| TC-20-02: Select color from dropdown | ✅ Automated | `tests/vodqa/test_wheel_picker_demo.py` | Parametrized (4 colors) |
+
 **Description:** Test wheel picker/spinner selection functionality.
 
 **Steps to Reproduce:**
@@ -483,12 +499,13 @@ CAROUSEL_BUTTON = (AppiumBy.XPATH, "//android.widget.TextView[@content-desc='car
 WHEEL_PICKER_BUTTON = (AppiumBy.XPATH, "//android.widget.TextView[@content-desc='wheelPicker']")
 ```
 
-**Automation Recommendations:**
-- Create `WheelPickerPage` class
-- Test value selection
-- Verify picker scroll behavior
-- Test boundary values
-- Implement test: `test_wheelPicker_selection`
+**Page Object:** `WheelPickerDemoPage` - `pages/vodqa/wheel_picker_demo_page.py`
+
+**Implemented Methods:**
+- `select_color(color)`
+- `capture_color_box_screenshot()`
+- `current_color_text` (property)
+- `color_dropdown_value` (property)
 
 ### 11. Feature: Swipe Gestures
 
@@ -696,9 +713,16 @@ WHEEL_PICKER_BUTTON = (AppiumBy.XPATH, "//android.widget.TextView[@content-desc=
 - Updated documentation to clarify behavior changes and method distinctions
 - Consolidated parameter validation tests using pytest parametrize
 
+### 2026-01-04: Native View and Wheel Picker Automation
+- Implemented `NativeViewDemoPage` and `WheelPickerDemoPage`
+- Added tests for Native View (TC-21-01, TC-21-02)
+- Added tests for Wheel Picker (TC-20-01, TC-20-02)
+- Updated automation coverage summary
+- Total automated tests increased to 48
+
 ---
 
-**Document Version:** 1.2
-**Last Updated:** 2025-12-29  
-**Status:** Ready for Implementation
+**Document Version:** 1.3
+**Last Updated:** 2026-01-04  
+**Status:** In Progress
 

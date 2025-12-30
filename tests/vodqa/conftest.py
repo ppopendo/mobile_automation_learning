@@ -8,15 +8,17 @@ from typing import Any, Generator
 import allure
 import pytest
 
+from pages.vodqa.carousel_page import CarouselPage
 from pages.vodqa.double_tap_page import DoubleTapPage
 from pages.vodqa.drag_and_drop_page import DragAndDropPage
 from pages.vodqa.login_page import LoginPage
 from pages.vodqa.long_press_page import LongPressPage
+from pages.vodqa.native_view_demo_page import NativeViewDemoPage
+from pages.vodqa.photo_view_page import PhotoViewPage
 from pages.vodqa.samples_list_page import SamplesListPage
 from pages.vodqa.slider_page import SliderPage
 from pages.vodqa.vertical_swiping_page import VerticalSwipingPage
-from pages.vodqa.photo_view_page import PhotoViewPage
-from pages.vodqa.carousel_page import CarouselPage
+from pages.vodqa.wheel_picker_demo_page import WheelPickerDemoPage
 
 
 @pytest.fixture(scope="session")
@@ -164,6 +166,44 @@ def carousel_page(driver: Any, samples_list_page: SamplesListPage) -> Generator[
     samples_list_page.swipe_up_and_validate_sample_name("Carousel")
     samples_list_page.tap_carousel()
     page = CarouselPage(driver)
+    page.wait_until_page_is_loaded()
+    yield page
+    # Teardown: Navigate back to Samples List
+    with allure.step("Teardown: navigating back to Samples List"):
+        page.tap_back_button()
+        samples_list_page.wait_until_page_is_loaded()
+
+
+@pytest.fixture
+def wheel_picker_demo_page(driver: Any, samples_list_page: SamplesListPage) -> Generator[WheelPickerDemoPage, None, None]:
+    """Navigate to Wheel Picker Demo page and return page object.
+    Handles teardown by navigating back to Samples List.
+
+    Yields:
+        WheelPickerDemoPage: Page object for Wheel Picker Demo screen.
+    """
+    samples_list_page.swipe_up_and_validate_sample_name("Wheel Picker")
+    samples_list_page.tap_wheel_picker()
+    page = WheelPickerDemoPage(driver)
+    page.wait_until_page_is_loaded()
+    yield page
+    # Teardown: Navigate back to Samples List
+    with allure.step("Teardown: navigating back to Samples List"):
+        page.tap_back_button()
+        samples_list_page.wait_until_page_is_loaded()
+
+
+@pytest.fixture
+def native_view_demo_page(driver: Any, samples_list_page: SamplesListPage) -> Generator[NativeViewDemoPage, None, None]:
+    """Navigate to Native View Demo page and return page object.
+    Handles teardown by navigating back to Samples List.
+
+    Yields:
+        NativeViewDemoPage: Page object for Native View Demo screen.
+    """
+    samples_list_page.swipe_up_and_validate_sample_name("Native View")
+    samples_list_page.tap_native_view()
+    page = NativeViewDemoPage(driver)
     page.wait_until_page_is_loaded()
     yield page
     # Teardown: Navigate back to Samples List

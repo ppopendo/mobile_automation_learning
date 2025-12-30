@@ -1,7 +1,9 @@
 from dataclasses import dataclass, field
 from typing import Tuple
+
 import allure
 from appium.webdriver.common.appiumby import AppiumBy
+
 from pages.base_appium_gestures import BaseAppiumGestures
 from pages.vodqa.header_bar_component import HeaderBarComponent
 
@@ -81,6 +83,16 @@ class SamplesListPage(BaseAppiumGestures, HeaderBarComponent):
     def tap_carousel(self) -> None:
         """Taps on the 'Carousel' sample in the samples list."""
         self.tap_element(SamplesListLocators.CAROUSEL)
+
+    @allure.step("the user taps on the 'Wheel Picker' sample")
+    def tap_wheel_picker(self) -> None:
+        """Taps on the 'Wheel Picker' sample in the samples list."""
+        self.tap_element(SamplesListLocators.WHEEL_PICKER)
+
+    @allure.step("the user taps on the 'Native View' sample")
+    def tap_native_view(self) -> None:
+        """Taps on the 'Native View' sample in the samples list."""
+        self.tap_element(SamplesListLocators.NATIVE_VIEW)
 
     @allure.step("the user scrolls to sample '{sample_name}'")
     def swipe_up_and_validate_sample_name(self, sample_name: str) -> None:
