@@ -185,36 +185,3 @@ class BasePage:
             else:
                 return
         raise TimeoutException(f"❌ Element {locator} not found after {max_swipes} swipe attempts.")
-
-    @allure.step("the user opens the dropdown menu")
-    def open_dropdown(self, locator: Tuple[str, str]) -> None:
-        """Opens a dropdown menu by tapping on its locator.
-
-        Args:
-            locator: Tuple containing the strategy and locator of the dropdown element.
-        """
-        self.tap_element(locator)
-        logger.info(f"✅ Opened dropdown menu: {locator}")
-
-    @allure.step("the user closes the dropdown menu")
-    def close_dropdown(self, locator: Tuple[str, str]) -> None:
-        """Closes a dropdown menu by tapping outside of it.
-
-        Args:
-            locator: Tuple containing the strategy and locator of the dropdown element.
-        """
-        self.tap_element(locator)
-        logger.info(f"✅ Closed dropdown menu: {locator}")
-
-    @allure.step("the user selects '{option_text}' from the dropdown menu")
-    def select_dropdown_option(self, dropdown_locator: Tuple[str, str], option_text: str) -> None:
-        """Selects an option from a dropdown menu.
-
-        Args:
-            dropdown_locator: Tuple containing the strategy and locator of the dropdown element.
-            option_text: The visible text of the option to select.
-        """
-        self.open_dropdown(dropdown_locator)
-        option_locator = (AppiumBy.XPATH, f"//android.widget.TextView[@text='{option_text}']")
-        self.tap_element(option_locator)
-        logger.info(f"✅ Selected option '{option_text}' from dropdown: {dropdown_locator}")

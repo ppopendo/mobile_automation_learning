@@ -42,3 +42,16 @@ class WheelPickerDemoPage(HeaderBarComponent):
     @allure.step("retrieving color dropdown value")
     def color_dropdown_value(self) -> str:
         return self.get_element_text(WheelPickerDemoLocators.COLOR_DROPDOWN)
+
+    @allure.step("the user selects '{color_name}' from color dropdown")
+    def select_color(self, color_name: str) -> None:
+        """Selects a color from the dropdown.
+
+        Args:
+            color_name: The name of the color to select (e.g., 'Red', 'Green', 'Blue').
+        """
+        # Open the dropdown
+        self.tap_element(WheelPickerDemoLocators.COLOR_DROPDOWN)
+        # Select the color option
+        color_option_locator = (AppiumBy.XPATH, f"//android.widget.TextView[@text='{color_name}']")
+        self.tap_element(color_option_locator)

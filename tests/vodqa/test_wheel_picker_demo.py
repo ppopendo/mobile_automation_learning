@@ -1,6 +1,6 @@
 """Test suite for Wheel Picker Demo feature in VodQA application.
 This module contains tests for wheel picker functionality.
-Tests verify property methods for retrieving color information.
+Tests verify color selection and property methods for retrieving color information.
 """
 
 import allure
@@ -38,3 +38,32 @@ class TestWheelPickerDemo:
         }
 
         assert actual == expected, f"Wheel Picker Demo page elements mismatch: {actual}"
+
+    @pytest.mark.tcid("TC-20-02")
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.title("Test selecting color from dropdown changes color box")
+    @pytest.mark.parametrize("color", ["Red", "Green", "Blue"], ids=["red", "green", "blue"])
+    def test_select_color_from_dropdown(self, wheel_picker_demo_page: WheelPickerDemoPage, color: str) -> None:
+        """Verify that selecting a color from the dropdown updates the color box.
+        Args:
+            color: The color name to select from dropdown.
+        Expected:
+            - Color can be selected from dropdown
+            - Dropdown value updates to selected color
+            - Current color text displays the selected color
+        """
+        # Act - select the color
+        wheel_picker_demo_page.select_color(color)
+
+        # Assert - verify the color was selected
+        actual = {
+            "dropdown_value": wheel_picker_demo_page.color_dropdown_value,
+            "color_text_contains": color in wheel_picker_demo_page.current_color_text,
+        }
+
+        expected = {
+            "dropdown_value": color,
+            "color_text_contains": True,
+        }
+
+        assert actual == expected, f"Color selection failed for {color}: {actual}"
