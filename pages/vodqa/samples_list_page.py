@@ -29,6 +29,19 @@ class SamplesListPage(BaseAppiumGestures, HeaderBarComponent):
     drag and drop, double tap, long press, and other interactive examples within the app.
     """
 
+    _SAMPLE_MAPPING = {
+        "Carousel": SamplesListLocators.CAROUSEL,
+        "Wheel Picker": SamplesListLocators.WHEEL_PICKER,
+        "Web View": SamplesListLocators.WEB_VIEW,
+        "Photo View": SamplesListLocators.PHOTO_VIEW,
+        "Long Press": SamplesListLocators.LONG_PRESS,
+        "Double Tap": SamplesListLocators.DOUBLE_TAP,
+        "Drag & Drop": SamplesListLocators.DRAG_AND_DROP,
+        "Vertical swiping": SamplesListLocators.VERTICAL_SWIPING,
+        "Slider": SamplesListLocators.SLIDER,
+        "Native View": SamplesListLocators.NATIVE_VIEW,
+    }
+
     @allure.step("the user waits until the samples list page is displayed")
     def wait_until_page_is_loaded(self) -> None:
         """Waits until the Samples List page is fully loaded."""
@@ -58,3 +71,29 @@ class SamplesListPage(BaseAppiumGestures, HeaderBarComponent):
     def tap_long_press(self) -> None:
         """Taps on the 'Long Press' sample in the samples list."""
         self.tap_element(SamplesListLocators.LONG_PRESS)
+
+    @allure.step("the user taps on the 'Photo View' sample")
+    def tap_photo_view(self) -> None:
+        """Taps on the 'Photo View' sample in the samples list."""
+        self.tap_element(SamplesListLocators.PHOTO_VIEW)
+
+    @allure.step("the user taps on the 'Carousel' sample")
+    def tap_carousel(self) -> None:
+        """Taps on the 'Carousel' sample in the samples list."""
+        self.tap_element(SamplesListLocators.CAROUSEL)
+
+    @allure.step("the user scrolls to sample '{sample_name}'")
+    def swipe_up_and_validate_sample_name(self, sample_name: str) -> None:
+        """Scrolls to and validates a sample by name using the _SAMPLE_MAPPING.
+
+        Args:
+            sample_name: The name of the sample to scroll to (e.g., "Carousel", "Photo View").
+
+        Raises:
+            ValueError: If the sample_name is not found in the _SAMPLE_MAPPING dictionary.
+        """
+        if sample_name not in self._SAMPLE_MAPPING:
+            raise ValueError(f"Sample '{sample_name}' not found in _SAMPLE_MAPPING dictionary.")
+
+        locator = self._SAMPLE_MAPPING[sample_name]
+        self.scroll_element_into_view(locator)
