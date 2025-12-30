@@ -53,5 +53,5 @@ class WheelPickerDemoPage(HeaderBarComponent):
         # Open the dropdown
         self.tap_element(WheelPickerDemoLocators.COLOR_DROPDOWN)
         # Select the color option
-        color_option_locator = (AppiumBy.XPATH, f"//*[@text='{color_name}']")
+        color_option_locator = (AppiumBy.XPATH, f"//android.widget.TextView[@text='{color_name}']")
         self.tap_element(color_option_locator)
