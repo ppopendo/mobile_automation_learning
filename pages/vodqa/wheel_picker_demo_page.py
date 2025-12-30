@@ -15,7 +15,9 @@ class WheelPickerDemoLocators:
     CURRENT_COLOR_BOX: Tuple[str, str] = field(
         default=(
             AppiumBy.XPATH,
-            "//android.widget.FrameLayout[@resource-id='android:id/content']/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup",
+            "//android.widget.FrameLayout[@resource-id='android:id/content']"
+            "/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup[1]"
+            "/android.view.ViewGroup/android.view.ViewGroup",
         ),
         init=False,
     )
