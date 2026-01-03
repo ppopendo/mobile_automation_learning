@@ -1,5 +1,6 @@
 import logging
 import os
+import tempfile
 import time
 from datetime import datetime
 from typing import Callable, List, Optional, Tuple
@@ -202,8 +203,8 @@ class BasePage:
         element = self.wait_for_element(locator)
         screenshot_data = element.screenshot_as_png
 
-        # Create screenshots directory if it doesn't exist
-        screenshots_dir = "/tmp/screenshots"
+        # Create screenshots directory if it doesn't exist (cross-platform)
+        screenshots_dir = os.path.join(tempfile.gettempdir(), "screenshots")
         os.makedirs(screenshots_dir, exist_ok=True)
 
         # Generate unique filename with timestamp
@@ -236,22 +237,41 @@ class BasePage:
 
         Returns:
             Tuple[int, int, int]: RGB color values as (red, green, blue).
+
+        Raises:
+            FileNotFoundError: If the image file does not exist.
+            ValueError: If the image is too small or has no pixels.
+            IOError: If there's an error reading or processing the image.
         """
-        with Image.open(filepath) as img:
-            # Convert to RGB if needed (handles RGBA, grayscale, etc.)
-            if img.mode != "RGB":
-                img = img.convert("RGB")
+        try:
+            with Image.open(filepath) as img:
+                # Convert to RGB if needed (handles RGBA, grayscale, etc.)
+                if img.mode != "RGB":
+                    img = img.convert("RGB")
 
-            # Get image dimensions and calculate center region (middle 50% of the image)
-            width, height = img.size
-            center_region = img.crop((width // 4, height // 4, width - width // 4, height - height // 4))
+                # Get image dimensions and calculate center region (middle 50% of the image)
+                width, height = img.size
 
-            # Get all pixels from the center region and calculate average RGB values
-            pixels = list(center_region.getdata())
-            pixel_count = len(pixels)
+                # Validate image size
+                if width < 2 or height < 2:
+                    raise ValueError(f"Image is too small ({width}x{height}). Minimum size is 2x2 pixels.")
 
-            return (
-                round(sum(pixel[0] for pixel in pixels) / pixel_count),
-                round(sum(pixel[1] for pixel in pixels) / pixel_count),
-                round(sum(pixel[2] for pixel in pixels) / pixel_count),
-            )
+                center_region = img.crop((width // 4, height // 4, width - width // 4, height - height // 4))
+
+                # Get all pixels from the center region and calculate average RGB values
+                pixels = list(center_region.getdata())
+                pixel_count = len(pixels)
+
+                # Ensure we have pixels to process
+                if pixel_count == 0:
+                    raise ValueError("No pixels found in the center region of the image.")
+
+                return (
+                    round(sum(pixel[0] for pixel in pixels) / pixel_count),
+                    round(sum(pixel[1] for pixel in pixels) / pixel_count),
+                    round(sum(pixel[2] for pixel in pixels) / pixel_count),
+                )
+        except FileNotFoundError as exc:
+            raise FileNotFoundError(f"Image file not found: {filepath}") from exc
+        except (OSError, IOError) as exc:
+            raise IOError(f"Error reading or processing image file: {filepath}") from exc
