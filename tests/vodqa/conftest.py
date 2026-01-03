@@ -175,9 +175,7 @@ def carousel_page(driver: Any, samples_list_page: SamplesListPage) -> Generator[
 
 
 @pytest.fixture
-def wheel_picker_demo_page(
-    driver: Any, samples_list_page: SamplesListPage
-) -> Generator[WheelPickerDemoPage, None, None]:
+def wheel_picker_demo_page(driver: Any, samples_list_page: SamplesListPage) -> Generator[WheelPickerDemoPage, None, None]:
     """Navigate to Wheel Picker Demo page and return page object.
     Handles teardown by navigating back to Samples List.
 
