@@ -2,6 +2,7 @@ import logging
 import time
 from typing import Callable, List, Optional, Tuple
 
+import allure
 from appium import webdriver
 from selenium.common.exceptions import (
     NoSuchElementException,
@@ -183,3 +184,23 @@ class BasePage:
             else:
                 return
         raise TimeoutException(f"❌ Element {locator} not found after {max_swipes} swipe attempts.")
+
+    @allure.step("the user captures a screenshot of {element_name}")
+    def capture_element_screenshot(self, locator: Tuple[str, str], element_name: str) -> bytes:
+        """Captures a screenshot of a specific element and attaches it to Allure report.
+
+        Args:
+            locator: Tuple containing the strategy and locator of the element to capture.
+            element_name: Descriptive name for the element being captured.
+
+        Returns:
+            bytes: PNG screenshot data of the element.
+        """
+        element = self.wait_for_element(locator)
+        screenshot_data = element.screenshot_as_png
+        allure.attach(
+            screenshot_data,
+            name=f"{element_name}_screenshot",
+            attachment_type=allure.attachment_type.PNG,
+        )
+        return screenshot_data
