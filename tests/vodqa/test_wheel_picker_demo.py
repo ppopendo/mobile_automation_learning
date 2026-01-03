@@ -21,20 +21,22 @@ class TestWheelPickerDemo:
         """Verify that the Wheel Picker Demo page contains required elements.
         Expected:
             - Current color text is displayed and contains 'Current Color:'
-            - Current color box element is visible
+            - Current color box element is visible and visual state is captured
             - Color dropdown value is displayed
         """
-        # Capture initial visual state of the color box
-        wheel_picker_demo_page.capture_color_box_screenshot()
+        # Capture initial visual state of the color box (also verifies element is present)
+        color_box_screenshot = wheel_picker_demo_page.capture_color_box_screenshot()
 
         # Assert multiple values using actual/expected pattern
         actual = {
             "has_color_text": "Current Color:" in wheel_picker_demo_page.current_color_text,
+            "has_color_box_screenshot": color_box_screenshot is not None and len(color_box_screenshot) > 0,
             "has_dropdown_value": len(wheel_picker_demo_page.color_dropdown_value) > 0,
         }
 
         expected = {
             "has_color_text": True,
+            "has_color_box_screenshot": True,
             "has_dropdown_value": True,
         }
 
