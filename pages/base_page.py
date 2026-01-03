@@ -1,9 +1,12 @@
 import logging
+import os
 import time
+from datetime import datetime
 from typing import Callable, List, Optional, Tuple
 
 import allure
 from appium import webdriver
+from PIL import Image
 from selenium.common.exceptions import (
     NoSuchElementException,
     StaleElementReferenceException,
@@ -186,21 +189,69 @@ class BasePage:
         raise TimeoutException(f"❌ Element {locator} not found after {max_swipes} swipe attempts.")
 
     @allure.step("the user captures a screenshot of {element_name}")
-    def capture_element_screenshot(self, locator: Tuple[str, str], element_name: str) -> bytes:
-        """Captures a screenshot of a specific element and attaches it to Allure report.
+    def capture_element_screenshot(self, locator: Tuple[str, str], element_name: str) -> str:
+        """Captures a screenshot of a specific element and saves it to a file.
 
         Args:
             locator: Tuple containing the strategy and locator of the element to capture.
             element_name: Descriptive name for the element being captured.
 
         Returns:
-            bytes: PNG screenshot data of the element.
+            str: File path to the saved screenshot.
         """
         element = self.wait_for_element(locator)
         screenshot_data = element.screenshot_as_png
+
+        # Create screenshots directory if it doesn't exist
+        screenshots_dir = "/tmp/screenshots"
+        os.makedirs(screenshots_dir, exist_ok=True)
+
+        # Generate unique filename with timestamp
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+        filename = f"{element_name}_{timestamp}.png"
+        filepath = os.path.join(screenshots_dir, filename)
+
+        # Save screenshot to file
+        with open(filepath, "wb") as f:
+            f.write(screenshot_data)
+
+        # Attach to Allure report
         allure.attach(
             screenshot_data,
             name=f"{element_name}_screenshot",
             attachment_type=allure.attachment_type.PNG,
         )
-        return screenshot_data
+
+        return filepath
+
+    @staticmethod
+    def get_rgb_from_image(filepath: str) -> Tuple[int, int, int]:
+        """Extracts the dominant RGB color from an image file.
+
+        This method reads an image file and calculates the average RGB color
+        from the center region of the image (middle 50% area).
+
+        Args:
+            filepath: Path to the image file.
+
+        Returns:
+            Tuple[int, int, int]: RGB color values as (red, green, blue).
+        """
+        with Image.open(filepath) as img:
+            # Convert to RGB if needed (handles RGBA, grayscale, etc.)
+            if img.mode != "RGB":
+                img = img.convert("RGB")
+
+            # Get image dimensions and calculate center region (middle 50% of the image)
+            width, height = img.size
+            center_region = img.crop((width // 4, height // 4, width - width // 4, height - height // 4))
+
+            # Get all pixels from the center region and calculate average RGB values
+            pixels = list(center_region.getdata())
+            pixel_count = len(pixels)
+
+            return (
+                round(sum(pixel[0] for pixel in pixels) / pixel_count),
+                round(sum(pixel[1] for pixel in pixels) / pixel_count),
+                round(sum(pixel[2] for pixel in pixels) / pixel_count),
+            )
