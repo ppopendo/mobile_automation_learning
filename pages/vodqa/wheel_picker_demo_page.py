@@ -34,14 +34,18 @@ class WheelPickerDemoPage(HeaderBarComponent):
         return self.get_element_text(WheelPickerDemoLocators.CURRENT_COLOR_TEXT)
 
     @property
-    @allure.step("retrieving current color box background color")
-    def current_color_box(self) -> str:
-        return self.wait_for_element(WheelPickerDemoLocators.CURRENT_COLOR_BOX).get_attribute("backgroundColor")
-
-    @property
     @allure.step("retrieving color dropdown value")
     def color_dropdown_value(self) -> str:
         return self.get_element_text(WheelPickerDemoLocators.COLOR_DROPDOWN)
+
+    @allure.step("the user captures the color box visual state")
+    def capture_color_box_screenshot(self) -> bytes:
+        """Captures a screenshot of the color box element for visual verification.
+
+        Returns:
+            bytes: PNG screenshot data of the color box element.
+        """
+        return self.capture_element_screenshot(WheelPickerDemoLocators.CURRENT_COLOR_BOX, "color_box")
 
     @allure.step("the user selects '{color_name}' from color dropdown")
     def select_color(self, color_name: str) -> None:
