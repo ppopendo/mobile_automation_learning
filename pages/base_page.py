@@ -2,9 +2,7 @@ import logging
 import time
 from typing import Callable, List, Optional, Tuple
 
-import allure
 from appium import webdriver
-from appium.webdriver.common.appiumby import AppiumBy
 from selenium.common.exceptions import (
     NoSuchElementException,
     StaleElementReferenceException,
