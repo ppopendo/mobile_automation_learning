@@ -241,7 +241,7 @@ class BasePage:
         Raises:
             FileNotFoundError: If the image file does not exist.
             ValueError: If the image is too small or has no pixels.
-            IOError: If there's an error reading or processing the image.
+            OSError: If there's an error reading or processing the image.
         """
         try:
             with Image.open(filepath) as img:
@@ -249,13 +249,14 @@ class BasePage:
                 if img.mode != "RGB":
                     img = img.convert("RGB")
 
-                # Get image dimensions and calculate center region (middle 50% of the image)
+                # Get image dimensions
                 width, height = img.size
 
-                # Validate image size
-                if width < 2 or height < 2:
-                    raise ValueError(f"Image is too small ({width}x{height}). Minimum size is 2x2 pixels.")
+                # Validate image size - need at least 4x4 to create a center region
+                if width < 4 or height < 4:
+                    raise ValueError(f"Image is too small ({width}x{height}). Minimum size is 4x4 pixels.")
 
+                # Calculate center region (middle 50% of the image)
                 center_region = img.crop((width // 4, height // 4, width - width // 4, height - height // 4))
 
                 # Get all pixels from the center region and calculate average RGB values
@@ -273,5 +274,5 @@ class BasePage:
                 )
         except FileNotFoundError as exc:
             raise FileNotFoundError(f"Image file not found: {filepath}") from exc
-        except (OSError, IOError) as exc:
-            raise IOError(f"Error reading or processing image file: {filepath}") from exc
+        except OSError as exc:
+            raise OSError(f"Error reading or processing image file: {filepath}") from exc
