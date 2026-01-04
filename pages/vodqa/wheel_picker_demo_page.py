@@ -23,8 +23,24 @@ class WheelPickerDemoLocators:
     )
     COLOR_DROPDOWN: Tuple[str, str] = field(default=(AppiumBy.ID, "android:id/text1"), init=False)
 
+    @staticmethod
+    def color_option_locator(color_name: str) -> Tuple[str, str]:
+        """Generate locator for color option by name.
+
+        Args:
+            color_name: The name of the color option (e.g., 'Red', 'Green', 'Blue').
+
+        Returns:
+            Tuple[str, str]: Locator tuple for the color option.
+        """
+        return AppiumBy.XPATH, f"//android.widget.TextView[@text='{color_name}']"
+
 
 class WheelPickerDemoPage(HeaderBarComponent):
+    """Page object for the Wheel Picker Demo screen, providing interactions with
+    the current color display, color dropdown, and color box visual state.
+    """
+
     def wait_until_page_is_loaded(self) -> None:
         self.wait_until_component_is_loaded(title="Wheel Picker Demo")
 
@@ -58,5 +74,4 @@ class WheelPickerDemoPage(HeaderBarComponent):
         # Open the dropdown
         self.tap_element(WheelPickerDemoLocators.COLOR_DROPDOWN)
         # Select the color option
-        color_option_locator = (AppiumBy.XPATH, f"//android.widget.TextView[@text='{color_name}']")
-        self.tap_element(color_option_locator)
+        self.tap_element(WheelPickerDemoLocators.color_option_locator(color_name))

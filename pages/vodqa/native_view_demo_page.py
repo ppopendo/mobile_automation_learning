@@ -15,6 +15,7 @@ class NativeViewDemoLocators:
 
 
 class NativeViewDemoPage(HeaderBarComponent):
+    """Page object for the Native View Demo screen, providing access to native container text elements."""
 
     def wait_until_page_is_loaded(self) -> None:
         self.wait_until_component_is_loaded(title="Native View Demo")
