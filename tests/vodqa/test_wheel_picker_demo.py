@@ -8,6 +8,15 @@ import pytest
 
 from pages.vodqa.wheel_picker_demo_page import WheelPickerDemoPage
 
+# Color map for expected RGB values of the color box
+# These are the expected RGB values when each color is selected
+BOX_COLORS_MAP = {
+    "Red": (255, 0, 0),
+    "Green": (0, 255, 0),
+    "Blue": (0, 0, 255),
+    "Black": (0, 0, 0),
+}
+
 
 @allure.feature("VodQA Samples")
 @allure.story("Wheel Picker Demo")
@@ -21,22 +30,22 @@ class TestWheelPickerDemo:
         """Verify that the Wheel Picker Demo page contains required elements.
         Expected:
             - Current color text is displayed and contains 'Current Color:'
-            - Current color box element is visible and visual state is captured
+            - Current color box element is visible and RGB color can be extracted
             - Color dropdown value is displayed
         """
-        # Capture initial visual state of the color box (also verifies element is present)
-        color_box_screenshot = wheel_picker_demo_page.capture_color_box_screenshot()
+        # Capture initial visual state of the color box and get RGB color
+        rgb_color = wheel_picker_demo_page.capture_color_box_screenshot()
 
         # Assert multiple values using actual/expected pattern
         actual = {
             "has_color_text": "Current Color:" in wheel_picker_demo_page.current_color_text,
-            "has_color_box_screenshot": color_box_screenshot is not None and len(color_box_screenshot) > 0,
+            "has_rgb_color": rgb_color is not None and isinstance(rgb_color, tuple) and len(rgb_color) == 3,
             "has_dropdown_value": len(wheel_picker_demo_page.color_dropdown_value) > 0,
         }
 
         expected = {
             "has_color_text": True,
-            "has_color_box_screenshot": True,
+            "has_rgb_color": True,
             "has_dropdown_value": True,
         }
 
@@ -49,9 +58,8 @@ class TestWheelPickerDemo:
     def test_select_color_from_dropdown(self, wheel_picker_demo_page: WheelPickerDemoPage, color: str) -> None:
         """Verify that selecting a color from the dropdown updates the color box visual state.
 
-        This test uses visual testing via screenshots since mobile native apps don't support
-        CSS color attributes. The screenshots are attached to the Allure report for manual
-        visual verification.
+        This test extracts RGB color values from the color box screenshot to verify
+        that the color changes when a new color is selected from the dropdown.
 
         Args:
             color: The color name to select from dropdown.
@@ -59,23 +67,25 @@ class TestWheelPickerDemo:
             - Color can be selected from dropdown
             - Dropdown value updates to selected color
             - Current color text displays the selected color
-            - Color box visual state is captured for verification
+            - Color box RGB values match the expected color
         """
         # Act - select the color
         wheel_picker_demo_page.select_color(color)
 
-        # Capture the visual state of the color box after selection
-        wheel_picker_demo_page.capture_color_box_screenshot()
+        # Capture the RGB color values from the color box after selection
+        rgb_color = wheel_picker_demo_page.capture_color_box_screenshot()
 
-        # Assert - verify the color was selected
+        # Assert - verify the color was selected and RGB values match expected
         actual = {
             "dropdown_value": wheel_picker_demo_page.color_dropdown_value,
             "color_text_contains": color in wheel_picker_demo_page.current_color_text,
+            "rgb_color": rgb_color,
         }
 
         expected = {
             "dropdown_value": color,
             "color_text_contains": True,
+            "rgb_color": BOX_COLORS_MAP[color],
         }
 
         assert actual == expected, f"Color selection failed for {color}: {actual}"

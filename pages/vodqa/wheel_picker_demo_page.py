@@ -38,14 +38,15 @@ class WheelPickerDemoPage(HeaderBarComponent):
     def color_dropdown_value(self) -> str:
         return self.get_element_text(WheelPickerDemoLocators.COLOR_DROPDOWN)
 
-    @allure.step("the user captures the color box visual state")
-    def capture_color_box_screenshot(self) -> bytes:
-        """Captures a screenshot of the color box element for visual verification.
+    @allure.step("the user captures the color box visual state and extracts RGB color")
+    def capture_color_box_screenshot(self) -> Tuple[int, int, int]:
+        """Captures a screenshot of the color box element and extracts its RGB color.
 
         Returns:
-            bytes: PNG screenshot data of the color box element.
+            Tuple[int, int, int]: RGB color values as (red, green, blue).
         """
-        return self.capture_element_screenshot(WheelPickerDemoLocators.CURRENT_COLOR_BOX, "color_box")
+        filepath = self.capture_element_screenshot(WheelPickerDemoLocators.CURRENT_COLOR_BOX, "color_box")
+        return self.get_rgb_from_image(filepath)
 
     @allure.step("the user selects '{color_name}' from color dropdown")
     def select_color(self, color_name: str) -> None:
