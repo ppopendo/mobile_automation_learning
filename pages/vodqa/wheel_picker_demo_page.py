@@ -46,8 +46,7 @@ class WheelPickerDemoPage(HeaderBarComponent):
             Tuple[int, int, int]: RGB color values as (red, green, blue).
         """
         filepath = self.capture_element_screenshot(WheelPickerDemoLocators.CURRENT_COLOR_BOX, "color_box")
-        rgb_color = self.get_rgb_from_image(filepath)
-        return rgb_color
+        return self.get_rgb_from_image(filepath)
 
     @allure.step("the user selects '{color_name}' from color dropdown")
     def select_color(self, color_name: str) -> None:

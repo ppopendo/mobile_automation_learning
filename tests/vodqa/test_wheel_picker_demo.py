@@ -8,6 +8,15 @@ import pytest
 
 from pages.vodqa.wheel_picker_demo_page import WheelPickerDemoPage
 
+# Color map for expected RGB values of the color box
+# These are the expected RGB values when each color is selected
+BOX_COLORS_MAP = {
+    "Red": (255, 0, 0),
+    "Green": (0, 255, 0),
+    "Blue": (0, 0, 255),
+    "Black": (0, 0, 0),
+}
+
 
 @allure.feature("VodQA Samples")
 @allure.story("Wheel Picker Demo")
@@ -58,7 +67,7 @@ class TestWheelPickerDemo:
             - Color can be selected from dropdown
             - Dropdown value updates to selected color
             - Current color text displays the selected color
-            - Color box RGB values can be extracted
+            - Color box RGB values match the expected color
         """
         # Act - select the color
         wheel_picker_demo_page.select_color(color)
@@ -66,17 +75,17 @@ class TestWheelPickerDemo:
         # Capture the RGB color values from the color box after selection
         rgb_color = wheel_picker_demo_page.capture_color_box_screenshot()
 
-        # Assert - verify the color was selected and RGB values are valid
+        # Assert - verify the color was selected and RGB values match expected
         actual = {
             "dropdown_value": wheel_picker_demo_page.color_dropdown_value,
             "color_text_contains": color in wheel_picker_demo_page.current_color_text,
-            "has_valid_rgb": isinstance(rgb_color, tuple) and len(rgb_color) == 3,
+            "rgb_color": rgb_color,
         }
 
         expected = {
             "dropdown_value": color,
             "color_text_contains": True,
-            "has_valid_rgb": True,
+            "rgb_color": BOX_COLORS_MAP[color],
         }
 
         assert actual == expected, f"Color selection failed for {color}: {actual}"

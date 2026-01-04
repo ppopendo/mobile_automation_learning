@@ -253,10 +253,15 @@ class BasePage:
                 width, height = img.size
 
                 # Validate image size - need at least 4x4 to create a center region
+                # We divide by 4 to get 25% from each side (width//4), which means we need
+                # at least 4 pixels to have a non-empty center region after cropping
                 if width < 4 or height < 4:
                     raise ValueError(f"Image is too small ({width}x{height}). Minimum size is 4x4 pixels.")
 
                 # Calculate center region (middle 50% of the image)
+                # Dividing by 4 gives us 25% margin on each side: left=25%, right=75%
+                # This crops out the outer 25% from all sides, leaving the center 50% region
+                # Example: for 100px width -> left=25px, right=75px -> center region = 50px
                 center_region = img.crop((width // 4, height // 4, width - width // 4, height - height // 4))
 
                 # Get all pixels from the center region and calculate average RGB values
@@ -267,6 +272,9 @@ class BasePage:
                 if pixel_count == 0:
                     raise ValueError("No pixels found in the center region of the image.")
 
+                # Calculate average RGB by summing all R, G, B values separately and dividing by pixel count
+                # pixel[0] = Red, pixel[1] = Green, pixel[2] = Blue
+                # This gives us the dominant/average color in the center region
                 return (
                     round(sum(pixel[0] for pixel in pixels) / pixel_count),
                     round(sum(pixel[1] for pixel in pixels) / pixel_count),
