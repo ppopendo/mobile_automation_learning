@@ -1,0 +1,77 @@
+from dataclasses import dataclass, field
+from typing import Tuple
+
+import allure
+from appium.webdriver.common.appiumby import AppiumBy
+
+from pages.vodqa.header_bar_component import HeaderBarComponent
+
+
+@dataclass(frozen=True)
+class WheelPickerDemoLocators:
+    CURRENT_COLOR_TEXT: Tuple[str, str] = field(
+        default=(AppiumBy.XPATH, "//*[contains(@text,' Current Color: ') ]"), init=False
+    )
+    CURRENT_COLOR_BOX: Tuple[str, str] = field(
+        default=(
+            AppiumBy.XPATH,
+            "//android.widget.FrameLayout[@resource-id='android:id/content']"
+            "/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup[1]"
+            "/android.view.ViewGroup/android.view.ViewGroup",
+        ),
+        init=False,
+    )
+    COLOR_DROPDOWN: Tuple[str, str] = field(default=(AppiumBy.ID, "android:id/text1"), init=False)
+
+    @staticmethod
+    def color_option_locator(color_name: str) -> Tuple[str, str]:
+        """Generate locator for color option by name.
+
+        Args:
+            color_name: The name of the color option (e.g., 'Red', 'Green', 'Blue').
+
+        Returns:
+            Tuple[str, str]: Locator tuple for the color option.
+        """
+        return AppiumBy.XPATH, f"//*[@text='{color_name}']"
+
+
+class WheelPickerDemoPage(HeaderBarComponent):
+    """Page object for the Wheel Picker Demo screen, providing interactions with
+    the current color display, color dropdown, and color box visual state.
+    """
+
+    def wait_until_page_is_loaded(self) -> None:
+        self.wait_until_component_is_loaded(title="Wheel Picker Demo")
+
+    @property
+    @allure.step("retrieving current color text")
+    def current_color_text(self) -> str:
+        return self.get_element_text(WheelPickerDemoLocators.CURRENT_COLOR_TEXT)
+
+    @property
+    @allure.step("retrieving color dropdown value")
+    def color_dropdown_value(self) -> str:
+        return self.get_element_text(WheelPickerDemoLocators.COLOR_DROPDOWN)
+
+    @allure.step("the user captures the color box visual state and extracts RGB color")
+    def capture_color_box_screenshot(self) -> Tuple[int, int, int]:
+        """Captures a screenshot of the color box element and extracts its RGB color.
+
+        Returns:
+            Tuple[int, int, int]: RGB color values as (red, green, blue).
+        """
+        filepath = self.capture_element_screenshot(WheelPickerDemoLocators.CURRENT_COLOR_BOX, "color_box")
+        return self.get_rgb_from_image(filepath)
+
+    @allure.step("the user selects '{color_name}' from color dropdown")
+    def select_color(self, color_name: str) -> None:
+        """Selects a color from the dropdown.
+
+        Args:
+            color_name: The name of the color to select (e.g., 'Red', 'Green', 'Blue').
+        """
+        # Open the dropdown
+        self.tap_element(WheelPickerDemoLocators.COLOR_DROPDOWN)
+        # Select the color option
+        self.tap_element(WheelPickerDemoLocators.color_option_locator(color_name))
