@@ -29,6 +29,16 @@ class WebViewLocators:
         default=(AppiumBy.XPATH, "//android.widget.TextView[@text='More']"), init=False
     )
     SEARCH_INPUT: Tuple[str, str] = field(default=(AppiumBy.XPATH, "//android.widget.EditText"), init=False)
+    SEARCH_RESULT_ITEM: Tuple[str, str] = field(
+        default=(AppiumBy.XPATH, "//android.view.View[@text='{search_value}']"),
+        init=False,
+        metadata={
+            "doc": (
+                "This locator is a format string and should not be used directly. "
+                "Format the locator with the required search_value parameter in the get_search_results_count method."
+            )
+        },
+    )
 
 
 class WebViewPage(BaseAppiumGestures, HeaderBarComponent):
@@ -95,3 +105,20 @@ class WebViewPage(BaseAppiumGestures, HeaderBarComponent):
         self.scroll_element_into_view(WebViewLocators.SEARCH_INPUT)
         self.tap_element(WebViewLocators.SEARCH_INPUT)
         self.safe_send_keys(WebViewLocators.SEARCH_INPUT, search_value)
+
+    @allure.step("the user gets the count of search results for '{search_value}'")
+    def get_search_results_count(self, search_value: str) -> int:
+        """Get the count of search result items matching the search value.
+
+        Args:
+            search_value: The text value to search for in results.
+
+        Returns:
+            int: The number of elements found matching the search value.
+        """
+        search_result_locator = (
+            WebViewLocators.SEARCH_RESULT_ITEM[0],
+            WebViewLocators.SEARCH_RESULT_ITEM[1].format(search_value=search_value),
+        )
+        elements = self._driver.find_elements(*search_result_locator)
+        return len(elements)
