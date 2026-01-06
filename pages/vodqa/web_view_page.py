@@ -1,7 +1,9 @@
-from dataclasses import field, dataclass
+from dataclasses import dataclass, field
 from typing import Tuple
+
 import allure
 from appium.webdriver.common.appiumby import AppiumBy
+
 from pages.base_appium_gestures import BaseAppiumGestures
 from pages.vodqa.header_bar_component import HeaderBarComponent
 
@@ -19,7 +21,7 @@ class WebViewLocators:
     )
     SEARCH_INPUT: Tuple[str, str] = field(default=(AppiumBy.XPATH, "//android.widget.EditText"), init=False)
     SEARCH_RESULT_ITEM: Tuple[str, str] = field(
-        default=(AppiumBy.XPATH, "//android.view.View[@text='{search_value}}']"), init=False
+        default=(AppiumBy.XPATH, "//android.view.View[@text='{search_value}']"), init=False
     )
 
 
@@ -51,4 +53,4 @@ class WebViewPage(BaseAppiumGestures, HeaderBarComponent):
     def enter_search_value(self, search_value: str) -> None:
         self.scroll_element_into_view(WebViewLocators.SEARCH_INPUT)
         self.tap_element(WebViewLocators.SEARCH_INPUT)
-        self.send_keys(WebViewLocators.SEARCH_RESULT_ITEM, search_value)
+        self.safe_send_keys(WebViewLocators.SEARCH_INPUT, search_value)
