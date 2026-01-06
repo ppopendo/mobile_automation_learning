@@ -94,6 +94,11 @@ class SamplesListPage(BaseAppiumGestures, HeaderBarComponent):
         """Taps on the 'Native View' sample in the samples list."""
         self.tap_element(SamplesListLocators.NATIVE_VIEW)
 
+    @allure.step("the user taps on the 'Web View' sample")
+    def tap_web_view(self) -> None:
+        """Taps on the 'Web View' sample in the samples list."""
+        self.tap_element(SamplesListLocators.WEB_VIEW)
+
     @allure.step("the user scrolls to sample '{sample_name}'")
     def swipe_up_and_validate_sample_name(self, sample_name: str) -> None:
         """Scrolls to and validates a sample by name using the _SAMPLE_MAPPING.

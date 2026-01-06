@@ -99,6 +99,32 @@ class BasePage:
             except TimeoutException as exc:
                 raise TimeoutException(f"❌ Element {locator} did not meet condition within {timeout_value}s") from exc
 
+    def switch_to_webview_context(self, timeout: int = 10) -> None:
+        """Switch to the WebView context if available.
+
+        Args:
+            timeout: Maximum time in seconds to wait for WebView context to be available.
+
+        Raises:
+            TimeoutException: If WebView context is not found within the timeout period.
+        """
+        end_time = time.time() + timeout
+        while time.time() < end_time:
+            contexts = self._driver.contexts
+            logger.info(f"Available contexts: {contexts}")
+            for context in contexts:
+                if "WEBVIEW" in context:
+                    self._driver.switch_to.context(context)
+                    logger.info(f"✅ Switched to WebView context: {context}")
+                    return
+            time.sleep(1)
+        raise TimeoutException(f"❌ WebView context not found within {timeout} seconds. Available contexts: {contexts}")
+
+    def switch_to_native_context(self) -> None:
+        """Switch back to the native app context."""
+        self._driver.switch_to.context("NATIVE_APP")
+        logger.info("✅ Switched to NATIVE_APP context")
+
     def safe_send_keys(
         self,
         locator: Tuple[str, str],
