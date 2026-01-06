@@ -3,6 +3,9 @@ from typing import Tuple
 
 import allure
 from appium.webdriver.common.appiumby import AppiumBy
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 from pages.base_appium_gestures import BaseAppiumGestures
 from pages.vodqa.header_bar_component import HeaderBarComponent
@@ -21,7 +24,7 @@ class WebViewLocators:
         metadata={
             "doc": (
                 "This locator is a format string and should not be used directly. "
-                "Format the locator with the required title parameter in the is_news_title_displayed method."
+                "Use the 'news_title_locator' static method to construct the locator with the required title."
             )
         },
     )
@@ -35,17 +38,46 @@ class WebViewLocators:
         metadata={
             "doc": (
                 "This locator is a format string and should not be used directly. "
-                "Format the locator with the required search_value parameter in the get_search_results_count method."
+                "Use the 'search_result_locator' static method to construct the locator with the required search value."
             )
         },
     )
+
+    @staticmethod
+    def news_title_locator(title: str) -> Tuple[str, str]:
+        """
+        Returns the NEWS_TITLE locator tuple with the given title.
+        Args:
+            title (str): The title text to match.
+        Returns:
+            Tuple[str, str]: The locator tuple for the given title.
+        """
+        return (
+            WebViewLocators.NEWS_TITLE[0],
+            WebViewLocators.NEWS_TITLE[1].format(title=title),
+        )
+
+    @staticmethod
+    def search_result_locator(search_value: str) -> Tuple[str, str]:
+        """
+        Returns the SEARCH_RESULT_ITEM locator tuple with the given search value.
+        Args:
+            search_value (str): The search value text to match.
+        Returns:
+            Tuple[str, str]: The locator tuple for the given search value.
+        """
+        return (
+            WebViewLocators.SEARCH_RESULT_ITEM[0],
+            WebViewLocators.SEARCH_RESULT_ITEM[1].format(search_value=search_value),
+        )
 
 
 class WebViewPage(BaseAppiumGestures, HeaderBarComponent):
     """Page object for the Web View screen, providing interactions with
     the Hacker News web content.
-    Before start interacting with this page, ensure that the web view context is set:
-    self.driver.switch_to.context('WEBVIEW_com.vodqareactnative')
+
+    Interactions with this page assume that the appropriate web view context
+    has already been selected by the test setup or shared utilities.
     """
 
     @allure.step("the user waits until the web view page is loaded")
@@ -54,12 +86,6 @@ class WebViewPage(BaseAppiumGestures, HeaderBarComponent):
 
         This method uses the shared header bar component logic to verify that the
         "Webview" screen is displayed before proceeding with further actions.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
         self.wait_until_component_is_loaded(title="Webview")
 
@@ -73,22 +99,12 @@ class WebViewPage(BaseAppiumGestures, HeaderBarComponent):
         Returns:
             bool: True if the news title is displayed, False otherwise.
         """
-        news_title_locator = (
-            WebViewLocators.NEWS_TITLE[0],
-            WebViewLocators.NEWS_TITLE[1].format(title=title),
-        )
+        news_title_locator = WebViewLocators.news_title_locator(title)
         return self.is_element_displayed(news_title_locator)
 
     @allure.step("the user taps on the 'More' link button")
     def tap_more_link_button(self) -> None:
-        """Tap the 'More' link button to load additional content.
-
-        Args:
-            None
-
-        Returns:
-            None
-        """
+        """Tap the 'More' link button to load additional content."""
         self.scroll_element_into_view(WebViewLocators.MORE_LINK_BUTTON)
         self.tap_element(WebViewLocators.MORE_LINK_BUTTON)
 
@@ -98,9 +114,6 @@ class WebViewPage(BaseAppiumGestures, HeaderBarComponent):
 
         Args:
             search_value: The text value to type into the search input.
-
-        Returns:
-            None
         """
         self.scroll_element_into_view(WebViewLocators.SEARCH_INPUT)
         self.tap_element(WebViewLocators.SEARCH_INPUT)
@@ -116,9 +129,11 @@ class WebViewPage(BaseAppiumGestures, HeaderBarComponent):
         Returns:
             int: The number of elements found matching the search value.
         """
-        search_result_locator = (
-            WebViewLocators.SEARCH_RESULT_ITEM[0],
-            WebViewLocators.SEARCH_RESULT_ITEM[1].format(search_value=search_value),
-        )
-        elements = self._driver.find_elements(*search_result_locator)
-        return len(elements)
+        search_result_locator = WebViewLocators.search_result_locator(search_value)
+        try:
+            elements = WebDriverWait(self._driver, self._short_timeout).until(
+                EC.presence_of_all_elements_located(search_result_locator)
+            )
+            return len(elements)
+        except TimeoutException:
+            return 0
