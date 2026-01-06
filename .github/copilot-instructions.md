@@ -1,8 +1,10 @@
 # GitHub Copilot Instructions
 
+> **Purpose**: This file provides context and guidelines for GitHub Copilot to assist with code generation, completion, and review in this repository. It defines project conventions, patterns, and best practices that should be followed.
+
 ## Project Overview
 
-This is a mobile automation testing project using Python with Appium for Android app testing. The project follows the Page Object Model (POM) design pattern.
+This is a mobile automation testing project using Python with Appium for Android app testing. The project follows the Page Object Model (POM) design pattern and emphasizes clean, maintainable, and well-tested code.
 
 ## Tech Stack
 
@@ -18,9 +20,9 @@ This is a mobile automation testing project using Python with Appium for Android
 
 - Line length: 120 characters (configured in Black and Pylint)
 - Use double quotes for strings (Black default)
-- Follow PEP 8 style guide
+- Follow [PEP 8 style guide](https://peps.python.org/pep-0008/)
 - Use type hints for all function parameters and return types
-- All public methods should have docstrings
+- All public methods should have docstrings in [Google style format](https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings)
 
 ### Page Object Pattern
 
@@ -113,11 +115,18 @@ def error_message(self) -> str:
 
 ## Dependencies
 
-When adding new dependencies, add them to `requirements.txt` and ensure compatibility with existing packages.
+When adding new dependencies, add them to `requirements.txt` and ensure compatibility with existing packages. Always check for security vulnerabilities before adding new packages.
 
 ## Pre-commit Hooks
 
 The project uses pre-commit hooks for code quality. Run `pre-commit run --all-files` before committing.
+
+## Additional Resources
+
+- [Appium Documentation](https://appium.io/docs/en/latest/)
+- [pytest Documentation](https://docs.pytest.org/)
+- [Allure Framework](https://docs.qameta.io/allure/)
+- [Python Type Hints](https://docs.python.org/3/library/typing.html)
 
 ## Code Review Agent Instructions
 
