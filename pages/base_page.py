@@ -109,6 +109,7 @@ class BasePage:
             TimeoutException: If WebView context is not found within the timeout period.
         """
         end_time = time.time() + timeout
+        contexts = []
         while time.time() < end_time:
             contexts = self._driver.contexts
             logger.info(f"Available contexts: {contexts}")
