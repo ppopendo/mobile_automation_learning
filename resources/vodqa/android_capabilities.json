@@ -11,5 +11,8 @@
     "deviceReadyTimeout": 120,
     "newCommandTimeout": 90,
     "appWaitDuration": 30000,
-    "appWaitActivity":  "*"
+    "appWaitActivity":  "*",
+    "chromedriverAutodownload": true,
+    "autoWebview": false,
+    "nativeWebScreenshot": true
 }
