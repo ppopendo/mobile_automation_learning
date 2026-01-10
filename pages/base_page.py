@@ -99,6 +99,7 @@ class BasePage:
             except TimeoutException as exc:
                 raise TimeoutException(f"❌ Element {locator} did not meet condition within {timeout_value}s") from exc
 
+    @allure.step("the user switches to webview context")
     def switch_to_webview_context(self, timeout: int = 10) -> None:
         """Switch to the WebView context if available.
 
@@ -108,19 +109,27 @@ class BasePage:
         Raises:
             TimeoutException: If WebView context is not found within the timeout period.
         """
-        end_time = time.time() + timeout
-        contexts = []
-        while time.time() < end_time:
-            contexts = self._driver.contexts
-            logger.info(f"Available contexts: {contexts}")
+
+        def _switch_to_webview(driver: webdriver.Remote) -> bool:
+            """Custom expected condition that switches to the first available WebView context."""
+            contexts = driver.contexts
+            logger.info("Available contexts: %s", contexts)
             for context in contexts:
                 if "WEBVIEW" in context:
-                    self._driver.switch_to.context(context)
-                    logger.info(f"✅ Switched to WebView context: {context}")
-                    return
-            time.sleep(1)
-        raise TimeoutException(f"❌ WebView context not found within {timeout} seconds. Available contexts: {contexts}")
+                    driver.switch_to.context(context)
+                    logger.info("✅ Switched to WebView context: %s", context)
+                    return True
+            return False
 
+        try:
+            WebDriverWait(self._driver, timeout, poll_frequency=1.0).until(_switch_to_webview)
+        except TimeoutException as exc:
+            contexts = self._driver.contexts
+            raise TimeoutException(
+                f"❌ WebView context not found within {timeout} seconds. Available contexts: {contexts}"
+            ) from exc
+
+    @allure.step("the user switches to native context")
     def switch_to_native_context(self) -> None:
         """Switch back to the native app context."""
         self._driver.switch_to.context("NATIVE_APP")

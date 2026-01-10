@@ -6,7 +6,7 @@ Tests verify header display, "More" button functionality, and search capabilitie
 import allure
 import pytest
 
-from pages.vodqa.web_view_page import WebViewLocators, WebViewPage
+from pages.vodqa.web_view_page import WebViewPage
 
 
 @allure.feature("VodQA Samples")
@@ -23,7 +23,7 @@ class TestWebView:
             - Header with text 'Hacker News' is displayed
         """
         actual = {
-            "header_displayed": web_view_page.is_element_displayed(WebViewLocators.HEADER),
+            "header_displayed": web_view_page.is_header_displayed,
         }
 
         expected = {
@@ -45,7 +45,7 @@ class TestWebView:
 
         # Verify header is still displayed
         actual = {
-            "header_displayed": web_view_page.is_element_displayed(WebViewLocators.HEADER),
+            "header_displayed": web_view_page.is_header_displayed,
         }
 
         expected = {
@@ -72,14 +72,4 @@ class TestWebView:
         results_count = web_view_page.get_search_results_count(search_value)
 
         # Verify that we have at least one result
-        actual = {
-            "has_results": results_count > 0,
-            "results_count": results_count,
-        }
-
-        expected = {
-            "has_results": True,
-            "results_count": results_count,  # Dynamic value, just verify it's present
-        }
-
-        assert actual == expected, f"Web View search validation failed: {actual}"
+        assert results_count > 0, f"Expected search results for '{search_value}', but found {results_count}"
