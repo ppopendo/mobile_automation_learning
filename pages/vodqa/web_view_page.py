@@ -4,6 +4,7 @@ from typing import Tuple
 import allure
 from appium.webdriver.common.appiumby import AppiumBy
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -118,6 +119,12 @@ class WebViewPage(BaseAppiumGestures, HeaderBarComponent):
         self.scroll_element_into_view(WebViewLocators.SEARCH_INPUT)
         self.tap_element(WebViewLocators.SEARCH_INPUT)
         self.safe_send_keys(WebViewLocators.SEARCH_INPUT, search_value)
+
+    @allure.step("the user submits the search form")
+    def submit_search(self) -> None:
+        """Submit the search form by pressing Enter."""
+        element = self.wait_for_element(WebViewLocators.SEARCH_INPUT)
+        element.send_keys(Keys.ENTER)
 
     @allure.step("the user gets the count of search results for '{search_value}'")
     def get_search_results_count(self, search_value: str) -> int:

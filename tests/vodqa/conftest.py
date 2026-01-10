@@ -18,6 +18,7 @@ from pages.vodqa.photo_view_page import PhotoViewPage
 from pages.vodqa.samples_list_page import SamplesListPage
 from pages.vodqa.slider_page import SliderPage
 from pages.vodqa.vertical_swiping_page import VerticalSwipingPage
+from pages.vodqa.web_view_page import WebViewPage
 from pages.vodqa.wheel_picker_demo_page import WheelPickerDemoPage
 
 
@@ -175,7 +176,9 @@ def carousel_page(driver: Any, samples_list_page: SamplesListPage) -> Generator[
 
 
 @pytest.fixture
-def wheel_picker_demo_page(driver: Any, samples_list_page: SamplesListPage) -> Generator[WheelPickerDemoPage, None, None]:
+def wheel_picker_demo_page(
+    driver: Any, samples_list_page: SamplesListPage
+) -> Generator[WheelPickerDemoPage, None, None]:
     """Navigate to Wheel Picker Demo page and return page object.
     Handles teardown by navigating back to Samples List.
 
@@ -208,5 +211,26 @@ def native_view_demo_page(driver: Any, samples_list_page: SamplesListPage) -> Ge
     yield page
     # Teardown: Navigate back to Samples List
     with allure.step("Teardown: navigating back to Samples List"):
+        page.tap_back_button()
+        samples_list_page.wait_until_page_is_loaded()
+
+
+@pytest.fixture
+def web_view_page(driver: Any, samples_list_page: SamplesListPage) -> Generator[WebViewPage, None, None]:
+    """Navigate to Web View page and return page object.
+    Handles context switching to WebView and teardown by switching back to native and navigating to Samples List.
+
+    Yields:
+        WebViewPage: Page object for Web View screen.
+    """
+    samples_list_page.swipe_up_and_validate_sample_name("Web View")
+    samples_list_page.tap_web_view()
+    page = WebViewPage(driver)
+    page.switch_to_webview_context()
+    page.wait_until_page_is_loaded()
+    yield page
+    # Teardown: Switch back to native context and navigate back to Samples List
+    with allure.step("Teardown: switching to native context and navigating back to Samples List"):
+        page.switch_to_native_context()
         page.tap_back_button()
         samples_list_page.wait_until_page_is_loaded()
