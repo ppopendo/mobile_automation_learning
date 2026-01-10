@@ -6,7 +6,6 @@ from appium.webdriver.common.appiumby import AppiumBy
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
 
 from pages.base_appium_gestures import BaseAppiumGestures
 from pages.vodqa.header_bar_component import HeaderBarComponent
@@ -74,12 +73,7 @@ class WebViewLocators:
 
 
 class WebViewPage(BaseAppiumGestures, HeaderBarComponent):
-    """Page object for the Web View screen, providing interactions with
-    the Hacker News web content.
-
-    Interactions with this page assume that the appropriate web view context
-    has already been selected by the test setup or shared utilities.
-    """
+    """Page object for the Web View screen, providing interactions with the Hacker News web content."""
 
     @allure.step("the user waits until the web view page is loaded")
     def wait_until_page_is_loaded(self) -> None:
@@ -89,6 +83,12 @@ class WebViewPage(BaseAppiumGestures, HeaderBarComponent):
         "Webview" screen is displayed before proceeding with further actions.
         """
         self.wait_until_component_is_loaded(title="Webview")
+
+    @property
+    @allure.step("checking if header is displayed")
+    def is_header_displayed(self) -> bool:
+        """Check if the 'Hacker News' header is displayed on the page."""
+        return self.is_element_displayed(WebViewLocators.HEADER)
 
     @allure.step("the user checks if news title '{title}' is displayed")
     def is_news_title_displayed(self, title: str) -> bool:
@@ -126,7 +126,7 @@ class WebViewPage(BaseAppiumGestures, HeaderBarComponent):
         element = self.wait_for_element(WebViewLocators.SEARCH_INPUT)
         element.send_keys(Keys.ENTER)
 
-    @allure.step("the user gets the count of search results for '{search_value}'")
+    @allure.step("retrieving the count of search results for '{search_value}'")
     def get_search_results_count(self, search_value: str) -> int:
         """Get the count of search result items matching the search value.
 
@@ -138,8 +138,10 @@ class WebViewPage(BaseAppiumGestures, HeaderBarComponent):
         """
         search_result_locator = WebViewLocators.search_result_locator(search_value)
         try:
-            elements = WebDriverWait(self._driver, self._short_timeout).until(
-                EC.presence_of_all_elements_located(search_result_locator)
+            elements = self.wait_for_element(
+                search_result_locator,
+                condition=EC.presence_of_all_elements_located,
+                timeout=self._short_timeout,
             )
             return len(elements)
         except TimeoutException:
