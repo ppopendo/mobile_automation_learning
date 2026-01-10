@@ -22,15 +22,7 @@ class TestWebView:
         Expected:
             - Header with text 'Hacker News' is displayed
         """
-        actual = {
-            "header_displayed": web_view_page.is_header_displayed,
-        }
-
-        expected = {
-            "header_displayed": True,
-        }
-
-        assert actual == expected, f"Web View header validation failed: {actual}"
+        assert web_view_page.is_header_displayed, "Web View header should be displayed"
 
     @pytest.mark.tcid("TC-22-02")
     @allure.severity(allure.severity_level.NORMAL)
@@ -44,15 +36,7 @@ class TestWebView:
         web_view_page.tap_more_link_button()
 
         # Verify header is still displayed
-        actual = {
-            "header_displayed": web_view_page.is_header_displayed,
-        }
-
-        expected = {
-            "header_displayed": True,
-        }
-
-        assert actual == expected, f"Web View header validation after 'More' click failed: {actual}"
+        assert web_view_page.is_header_displayed, "Web View header should be displayed after clicking 'More' button"
 
     @pytest.mark.tcid("TC-22-03")
     @allure.severity(allure.severity_level.NORMAL)
