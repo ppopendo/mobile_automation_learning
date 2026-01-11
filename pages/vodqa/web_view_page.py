@@ -85,7 +85,7 @@ class WebViewPage(BaseAppiumGestures, HeaderBarComponent):
         self.wait_until_component_is_loaded(title="Webview")
 
     @property
-    @allure.step("checking if header is displayed")
+    @allure.step("retrieving if the 'Hacker News' header is displayed")
     def is_header_displayed(self) -> bool:
         """Check if the 'Hacker News' header is displayed on the page."""
         return self.is_element_displayed(WebViewLocators.HEADER)
