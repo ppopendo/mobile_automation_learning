@@ -4,6 +4,7 @@ from typing import Tuple
 import allure
 from appium.webdriver.common.appiumby import AppiumBy
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support import expected_conditions as EC
 
 from pages.base_appium_gestures import BaseAppiumGestures
 from pages.vodqa.header_bar_component import HeaderBarComponent
@@ -134,7 +135,11 @@ class WebViewPage(BaseAppiumGestures, HeaderBarComponent):
         """
         search_result_locator = WebViewLocators.search_result_locator(search_value)
         try:
-            elements = self.wait_for_all_elements(search_result_locator, timeout=self._short_timeout)
+            elements = self.wait_for_element(
+                search_result_locator,
+                condition=EC.presence_of_all_elements_located,
+                timeout=self._short_timeout,
+            )
             return len(elements)
         except TimeoutException:
             return 0
