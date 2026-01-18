@@ -226,7 +226,6 @@ def web_view_page(driver: Any, samples_list_page: SamplesListPage) -> Generator[
     samples_list_page.swipe_up_and_validate_sample_name("Web View")
     samples_list_page.tap_web_view()
     page = WebViewPage(driver)
-    # page.switch_to_webview_context()
     page.wait_until_page_is_loaded()
     yield page
     # Teardown: Switch back to native context and navigate back to Samples List

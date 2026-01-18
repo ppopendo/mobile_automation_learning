@@ -189,12 +189,12 @@ class BasePage:
 
         if not webview_contexts:
             suggestions = [
-                "1. Upewnij się, że aplikacja ma włączone WebView.setWebContentsDebuggingEnabled(true)",
-                "2. Sprawdź czy jesteś na ekranie zawierającym WebView",
-                "3. Poczekaj dłużej - WebView może potrzebować więcej czasu na załadowanie",
-                "4. Dodaj capability 'chromedriverAutodownload': True",
-                "5. Sprawdź kompatybilność wersji ChromeDriver z WebView na urządzeniu",
-                "6. Dla Android: sprawdź czy Android System WebView jest zaktualizowany",
+                "1. Make sure that the application has WebView.setWebContentsDebuggingEnabled(true) enabled",
+                "2. Verify that you are on a screen that contains a WebView",
+                "3. Wait longer - the WebView may need more time to load",
+                "4. Add the capability 'chromedriverAutodownload': True",
+                "5. Check the ChromeDriver version compatibility with the WebView on the device",
+                "6. For Android: verify that Android System WebView is updated to the latest version",
             ]
             diagnostic_info["suggestions"] = suggestions
             logger.warning("⚠️ No WebView context found!")
@@ -265,7 +265,6 @@ class BasePage:
             TimeoutException: If the element is not found within the timeout period.
         """
         self.safe_send_keys(locator, text, timeout, clear_first)
-        self._driver.hide_keyboard('Go')
         self._driver.press_keycode(66)  # Android keycode for Enter/Go
         logger.info(f"✅ Entered text '{text}' and pressed Go on keyboard")
 
