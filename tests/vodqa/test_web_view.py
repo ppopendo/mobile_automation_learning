@@ -3,6 +3,8 @@ This module contains tests for web view functionality.
 Tests verify header display, "More" button functionality, and search capabilities.
 """
 
+import time
+
 import allure
 import pytest
 
@@ -48,12 +50,68 @@ class TestWebView:
         """
         search_value = "Bluescreen"
 
-        # Scroll to search input, enter search value and press Enter
+        # Scroll to search input, enter search value and press Go
         web_view_page.enter_search_value(search_value)
-        web_view_page.submit_search()
+        if not web_view_page.is_dropdown_stories_displayed():
+            raise ValueError("Dropdown stories not displayed after entering search value.")
 
         # Get the count of search results
         results_count = web_view_page.get_search_results_count(search_value)
 
         # Verify that we have at least one result
-        assert results_count > 0, f"Expected search results for '{search_value}', but found {results_count}"
+        assert results_count >= 2, f"Expected search results for '{search_value}', but found {results_count}"
+
+    @pytest.mark.tcid("TC-22-04")
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.title("Test web view search dropdown displays stories")
+    def test_web_view_search_dropdown_displays_stories(self, web_view_page: WebViewPage) -> None:
+        """Verify that dropdown with stories is displayed after entering search value."""
+        search_value = "Bluescreen"
+
+        # Scroll to search input, enter search value and press Go
+        web_view_page.tap_search_input()
+        web_view_page.enter_search_value(search_value)
+
+        # Verify that we have at least one result
+        assert (
+            web_view_page.is_dropdown_stories_displayed()
+        ), "Dropdown stories should be displayed after entering search value"
+
+    @pytest.mark.tcid("TC-22-05")
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.title("Diagnostic test for WebView context availability")
+    def test_webview_context_diagnostic(self, driver, samples_list_page) -> None:
+        """Diagnostic test to check WebView context availability.
+
+        This test navigates to WebView screen and diagnoses available contexts.
+        Used for troubleshooting when WebView context is not found.
+        """
+        # Navigate to Web View page
+        samples_list_page.swipe_up_and_validate_sample_name("Web View")
+        samples_list_page.tap_web_view()
+
+        # Create page object without switching context
+        page = WebViewPage(driver)
+
+        # Run diagnostics
+        time.sleep(77)  # Wait for WebView to load properly
+        diagnostic_info = page.diagnose_webview_contexts()
+
+        # Print diagnostic info
+        print(f"\n{'='*60}")
+        print("🔍 WebView Diagnostic Results:")
+        print(f"{'='*60}")
+        print(f"Current context: {diagnostic_info['current_context']}")
+        print(f"Available contexts: {diagnostic_info['available_contexts']}")
+        print(f"WebView available: {diagnostic_info['webview_available']}")
+        if diagnostic_info['suggestions']:
+            print("\n⚠️ Suggestions to fix:")
+            for suggestion in diagnostic_info['suggestions']:
+                print(f"   {suggestion}")
+        print(f"{'='*60}\n")
+
+        # Assert - this test passes if diagnostics run, fails if WebView is not available
+        assert diagnostic_info['webview_available'], (
+            f"WebView context not available. Only found: {diagnostic_info['available_contexts']}. "
+            f"The app may not have WebView debugging enabled."
+        )

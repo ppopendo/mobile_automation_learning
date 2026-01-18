@@ -33,7 +33,7 @@ class WebViewLocators:
     )
     SEARCH_INPUT: Tuple[str, str] = field(default=(AppiumBy.XPATH, "//android.widget.EditText"), init=False)
     SEARCH_RESULT_ITEM: Tuple[str, str] = field(
-        default=(AppiumBy.XPATH, "//android.view.View[@text='{search_value}']"),
+        default=(AppiumBy.XPATH, "//android.view.View[contains(@text, '{search_value}')]"),
         init=False,
         metadata={
             "doc": (
@@ -42,6 +42,9 @@ class WebViewLocators:
             )
         },
     )
+    DROPDOWN_STORIES: Tuple[str, str] = field(default=(AppiumBy.ID, "downshift-0-label"), init=False)
+    DROPDOWN_POPULARITY: Tuple[str, str] = field(default=(AppiumBy.ID, "downshift-1-label"), init=False)
+    DROPDOWN_ALL_TIME: Tuple[str, str] = field(default=(AppiumBy.ID, "downshift-2-label"), init=False)
 
     @staticmethod
     def news_title_locator(title: str) -> Tuple[str, str]:
@@ -106,7 +109,7 @@ class WebViewPage(BaseAppiumGestures, HeaderBarComponent):
     @allure.step("the user taps on the 'More' link button")
     def tap_more_link_button(self) -> None:
         """Tap the 'More' link button to load additional content."""
-        self.scroll_element_into_view(WebViewLocators.MORE_LINK_BUTTON)
+        self.scroll_element_into_view(WebViewLocators.MORE_LINK_BUTTON, max_scrolls=22)
         self.tap_element(WebViewLocators.MORE_LINK_BUTTON)
 
     @allure.step("the user enters search value '{search_value}' in the search input")
@@ -116,9 +119,8 @@ class WebViewPage(BaseAppiumGestures, HeaderBarComponent):
         Args:
             search_value: The text value to type into the search input.
         """
-        self.scroll_element_into_view(WebViewLocators.SEARCH_INPUT)
-        self.tap_element(WebViewLocators.SEARCH_INPUT)
-        self.safe_send_keys(WebViewLocators.SEARCH_INPUT, search_value)
+        self.scroll_element_into_view(WebViewLocators.SEARCH_INPUT, max_scrolls=22)
+        self.send_keys_and_press_go(WebViewLocators.SEARCH_INPUT, search_value)
 
     @allure.step("the user submits the search form")
     def submit_search(self) -> None:
@@ -146,3 +148,22 @@ class WebViewPage(BaseAppiumGestures, HeaderBarComponent):
             return len(elements)
         except TimeoutException:
             return 0
+
+    def is_dropdown_stories_displayed(self) -> bool:
+        """Check if the 'Stories' dropdown is displayed."""
+        self.wait_for_element(WebViewLocators.DROPDOWN_STORIES)
+        return self.is_element_displayed(WebViewLocators.DROPDOWN_STORIES)
+
+    def is_dropdown_popularity_displayed(self) -> bool:
+        """Check if the 'Popularity' dropdown is displayed."""
+        return self.is_element_displayed(WebViewLocators.DROPDOWN_POPULARITY)
+
+    def is_dropdown_all_time_displayed(self) -> bool:
+        """Check if the 'All Time' dropdown is displayed."""
+        return self.is_element_displayed(WebViewLocators.DROPDOWN_ALL_TIME)
+
+    @allure.step("the user taps the search input field")
+    def tap_search_input(self) -> None:
+        """Tap the search input field to focus it."""
+        self.scroll_element_into_view(WebViewLocators.SEARCH_INPUT, max_scrolls=22)
+        self.tap_element(WebViewLocators.SEARCH_INPUT)

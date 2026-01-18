@@ -6,8 +6,8 @@ from datetime import datetime
 from typing import Callable, List, Optional, Tuple
 
 import allure
-from appium import webdriver
 from PIL import Image
+from appium import webdriver
 from selenium.common.exceptions import (
     NoSuchElementException,
     StaleElementReferenceException,
@@ -135,6 +135,85 @@ class BasePage:
         self._driver.switch_to.context("NATIVE_APP")
         logger.info("✅ Switched to NATIVE_APP context")
 
+    @property
+    @allure.step("retrieving current context")
+    def current_context(self) -> str:
+        """Get the current context (NATIVE_APP or WEBVIEW_xxx).
+
+        Returns:
+            str: The current context name.
+        """
+        return self._driver.current_context
+
+    @property
+    @allure.step("retrieving available contexts")
+    def available_contexts(self) -> List[str]:
+        """Get all available contexts.
+
+        Returns:
+            List[str]: List of available context names.
+        """
+        return self._driver.contexts
+
+    @allure.step("the user diagnoses webview availability")
+    def diagnose_webview_contexts(self) -> dict:
+        """Diagnose WebView availability and return detailed information.
+
+        This method helps troubleshoot issues when WebView context is not available.
+        It checks for common problems and provides actionable suggestions.
+
+        Returns:
+            dict: Diagnostic information including:
+                - current_context: The current context
+                - available_contexts: List of all available contexts
+                - webview_available: Boolean indicating if WebView is available
+                - suggestions: List of troubleshooting suggestions if WebView is not found
+        """
+        contexts = self._driver.contexts
+        current = self._driver.current_context
+        webview_contexts = [ctx for ctx in contexts if "WEBVIEW" in ctx]
+
+        diagnostic_info = {
+            "current_context": current,
+            "available_contexts": contexts,
+            "webview_available": len(webview_contexts) > 0,
+            "webview_contexts": webview_contexts,
+            "suggestions": [],
+        }
+
+        logger.info("=" * 60)
+        logger.info("🔍 WebView Diagnostic Report")
+        logger.info("=" * 60)
+        logger.info(f"Current context: {current}")
+        logger.info(f"Available contexts: {contexts}")
+
+        if not webview_contexts:
+            suggestions = [
+                "1. Upewnij się, że aplikacja ma włączone WebView.setWebContentsDebuggingEnabled(true)",
+                "2. Sprawdź czy jesteś na ekranie zawierającym WebView",
+                "3. Poczekaj dłużej - WebView może potrzebować więcej czasu na załadowanie",
+                "4. Dodaj capability 'chromedriverAutodownload': True",
+                "5. Sprawdź kompatybilność wersji ChromeDriver z WebView na urządzeniu",
+                "6. Dla Android: sprawdź czy Android System WebView jest zaktualizowany",
+            ]
+            diagnostic_info["suggestions"] = suggestions
+            logger.warning("⚠️ No WebView context found!")
+            for suggestion in suggestions:
+                logger.info(f"   {suggestion}")
+        else:
+            logger.info(f"✅ WebView contexts found: {webview_contexts}")
+
+        logger.info("=" * 60)
+
+        # Attach diagnostic info to Allure report
+        allure.attach(
+            str(diagnostic_info),
+            name="WebView Diagnostic Report",
+            attachment_type=allure.attachment_type.TEXT,
+        )
+
+        return diagnostic_info
+
     def safe_send_keys(
         self,
         locator: Tuple[str, str],
@@ -162,6 +241,33 @@ class BasePage:
                     time.sleep(0.3)
                     continue
                 raise
+
+    @allure.step("the user enters text and presses Go on keyboard")
+    def send_keys_and_press_go(
+        self,
+        locator: Tuple[str, str],
+        text: str,
+        timeout: Optional[int] = None,
+        clear_first: bool = True,
+    ) -> None:
+        """Enters text into a field and presses the Go button on the device keyboard.
+
+        This method is useful for search fields or forms where pressing "Go" on the
+        keyboard triggers form submission or search action.
+
+        Args:
+            locator: Tuple of (By strategy, locator value) to identify the input field.
+            text: The text to enter into the field.
+            timeout: Maximum time in seconds to wait for element visibility (default: class timeout).
+            clear_first: Whether to clear the field before entering text (default: True).
+
+        Raises:
+            TimeoutException: If the element is not found within the timeout period.
+        """
+        self.safe_send_keys(locator, text, timeout, clear_first)
+        self._driver.hide_keyboard('Go')
+        self._driver.press_keycode(66)  # Android keycode for Enter/Go
+        logger.info(f"✅ Entered text '{text}' and pressed Go on keyboard")
 
     def tap_element(self, locator: Tuple[str, str]):
         """
