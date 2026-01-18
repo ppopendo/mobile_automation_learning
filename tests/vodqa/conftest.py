@@ -218,7 +218,7 @@ def native_view_demo_page(driver: Any, samples_list_page: SamplesListPage) -> Ge
 @pytest.fixture
 def web_view_page(driver: Any, samples_list_page: SamplesListPage) -> Generator[WebViewPage, None, None]:
     """Navigate to Web View page and return page object.
-    Handles context switching to WebView and teardown by switching back to native and navigating to Samples List.
+    Teardown switches back to native context and navigates to Samples List.
 
     Yields:
         WebViewPage: Page object for Web View screen.
