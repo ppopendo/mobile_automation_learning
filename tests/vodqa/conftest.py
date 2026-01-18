@@ -227,6 +227,7 @@ def web_view_page(driver: Any, samples_list_page: SamplesListPage) -> Generator[
     samples_list_page.tap_web_view()
     page = WebViewPage(driver)
     page.wait_until_page_is_loaded()
+    page.switch_to_webview_context()
     yield page
     # Teardown: Switch back to native context and navigate back to Samples List
     with allure.step("Teardown: switching to native context and navigating back to Samples List"):
