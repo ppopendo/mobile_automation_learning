@@ -159,12 +159,12 @@ class WebViewPage(BaseAppiumGestures, HeaderBarComponent):
     @allure.step("retrieving if 'Popularity' dropdown is displayed")
     def is_dropdown_popularity_displayed(self) -> bool:
         """Check if the 'Popularity' dropdown is displayed."""
-        return self.is_element_displayed(WebViewLocators.DROPDOWN_POPULARITY)
+        return self.is_element_displayed(WebViewLocators.DROPDOWN_POPULARITY, timeout=self._short_timeout)
 
     @allure.step("retrieving if 'All Time' dropdown is displayed")
     def is_dropdown_all_time_displayed(self) -> bool:
         """Check if the 'All Time' dropdown is displayed."""
-        return self.is_element_displayed(WebViewLocators.DROPDOWN_ALL_TIME)
+        return self.is_element_displayed(WebViewLocators.DROPDOWN_ALL_TIME, timeout=self._short_timeout)
 
     @allure.step("the user taps the search input field")
     def tap_search_input(self) -> None:
