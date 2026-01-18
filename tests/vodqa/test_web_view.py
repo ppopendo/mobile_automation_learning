@@ -73,6 +73,7 @@ class TestWebView:
         search_value = "Bluescreen"
 
         # Scroll to search input, enter search value and press Go
+        web_view_page.tap_search_input()
         web_view_page.enter_search_value(search_value)
 
         # Verify that we have at least one result
@@ -83,7 +84,7 @@ class TestWebView:
     @pytest.mark.tcid("TC-22-05")
     @allure.severity(allure.severity_level.NORMAL)
     @allure.title("Diagnostic test for WebView context availability")
-    def test_webview_context_diagnostic(self, driver, samples_list_page: SamplesListPage) -> None:
+    def test_webview_context_diagnostic(self, samples_list_page: SamplesListPage) -> None:
         """Diagnostic test to check WebView context availability.
 
         This test navigates to WebView screen and diagnoses available contexts.
@@ -94,7 +95,7 @@ class TestWebView:
         samples_list_page.tap_web_view()
 
         # Create page object without switching context
-        page = WebViewPage(driver)
+        page = WebViewPage(samples_list_page._driver)
 
         # Run diagnostics
         diagnostic_info = page.diagnose_webview_contexts()
