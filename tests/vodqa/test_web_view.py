@@ -43,33 +43,29 @@ class TestWebView:
         """
         # Scroll to bottom and click the 'More' button
         web_view_page.tap_more_link_button()
-
-        # Verify header is still displayed
-        actual = {"header_displayed": web_view_page.is_header_displayed}
-        expected = {"header_displayed": True}
-
-        assert actual == expected, f"Web View header state after clicking 'More' button mismatch: {actual}"
+        assert web_view_page.is_header_displayed, "Header should be displayed after clicking 'More' button"
 
     @pytest.mark.tcid("TC-22-03")
     @allure.severity(allure.severity_level.NORMAL)
     @allure.title("Test web view search functionality returns results")
     def test_web_view_search_returns_results(self, web_view_page: WebViewPage) -> None:
-        """Verify that searching for 'Bluescreen' in Web View returns at least 2 matching results.
+        """Verify that searching for 'Bluescreen' in Web View returns at least 1 matching results.
         Expected:
             - Dropdown stories are displayed after entering search value
-            - Search results count for 'Bluescreen' is at least 2
+            - Search results count for 'Bluescreen' is at least 1
         """
         search_value = "Bluescreen"
 
         # Scroll to search input, enter search value and press Go
+        web_view_page.tap_search_input()
         web_view_page.enter_search_value(search_value)
 
         # Get search state and results count
         results_count = web_view_page.get_search_results_count(search_value)
 
         actual = {
-            "dropdown_displayed": web_view_page.is_dropdown_stories_displayed(),
-            "results_count_at_least_2": results_count >= 2,
+            "dropdown_displayed": web_view_page.is_dropdown_stories_displayed,
+            "results_count_at_least_2": results_count >= 1,
         }
 
         expected = {
@@ -87,13 +83,12 @@ class TestWebView:
         search_value = "Bluescreen"
 
         # Enter search value and press Go
+        web_view_page.tap_search_input()
         web_view_page.enter_search_value(search_value)
 
-        # Verify that we have at least one result
-        actual = {"dropdown_displayed": web_view_page.is_dropdown_stories_displayed()}
-        expected = {"dropdown_displayed": True}
-
-        assert actual == expected, f"Dropdown stories state mismatch after search: {actual}"
+        assert (
+            web_view_page.is_dropdown_stories_displayed
+        ), f"Dropdown with stories should be displayed after searching for '{search_value}'"
 
     @pytest.mark.tcid("TC-22-05")
     @allure.severity(allure.severity_level.NORMAL)

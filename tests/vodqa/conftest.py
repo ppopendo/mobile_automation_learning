@@ -7,6 +7,7 @@ from typing import Any, Generator
 
 import allure
 import pytest
+import logging
 
 from pages.vodqa.carousel_page import CarouselPage
 from pages.vodqa.double_tap_page import DoubleTapPage
@@ -20,6 +21,8 @@ from pages.vodqa.slider_page import SliderPage
 from pages.vodqa.vertical_swiping_page import VerticalSwipingPage
 from pages.vodqa.web_view_page import WebViewPage
 from pages.vodqa.wheel_picker_demo_page import WheelPickerDemoPage
+
+logger = logging.getLogger(__name__)
 
 
 @pytest.fixture(scope="session")
@@ -227,7 +230,7 @@ def web_view_page(driver: Any, samples_list_page: SamplesListPage) -> Generator[
     samples_list_page.tap_web_view()
     page = WebViewPage(driver)
     page.wait_until_page_is_loaded()
-    page.switch_to_webview_context()
+    # page.switch_to_webview_context()
     yield page
     # Teardown: Switch back to native context and navigate back to Samples List
     with allure.step("Teardown: switching to native context and navigating back to Samples List"):

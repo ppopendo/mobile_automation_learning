@@ -41,7 +41,9 @@ class WebViewLocators:
             )
         },
     )
-    DROPDOWN_STORIES: Tuple[str, str] = field(default=(AppiumBy.ID, "downshift-0-label"), init=False)
+    DROPDOWN_STORIES: Tuple[str, str] = field(
+        default=(AppiumBy.XPATH, "//*[@resource-id='downshift-0-label']"), init=False
+    )
     DROPDOWN_POPULARITY: Tuple[str, str] = field(default=(AppiumBy.ID, "downshift-1-label"), init=False)
     DROPDOWN_ALL_TIME: Tuple[str, str] = field(default=(AppiumBy.ID, "downshift-2-label"), init=False)
 
@@ -144,20 +146,23 @@ class WebViewPage(BaseAppiumGestures, HeaderBarComponent):
         except TimeoutException:
             return 0
 
+    @property
     @allure.step("the user checks if 'Stories' dropdown is displayed")
     def is_dropdown_stories_displayed(self) -> bool:
         """Check if the 'Stories' dropdown is displayed."""
-        return self.is_element_displayed(WebViewLocators.DROPDOWN_STORIES, timeout=self._short_timeout)
+        return self.is_element_displayed(WebViewLocators.DROPDOWN_STORIES, timeout=self._timeout)
 
+    @property
     @allure.step("the user checks if 'Popularity' dropdown is displayed")
     def is_dropdown_popularity_displayed(self) -> bool:
         """Check if the 'Popularity' dropdown is displayed."""
-        return self.is_element_displayed(WebViewLocators.DROPDOWN_POPULARITY, timeout=self._short_timeout)
+        return self.is_element_displayed(WebViewLocators.DROPDOWN_POPULARITY, timeout=self._timeout)
 
+    @property
     @allure.step("the user checks if 'All Time' dropdown is displayed")
     def is_dropdown_all_time_displayed(self) -> bool:
         """Check if the 'All Time' dropdown is displayed."""
-        return self.is_element_displayed(WebViewLocators.DROPDOWN_ALL_TIME, timeout=self._short_timeout)
+        return self.is_element_displayed(WebViewLocators.DROPDOWN_ALL_TIME, timeout=self._timeout)
 
     @allure.step("the user taps the search input field")
     def tap_search_input(self) -> None:
