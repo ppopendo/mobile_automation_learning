@@ -29,5 +29,5 @@ This document tracks remaining tasks, improvements, and technical debt for the m
 
 ## 📝 Documentation
 - [ ] **Docstrings**: Ensure all new Page Objects (`WebViewPage`, `NativeViewDemoPage`, etc.) have full Google-style docstrings.
-- [ ] **README**: Update the main project README with instructions on running the new test suites (`pytest tests/vodqa/test_web_view.py`, etc.).
+- [x] **README**: Update the main project README with instructions on running the new test suites (`pytest tests/vodqa/test_web_view.py`, etc.).
 

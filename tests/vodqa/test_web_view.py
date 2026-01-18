@@ -7,6 +7,7 @@ import logging
 
 import allure
 import pytest
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
 from pages.vodqa.samples_list_page import SamplesListPage
 from pages.vodqa.web_view_page import WebViewPage
@@ -49,21 +50,31 @@ class TestWebView:
     def test_web_view_search_returns_results(self, web_view_page: WebViewPage) -> None:
         """Verify that searching for 'Bluescreen' in Web View returns at least 2 matching results.
         Expected:
+            - Dropdown stories are displayed after entering search value
             - Search results count for 'Bluescreen' is at least 2
         """
         search_value = "Bluescreen"
 
         # Scroll to search input, enter search value and press Go
         web_view_page.enter_search_value(search_value)
-        assert (
-            web_view_page.is_dropdown_stories_displayed()
-        ), "Dropdown stories not displayed after entering search value."
 
-        # Get the count of search results
+        # Get search state and results count
         results_count = web_view_page.get_search_results_count(search_value)
 
-        # Verify that we have at least 2 results
-        assert results_count >= 2, f"Expected at least 2 search results for '{search_value}', but found {results_count}"
+        actual = {
+            "dropdown_displayed": web_view_page.is_dropdown_stories_displayed(),
+            "results_count": results_count,
+        }
+
+        expected = {
+            "dropdown_displayed": True,
+            "results_count": 2,
+        }
+
+        assert (
+            actual["dropdown_displayed"] == expected["dropdown_displayed"]
+            and actual["results_count"] >= expected["results_count"]
+        ), f"Search state mismatch. Expected dropdown displayed and at least {expected['results_count']} results, got: {actual}"
 
     @pytest.mark.tcid("TC-22-04")
     @allure.severity(allure.severity_level.NORMAL)
@@ -72,8 +83,7 @@ class TestWebView:
         """Verify that dropdown with stories is displayed after entering search value."""
         search_value = "Bluescreen"
 
-        # Scroll to search input, enter search value and press Go
-        web_view_page.tap_search_input()
+        # Enter search value and press Go
         web_view_page.enter_search_value(search_value)
 
         # Verify that we have at least one result
@@ -95,7 +105,7 @@ class TestWebView:
         samples_list_page.tap_web_view()
 
         # Create page object without switching context
-        page = WebViewPage(samples_list_page._driver)
+        page = WebViewPage(samples_list_page.driver)
 
         # Run diagnostics
         diagnostic_info = page.diagnose_webview_contexts()
@@ -114,7 +124,7 @@ class TestWebView:
         try:
             page.tap_back_button()
             samples_list_page.wait_until_page_is_loaded()
-        except Exception as e:
+        except (TimeoutException, NoSuchElementException) as e:
             logger.warning(f"Cleanup failed in diagnostic test: {e}")
 
         # Assert - this test passes if diagnostics run, fails if WebView is not available
