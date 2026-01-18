@@ -6,8 +6,8 @@ from datetime import datetime
 from typing import Callable, List, Optional, Tuple
 
 import allure
-from PIL import Image
 from appium import webdriver
+from PIL import Image
 from selenium.common.exceptions import (
     NoSuchElementException,
     StaleElementReferenceException,
@@ -29,6 +29,15 @@ class BasePage:
         self._timeout = TIMEOUT
         self._short_timeout = SHORT_TIMEOUT
         self._page_load_timeout = PAGE_LOAD_TIMEOUT
+
+    @property
+    def driver(self) -> webdriver.Remote:
+        """Get the Appium driver instance.
+
+        Returns:
+            webdriver.Remote: The Appium driver instance.
+        """
+        return self._driver
 
     def find_element(self, locator: Tuple[str, str]):
         try:
@@ -204,13 +213,6 @@ class BasePage:
             logger.info(f"✅ WebView contexts found: {webview_contexts}")
 
         logger.info("=" * 60)
-
-        # Attach diagnostic info to Allure report
-        allure.attach(
-            str(diagnostic_info),
-            name="WebView Diagnostic Report",
-            attachment_type=allure.attachment_type.TEXT,
-        )
 
         return diagnostic_info
 

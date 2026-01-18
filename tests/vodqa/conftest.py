@@ -230,6 +230,14 @@ def web_view_page(driver: Any, samples_list_page: SamplesListPage) -> Generator[
     yield page
     # Teardown: Switch back to native context and navigate back to Samples List
     with allure.step("Teardown: switching to native context and navigating back to Samples List"):
-        page.switch_to_native_context()
-        page.tap_back_button()
-        samples_list_page.wait_until_page_is_loaded()
+        try:
+            page.switch_to_native_context()
+            page.tap_back_button()
+            samples_list_page.wait_until_page_is_loaded()
+        except Exception as e:
+            logger.error(f"Error during teardown in web_view_page fixture: {e}")
+            # Attempt to recover by ensuring we're at least in native context
+            try:
+                page.switch_to_native_context()
+            except Exception as recovery_error:
+                logger.error(f"Failed to switch to native context during recovery: {recovery_error}")
