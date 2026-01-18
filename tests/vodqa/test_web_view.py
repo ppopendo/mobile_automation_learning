@@ -3,10 +3,16 @@ This module contains tests for web view functionality.
 Tests verify header display, "More" button functionality, and search capabilities.
 """
 
+import logging
+
 import allure
 import pytest
+from appium import webdriver
 
+from pages.vodqa.samples_list_page import SamplesListPage
 from pages.vodqa.web_view_page import WebViewPage
+
+logger = logging.getLogger(__name__)
 
 
 @allure.feature("VodQA Samples")
@@ -50,9 +56,9 @@ class TestWebView:
 
         # Scroll to search input, enter search value and press Go
         web_view_page.enter_search_value(search_value)
-        assert web_view_page.is_dropdown_stories_displayed(), (
-            "Dropdown stories not displayed after entering search value."
-        )
+        assert (
+            web_view_page.is_dropdown_stories_displayed()
+        ), "Dropdown stories not displayed after entering search value."
 
         # Get the count of search results
         results_count = web_view_page.get_search_results_count(search_value)
@@ -68,7 +74,6 @@ class TestWebView:
         search_value = "Bluescreen"
 
         # Scroll to search input, enter search value and press Go
-        web_view_page.tap_search_input()
         web_view_page.enter_search_value(search_value)
 
         # Verify that we have at least one result
@@ -79,7 +84,7 @@ class TestWebView:
     @pytest.mark.tcid("TC-22-05")
     @allure.severity(allure.severity_level.NORMAL)
     @allure.title("Diagnostic test for WebView context availability")
-    def test_webview_context_diagnostic(self, driver, samples_list_page) -> None:
+    def test_webview_context_diagnostic(self, driver: webdriver.Remote, samples_list_page: SamplesListPage) -> None:
         """Diagnostic test to check WebView context availability.
 
         This test navigates to WebView screen and diagnoses available contexts.
@@ -105,8 +110,15 @@ class TestWebView:
             attachment_type=allure.attachment_type.TEXT,
         )
 
+        # Explicit teardown: Navigate back to Samples List
+        try:
+            page.tap_back_button()
+            samples_list_page.wait_until_page_is_loaded()
+        except Exception as e:
+            logger.warning(f"Cleanup failed in diagnostic test: {e}")
+
         # Assert - this test passes if diagnostics run, fails if WebView is not available
-        assert diagnostic_info['webview_available'], (
+        assert diagnostic_info["webview_available"], (
             f"WebView context not available. Only found: {diagnostic_info['available_contexts']}. "
             "The app may not have WebView debugging enabled."
         )
