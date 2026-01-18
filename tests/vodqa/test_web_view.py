@@ -28,7 +28,10 @@ class TestWebView:
         Expected:
             - Header with text 'Hacker News' is displayed
         """
-        assert web_view_page.is_header_displayed, "Web View header should be displayed"
+        actual = {"header_displayed": web_view_page.is_header_displayed}
+        expected = {"header_displayed": True}
+
+        assert actual == expected, f"Web View header state mismatch: {actual}"
 
     @pytest.mark.tcid("TC-22-02")
     @allure.severity(allure.severity_level.NORMAL)
@@ -42,7 +45,10 @@ class TestWebView:
         web_view_page.tap_more_link_button()
 
         # Verify header is still displayed
-        assert web_view_page.is_header_displayed, "Web View header should be displayed after clicking 'More' button"
+        actual = {"header_displayed": web_view_page.is_header_displayed}
+        expected = {"header_displayed": True}
+
+        assert actual == expected, f"Web View header state after clicking 'More' button mismatch: {actual}"
 
     @pytest.mark.tcid("TC-22-03")
     @allure.severity(allure.severity_level.NORMAL)
@@ -63,18 +69,15 @@ class TestWebView:
 
         actual = {
             "dropdown_displayed": web_view_page.is_dropdown_stories_displayed(),
-            "results_count": results_count,
+            "results_count_at_least_2": results_count >= 2,
         }
 
         expected = {
             "dropdown_displayed": True,
-            "results_count": 2,
+            "results_count_at_least_2": True,
         }
 
-        assert (
-            actual["dropdown_displayed"] == expected["dropdown_displayed"]
-            and actual["results_count"] >= expected["results_count"]
-        ), f"Search state mismatch. Expected dropdown displayed and at least {expected['results_count']} results, got: {actual}"
+        assert actual == expected, f"Search state mismatch. Expected {expected}, got: {actual}"
 
     @pytest.mark.tcid("TC-22-04")
     @allure.severity(allure.severity_level.NORMAL)
@@ -87,9 +90,10 @@ class TestWebView:
         web_view_page.enter_search_value(search_value)
 
         # Verify that we have at least one result
-        assert (
-            web_view_page.is_dropdown_stories_displayed()
-        ), "Dropdown stories should be displayed after entering search value"
+        actual = {"dropdown_displayed": web_view_page.is_dropdown_stories_displayed()}
+        expected = {"dropdown_displayed": True}
+
+        assert actual == expected, f"Dropdown stories state mismatch after search: {actual}"
 
     @pytest.mark.tcid("TC-22-05")
     @allure.severity(allure.severity_level.NORMAL)

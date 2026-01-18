@@ -437,8 +437,7 @@ WEB_VIEW_COMPONENT = (AppiumBy.CLASS_NAME, "android.webkit.WebView")
 - `is_header_displayed` (property)
 - `is_news_title_displayed(title)`
 - `tap_more_link_button()`
-- `enter_search_value(search_value)`
-- `submit_search()`
+- `enter_search_value(search_value)` (enters the text and submits the search)
 - `get_search_results_count(search_value)`
 
 
