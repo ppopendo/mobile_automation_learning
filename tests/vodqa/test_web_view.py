@@ -106,7 +106,7 @@ class TestWebView:
         )
 
         # Assert - this test passes if diagnostics run, fails if WebView is not available
-        assert diagnostic_info["webview_available"], (
+        assert diagnostic_info['webview_available'], (
             f"WebView context not available. Only found: {diagnostic_info['available_contexts']}. "
             "The app may not have WebView debugging enabled."
         )
