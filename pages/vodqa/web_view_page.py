@@ -109,6 +109,7 @@ class WebViewPage(BaseAppiumGestures, HeaderBarComponent):
     @allure.step("the user taps on the 'More' link button")
     def tap_more_link_button(self) -> None:
         """Tap the 'More' link button to load additional content."""
+        # Using higher max_scrolls value because the More button is typically at the bottom of a long page
         self.scroll_element_into_view(WebViewLocators.MORE_LINK_BUTTON, max_scrolls=22)
         self.tap_element(WebViewLocators.MORE_LINK_BUTTON)
 
@@ -119,6 +120,7 @@ class WebViewPage(BaseAppiumGestures, HeaderBarComponent):
         Args:
             search_value: The text value to type into the search input.
         """
+        # Using higher max_scrolls value because the search input is typically at the bottom of the page
         self.scroll_element_into_view(WebViewLocators.SEARCH_INPUT, max_scrolls=22)
         self.send_keys_and_press_go(WebViewLocators.SEARCH_INPUT, search_value)
 
@@ -149,21 +151,24 @@ class WebViewPage(BaseAppiumGestures, HeaderBarComponent):
         except TimeoutException:
             return 0
 
+    @allure.step("retrieving if 'Stories' dropdown is displayed")
     def is_dropdown_stories_displayed(self) -> bool:
         """Check if the 'Stories' dropdown is displayed."""
-        self.wait_for_element(WebViewLocators.DROPDOWN_STORIES)
-        return self.is_element_displayed(WebViewLocators.DROPDOWN_STORIES)
+        return self.is_element_displayed(WebViewLocators.DROPDOWN_STORIES, timeout=self._short_timeout)
 
+    @allure.step("retrieving if 'Popularity' dropdown is displayed")
     def is_dropdown_popularity_displayed(self) -> bool:
         """Check if the 'Popularity' dropdown is displayed."""
-        return self.is_element_displayed(WebViewLocators.DROPDOWN_POPULARITY)
+        return self.is_element_displayed(WebViewLocators.DROPDOWN_POPULARITY, timeout=self._short_timeout)
 
+    @allure.step("retrieving if 'All Time' dropdown is displayed")
     def is_dropdown_all_time_displayed(self) -> bool:
         """Check if the 'All Time' dropdown is displayed."""
-        return self.is_element_displayed(WebViewLocators.DROPDOWN_ALL_TIME)
+        return self.is_element_displayed(WebViewLocators.DROPDOWN_ALL_TIME, timeout=self._short_timeout)
 
     @allure.step("the user taps the search input field")
     def tap_search_input(self) -> None:
         """Tap the search input field to focus it."""
+        # Using higher max_scrolls value because the search input is typically at the bottom of the page
         self.scroll_element_into_view(WebViewLocators.SEARCH_INPUT, max_scrolls=22)
         self.tap_element(WebViewLocators.SEARCH_INPUT)

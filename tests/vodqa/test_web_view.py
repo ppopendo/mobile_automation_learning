@@ -3,8 +3,6 @@ This module contains tests for web view functionality.
 Tests verify header display, "More" button functionality, and search capabilities.
 """
 
-import time
-
 import allure
 import pytest
 
@@ -44,22 +42,23 @@ class TestWebView:
     @allure.severity(allure.severity_level.NORMAL)
     @allure.title("Test web view search functionality returns results")
     def test_web_view_search_returns_results(self, web_view_page: WebViewPage) -> None:
-        """Verify that searching for 'Bluescreen' in Web View returns matching results.
+        """Verify that searching for 'Bluescreen' in Web View returns at least 2 matching results.
         Expected:
-            - Search results count for 'Bluescreen' is greater than 0
+            - Search results count for 'Bluescreen' is at least 2
         """
         search_value = "Bluescreen"
 
         # Scroll to search input, enter search value and press Go
         web_view_page.enter_search_value(search_value)
-        if not web_view_page.is_dropdown_stories_displayed():
-            raise ValueError("Dropdown stories not displayed after entering search value.")
+        assert web_view_page.is_dropdown_stories_displayed(), (
+            "Dropdown stories not displayed after entering search value."
+        )
 
         # Get the count of search results
         results_count = web_view_page.get_search_results_count(search_value)
 
-        # Verify that we have at least one result
-        assert results_count >= 2, f"Expected search results for '{search_value}', but found {results_count}"
+        # Verify that we have at least 2 results
+        assert results_count >= 2, f"Expected at least 2 search results for '{search_value}', but found {results_count}"
 
     @pytest.mark.tcid("TC-22-04")
     @allure.severity(allure.severity_level.NORMAL)
@@ -94,24 +93,20 @@ class TestWebView:
         page = WebViewPage(driver)
 
         # Run diagnostics
-        time.sleep(77)  # Wait for WebView to load properly
         diagnostic_info = page.diagnose_webview_contexts()
 
-        # Print diagnostic info
-        print(f"\n{'='*60}")
-        print("🔍 WebView Diagnostic Results:")
-        print(f"{'='*60}")
-        print(f"Current context: {diagnostic_info['current_context']}")
-        print(f"Available contexts: {diagnostic_info['available_contexts']}")
-        print(f"WebView available: {diagnostic_info['webview_available']}")
-        if diagnostic_info['suggestions']:
-            print("\n⚠️ Suggestions to fix:")
-            for suggestion in diagnostic_info['suggestions']:
-                print(f"   {suggestion}")
-        print(f"{'='*60}\n")
+        # Attach diagnostic info to Allure report
+        allure.attach(
+            f"Current context: {diagnostic_info['current_context']}\n"
+            f"Available contexts: {diagnostic_info['available_contexts']}\n"
+            f"WebView available: {diagnostic_info['webview_available']}\n"
+            f"Suggestions: {', '.join(diagnostic_info['suggestions']) if diagnostic_info['suggestions'] else 'None'}",
+            name="WebView Diagnostic Results",
+            attachment_type=allure.attachment_type.TEXT,
+        )
 
         # Assert - this test passes if diagnostics run, fails if WebView is not available
         assert diagnostic_info['webview_available'], (
             f"WebView context not available. Only found: {diagnostic_info['available_contexts']}. "
-            f"The app may not have WebView debugging enabled."
+            "The app may not have WebView debugging enabled."
         )
