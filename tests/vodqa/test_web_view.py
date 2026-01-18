@@ -7,7 +7,6 @@ import logging
 
 import allure
 import pytest
-from appium import webdriver
 
 from pages.vodqa.samples_list_page import SamplesListPage
 from pages.vodqa.web_view_page import WebViewPage
@@ -84,7 +83,7 @@ class TestWebView:
     @pytest.mark.tcid("TC-22-05")
     @allure.severity(allure.severity_level.NORMAL)
     @allure.title("Diagnostic test for WebView context availability")
-    def test_webview_context_diagnostic(self, driver: webdriver.Remote, samples_list_page: SamplesListPage) -> None:
+    def test_webview_context_diagnostic(self, driver, samples_list_page: SamplesListPage) -> None:
         """Diagnostic test to check WebView context availability.
 
         This test navigates to WebView screen and diagnoses available contexts.
