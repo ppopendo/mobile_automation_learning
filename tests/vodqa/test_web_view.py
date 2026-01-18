@@ -90,9 +90,10 @@ class TestWebView:
         web_view_page.enter_search_value(search_value)
 
         # Verify that we have at least one result
-        assert (
-            web_view_page.is_dropdown_stories_displayed()
-        ), "Dropdown stories should be displayed after entering search value"
+        actual = {"dropdown_displayed": web_view_page.is_dropdown_stories_displayed()}
+        expected = {"dropdown_displayed": True}
+
+        assert actual == expected, f"Dropdown stories state mismatch after search: {actual}"
 
     @pytest.mark.tcid("TC-22-05")
     @allure.severity(allure.severity_level.NORMAL)
