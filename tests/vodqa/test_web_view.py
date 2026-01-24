@@ -101,11 +101,11 @@ class TestWebView:
         Used for troubleshooting when WebView context is not found.
 
         Note: This test is environment/device dependent (requires WebView debugging enabled).
-        Set RUN_DIAGNOSTIC_TESTS=true to enable this test.
+        Set RUN_DIAGNOSTIC_TESTS to any value to enable this test.
         """
         # Skip test unless explicitly enabled via environment variable
         if not os.getenv("RUN_DIAGNOSTIC_TESTS"):
-            pytest.skip("Diagnostic test skipped. Set RUN_DIAGNOSTIC_TESTS=true to enable.")
+            pytest.skip("Diagnostic test skipped. Set RUN_DIAGNOSTIC_TESTS to any value to enable.")
 
         # Navigate to Web View page
         samples_list_page.swipe_up_and_validate_sample_name("Web View")
