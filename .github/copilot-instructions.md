@@ -39,7 +39,7 @@ This is a mobile automation testing project using Python with Appium for Android
 - Step descriptions should be in format: "the user {action}" (e.g., "the user clicks the login button")
 - Use `@property` decorator for getter methods that retrieve element text/attributes
 - Property step descriptions should be in format: "retrieving {what}" (e.g., "retrieving product price")
-- For properties that check boolean states (e.g., is_displayed, is_enabled), use format: "the user checks if {condition}" with optional page context (e.g., "the login button is displayed on Menu page")
+- For properties that check boolean states (e.g., is_displayed, is_enabled), use a descriptive statement with page context (e.g., "the login button is displayed on Menu page")
 - Return type hints are mandatory
 
 ### Waits & Timeouts
