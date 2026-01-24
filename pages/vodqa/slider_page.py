@@ -149,3 +149,70 @@ class SliderPage(BaseAppiumGestures, HeaderBarComponent):
             speed: Swipe speed in pixels per second.
         """
         self.swipe_right(locator=SliderPageLocators.SLIDER_2, percentage=percentage, speed=speed)
+
+    # ==================== DRAG GESTURES ====================
+
+    @allure.step("the user drags slider 1 to {target_percentage}% position")
+    def drag_slider_1_to_percentage(self, target_percentage: int, speed: int = 1500) -> None:
+        """Drag slider 1 thumb to a specific percentage position.
+
+        Uses drag gesture to move the slider thumb to the target position.
+
+        Args:
+            target_percentage: Target position as percentage (0-100).
+            speed: Drag speed in pixels per second.
+
+        Raises:
+            ValueError: If target_percentage is not between 0 and 100.
+        """
+        self._drag_slider_to_percentage(SliderPageLocators.SLIDER_1, target_percentage, speed)
+
+    @allure.step("the user drags slider 2 to {target_percentage}% position")
+    def drag_slider_2_to_percentage(self, target_percentage: int, speed: int = 1500) -> None:
+        """Drag slider 2 thumb to a specific percentage position.
+
+        Uses drag gesture to move the slider thumb to the target position.
+
+        Args:
+            target_percentage: Target position as percentage (0-100).
+            speed: Drag speed in pixels per second.
+
+        Raises:
+            ValueError: If target_percentage is not between 0 and 100.
+        """
+        self._drag_slider_to_percentage(SliderPageLocators.SLIDER_2, target_percentage, speed)
+
+    def _drag_slider_to_percentage(self, locator: Tuple[str, str], target_percentage: int, speed: int = 1500) -> None:
+        """Internal method to drag a slider to a specific percentage position.
+
+        Calculates the target X coordinate based on slider width and target percentage,
+        then performs a drag gesture from the slider element to that position.
+
+        Args:
+            locator: Slider element locator.
+            target_percentage: Target position as percentage (0-100).
+            speed: Drag speed in pixels per second.
+
+        Raises:
+            ValueError: If target_percentage is not between 0 and 100.
+        """
+        if not 0 <= target_percentage <= 100:
+            raise ValueError(f"Target percentage must be between 0 and 100, got {target_percentage}")
+
+        slider = self.wait_for_element(locator)
+        slider_location = slider.location
+        slider_size = slider.size
+
+        start_x = slider_location["x"]
+        slider_width = slider_size["width"]
+        target_x = start_x + int(slider_width * (target_percentage / 100))
+        center_y = slider_location["y"] + (slider_size["height"] // 2)
+
+        params = {
+            "elementId": slider.id,
+            "endX": target_x,
+            "endY": center_y,
+            "speed": speed,
+        }
+
+        self._driver.execute_script("mobile: dragGesture", params)

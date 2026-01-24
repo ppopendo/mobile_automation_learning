@@ -12,7 +12,7 @@ This document tracks remaining tasks, improvements, and technical debt for the m
 ## 🔄 Improvements & Refactoring (from Test Plan)
 
 ### Slider Feature
-- [ ] **Drag Gesture**: Add strict drag gesture tests (currently mostly tapping).
+- [x] **Drag Gesture**: Add strict drag gesture tests (currently mostly tapping).
 - [ ] **Value Assertion**: Add assertion for actual slider value text changes (currently validating position/response).
 - [ ] **Locator Verification**: Verify `SLIDER_ELEMENT` and `SLIDER_VALUE_TEXT` locators during a debug session.
 

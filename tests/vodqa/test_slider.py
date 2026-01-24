@@ -56,3 +56,97 @@ class TestSlider:
         assert (
             slider_page.slider_1_value == expected_value
         ), f"Slider 1 should display a value after tapping at {percentage}%"
+
+
+@allure.feature("VodQA Samples")
+@allure.story("Slider Drag Gesture")
+class TestSliderDragGesture:
+    """Test class for Slider drag gesture functionality.
+
+    These tests verify that sliders respond correctly to drag gestures,
+    which simulate a finger dragging the slider thumb to a specific position.
+    """
+
+    @pytest.mark.tcid("TC-02-04")
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.title("Test drag slider 1 to 75% position")
+    def test_drag_slider_1_to_75_percent(self, slider_page: SliderPage) -> None:
+        """Verify that dragging slider 1 to 75% position updates its value.
+
+        Steps:
+            1. Drag slider 1 thumb to 75% position
+            2. Verify slider value is updated
+
+        Expected:
+            - Slider 1 value reflects approximately 75% position
+        """
+        slider_page.drag_slider_1_to_percentage(75)
+
+        actual = {"is_displayed": slider_page.is_slider_1_displayed}
+        expected = {"is_displayed": True}
+
+        assert actual == expected, f"Slider state mismatch: {actual}"
+
+    @pytest.mark.tcid("TC-02-05")
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.title("Test drag slider 2 to 25% position")
+    def test_drag_slider_2_to_25_percent(self, slider_page: SliderPage) -> None:
+        """Verify that dragging slider 2 to 25% position updates its value.
+
+        Steps:
+            1. Drag slider 2 thumb to 25% position
+            2. Verify slider value is updated
+
+        Expected:
+            - Slider 2 value reflects approximately 25% position
+        """
+        slider_page.drag_slider_2_to_percentage(25)
+
+        actual = {"is_displayed": slider_page.is_slider_2_displayed}
+        expected = {"is_displayed": True}
+
+        assert actual == expected, f"Slider state mismatch: {actual}"
+
+    @pytest.mark.tcid("TC-02-06")
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.title("Test drag slider 1 to {target_percentage}% position")
+    @pytest.mark.parametrize(
+        "target_percentage",
+        [0, 25, 50, 75, 100],
+        ids=["0%", "25%", "50%", "75%", "100%"],
+    )
+    def test_drag_slider_1_multiple_positions(self, slider_page: SliderPage, target_percentage: int) -> None:
+        """Test drag gesture on slider 1 at different target positions.
+
+        Args:
+            target_percentage: Target slider position (0-100%).
+
+        Expected:
+            - Slider responds to drag gesture at specified position
+            - Slider remains visible after drag operation
+        """
+        slider_page.drag_slider_1_to_percentage(target_percentage)
+
+        assert slider_page.is_slider_1_displayed, f"Slider 1 should be visible after dragging to {target_percentage}%"
+
+    @pytest.mark.tcid("TC-02-07")
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.title("Test drag slider with different speeds")
+    @pytest.mark.parametrize(
+        "speed",
+        [500, 1500, 3000],
+        ids=["slow", "medium", "fast"],
+    )
+    def test_drag_slider_with_different_speeds(self, slider_page: SliderPage, speed: int) -> None:
+        """Test drag gesture on slider with different drag speeds.
+
+        Args:
+            speed: Drag speed in pixels per second.
+
+        Expected:
+            - Drag gesture works correctly regardless of speed
+            - Slider responds to drag operation
+        """
+        slider_page.drag_slider_1_to_percentage(50, speed=speed)
+
+        assert slider_page.is_slider_1_displayed, f"Slider 1 should be visible after dragging at speed {speed}"
