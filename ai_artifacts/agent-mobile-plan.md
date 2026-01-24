@@ -41,14 +41,14 @@
 | **5. Double Tap** | ✅ **Automated** | **2** | ✅ `DoubleTapPage` | TC-05-01, TC-05-02 complete |
 | **6. Long Press** | ✅ **Automated** | **2** | ✅ `LongPressPage` | TC-06-01, TC-06-02 complete |
 | **7. Photo View** | ✅ **Automated** | **9** | ✅ `PhotoViewPage` | TC-09-01 to TC-09-09 complete (Pinch gestures with validation) |
-| 8. Web View | 🔲 Not Started | 0 | 🔲 - | - |
+| **8. Web View** | ✅ **Automated** | **5** | ✅ `WebViewPage` | TC-22-01 to TC-22-05 complete |
 | **9. Carousel** | ✅ **Automated** | **4** | ✅ `CarouselPage` | TC-10-01 to TC-10-04 complete (Horizontal fling with ID validation) |
 | **10. Wheel Picker** | ✅ **Automated** | **5** | ✅ `WheelPickerDemoPage` | TC-20-01, TC-20-02 (parametrized) complete |
 | **11. Swipe Gestures** | ✅ **Automated** | **6** | ✅ `SliderPage` | TC-07-01, TC-07-02, TC-07-04, TC-07-05 complete |
 | **12. Fling & Scroll Gestures** | ✅ **Automated** | **9** | ✅ `VerticalSwipingPage` | TC-08-01 to TC-08-09 complete (W3C gestures, vertical) |
 
-**Total Automated Tests:** 48  
-**Last Updated:** 2026-01-04
+**Total Automated Tests:** 53  
+**Last Updated:** 2026-01-18
 
 ---
 
@@ -396,6 +396,16 @@ IMAGE_VIEW = (AppiumBy.CLASS_NAME, "android.widget.ImageView")
 
 **Content Descriptor:** `webView`
 
+**Automation Status:** ✅ **AUTOMATED**
+
+| Test Case | Status | Test File | Notes |
+|-----------|--------|-----------|-------|
+| TC-22-01: Page displays correct header | ✅ Automated | `tests/vodqa/test_web_view.py` | Verifies 'Hacker News' header |
+| TC-22-02: 'More' button functionality | ✅ Automated | `tests/vodqa/test_web_view.py` | Verifies header after 'More' click |
+| TC-22-03: Search functionality | ✅ Automated | `tests/vodqa/test_web_view.py` | Verifies search results for 'Bluescreen' |
+| TC-22-04: Dropdown stories display | ✅ Automated | `tests/vodqa/test_web_view.py` | Verifies dropdown after entering search value |
+| TC-22-05: WebView context diagnostic | ✅ Automated | `tests/vodqa/test_web_view.py` | Diagnostic test for WebView context troubleshooting |
+
 **Description:** Test WebView component and web content interaction.
 
 **Steps to Reproduce:**
@@ -420,13 +430,16 @@ WEB_VIEW_BUTTON = (AppiumBy.XPATH, "//android.widget.TextView[@content-desc='web
 WEB_VIEW_COMPONENT = (AppiumBy.CLASS_NAME, "android.webkit.WebView")
 ```
 
-**Automation Recommendations:**
-- Create `WebViewPage` class
-- Switch context to WEBVIEW if needed
-- Test web content loading
-- Verify web element interactions
-- Handle hybrid app contexts
-- Implement test: `test_webView_content`
+**Page Object:** `WebViewPage` - `pages/vodqa/web_view_page.py`
+
+**Implemented Methods:**
+- `wait_until_page_is_loaded()`
+- `is_header_displayed` (property)
+- `is_news_title_displayed(title)`
+- `tap_more_link_button()`
+- `enter_search_value(search_value)` (enters the text and submits the search)
+- `get_search_results_count(search_value)`
+
 
 ---
 
@@ -720,9 +733,15 @@ WHEEL_PICKER_BUTTON = (AppiumBy.XPATH, "//android.widget.TextView[@content-desc=
 - Updated automation coverage summary
 - Total automated tests increased to 48
 
+### 2026-01-10: Web View Automation
+- Implemented `WebViewPage` with interactions for Web View elements
+- Added tests for Web View (TC-22-01, TC-22-02, TC-22-03, TC-22-04, TC-22-05)
+- Validated header display, 'More' button, search functionality, dropdown stories, and diagnostic test
+- Total automated tests increased to 53
+
 ---
 
-**Document Version:** 1.3
-**Last Updated:** 2026-01-04  
+**Document Version:** 1.4
+**Last Updated:** 2026-01-10  
 **Status:** In Progress
 
