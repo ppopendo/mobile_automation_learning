@@ -41,9 +41,7 @@ class WebViewLocators:
             )
         },
     )
-    DROPDOWN_STORIES: Tuple[str, str] = field(
-        default=(AppiumBy.XPATH, "//*[@resource-id='downshift-0-label']"), init=False
-    )
+    DROPDOWN_STORIES: Tuple[str, str] = field(default=(AppiumBy.ID, "downshift-0-label"), init=False)
     DROPDOWN_POPULARITY: Tuple[str, str] = field(default=(AppiumBy.ID, "downshift-1-label"), init=False)
     DROPDOWN_ALL_TIME: Tuple[str, str] = field(default=(AppiumBy.ID, "downshift-2-label"), init=False)
 

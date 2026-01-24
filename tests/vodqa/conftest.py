@@ -3,11 +3,11 @@ VodQA test fixtures.
 Contains fixtures for VodQA app test setup, teardown and test data.
 """
 
+import logging
 from typing import Any, Generator
 
 import allure
 import pytest
-import logging
 
 from pages.vodqa.carousel_page import CarouselPage
 from pages.vodqa.double_tap_page import DoubleTapPage
