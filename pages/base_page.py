@@ -175,6 +175,7 @@ class BasePage:
             dict: Diagnostic information including:
                 - current_context: The current context
                 - available_contexts: List of all available contexts
+                - webview_contexts: List of WebView-specific contexts found
                 - webview_available: Boolean indicating if WebView is available
                 - suggestions: List of troubleshooting suggestions if WebView is not found
         """
@@ -265,8 +266,22 @@ class BasePage:
 
         Raises:
             TimeoutException: If the element is not found within the timeout period.
+            NotImplementedError: If called on a non-Android platform where Android keycodes are not supported.
         """
         self.safe_send_keys(locator, text, timeout, clear_first)
+
+        # Determine platform from driver capabilities to avoid using Android-specific APIs on other platforms.
+        platform_name = ""
+        capabilities = getattr(self._driver, "capabilities", {}) or {}
+        if isinstance(capabilities, dict):
+            platform_name = str(capabilities.get("platformName", "")).lower()
+
+        if platform_name != "android":
+            raise NotImplementedError(
+                "send_keys_and_press_go is only supported on Android drivers. "
+                "For iOS or other platforms, use a platform-appropriate submission method instead."
+            )
+
         self._driver.press_keycode(66)  # Android keycode for Enter/Go
         logger.info(f"✅ Entered text '{text}' and pressed Go on keyboard")
 

@@ -4,6 +4,7 @@ Tests verify header display, "More" button functionality, and search capabilitie
 """
 
 import logging
+import os
 
 import allure
 import pytest
@@ -49,7 +50,7 @@ class TestWebView:
     @allure.severity(allure.severity_level.NORMAL)
     @allure.title("Test web view search functionality returns results")
     def test_web_view_search_returns_results(self, web_view_page: WebViewPage) -> None:
-        """Verify that searching for 'Bluescreen' in Web View returns at least 1 matching results.
+        """Verify that searching for 'Bluescreen' in Web View returns at least 1 matching result.
         Expected:
             - Dropdown stories are displayed after entering search value
             - Search results count for 'Bluescreen' is at least 1
@@ -65,12 +66,12 @@ class TestWebView:
 
         actual = {
             "dropdown_displayed": web_view_page.is_dropdown_stories_displayed,
-            "results_count_at_least_2": results_count >= 1,
+            "results_count_at_least_1": results_count >= 1,
         }
 
         expected = {
             "dropdown_displayed": True,
-            "results_count_at_least_2": True,
+            "results_count_at_least_1": True,
         }
 
         assert actual == expected, f"Search state mismatch. Expected {expected}, got: {actual}"
@@ -98,7 +99,14 @@ class TestWebView:
 
         This test navigates to WebView screen and diagnoses available contexts.
         Used for troubleshooting when WebView context is not found.
+
+        Note: This test is environment/device dependent (requires WebView debugging enabled).
+        Set RUN_DIAGNOSTIC_TESTS=true to enable this test.
         """
+        # Skip test unless explicitly enabled via environment variable
+        if not os.getenv("RUN_DIAGNOSTIC_TESTS", "false").lower() == "true":
+            pytest.skip("Diagnostic test skipped. Set RUN_DIAGNOSTIC_TESTS=true to enable.")
+
         # Navigate to Web View page
         samples_list_page.swipe_up_and_validate_sample_name("Web View")
         samples_list_page.tap_web_view()
