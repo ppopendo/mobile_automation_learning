@@ -104,7 +104,7 @@ class TestWebView:
         Set RUN_DIAGNOSTIC_TESTS=true to enable this test.
         """
         # Skip test unless explicitly enabled via environment variable
-        if os.getenv("RUN_DIAGNOSTIC_TESTS", "").lower() != "true":
+        if not os.getenv("RUN_DIAGNOSTIC_TESTS"):
             pytest.skip("Diagnostic test skipped. Set RUN_DIAGNOSTIC_TESTS=true to enable.")
 
         # Navigate to Web View page
