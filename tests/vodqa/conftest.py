@@ -8,6 +8,7 @@ from typing import Any, Generator
 
 import allure
 import pytest
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
 from pages.vodqa.carousel_page import CarouselPage
 from pages.vodqa.double_tap_page import DoubleTapPage
@@ -238,10 +239,10 @@ def web_view_page(driver: Any, samples_list_page: SamplesListPage) -> Generator[
             page.switch_to_native_context()
             page.tap_back_button()
             samples_list_page.wait_until_page_is_loaded()
-        except Exception as e:
-            logger.error(f"Error during teardown in web_view_page fixture: {e}")
+        except (TimeoutException, NoSuchElementException) as e:
+            logger.exception("Error during teardown in web_view_page fixture: %s", e)
             # Attempt to recover by ensuring we're at least in native context
             try:
                 page.switch_to_native_context()
-            except Exception as recovery_error:
-                logger.error(f"Failed to switch to native context during recovery: {recovery_error}")
+            except (TimeoutException, NoSuchElementException) as recovery_error:
+                logger.exception("Failed to switch to native context during recovery: %s", recovery_error)

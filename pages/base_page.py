@@ -280,7 +280,7 @@ class BasePage:
             )
 
         self._driver.press_keycode(66)  # Android keycode for Enter/Go
-        logger.info(f"✅ Entered text '{text}' and pressed Go on keyboard")
+        logger.info("✅ Entered text (length=%d) and pressed Go on keyboard", len(text))
 
     def tap_element(self, locator: Tuple[str, str]):
         """

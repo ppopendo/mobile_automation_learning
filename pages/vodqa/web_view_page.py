@@ -87,7 +87,7 @@ class WebViewPage(BaseAppiumGestures, HeaderBarComponent):
         self.wait_until_component_is_loaded(title="Webview")
 
     @property
-    @allure.step("retrieving if the 'Hacker News' header is displayed")
+    @allure.step("the 'Hacker News' header is displayed on Web View page")
     def is_header_displayed(self) -> bool:
         """Check if the 'Hacker News' header is displayed on the page."""
         return self.is_element_displayed(WebViewLocators.HEADER)
@@ -145,19 +145,19 @@ class WebViewPage(BaseAppiumGestures, HeaderBarComponent):
             return 0
 
     @property
-    @allure.step("the user checks if 'Stories' dropdown is displayed")
+    @allure.step("the 'Stories' dropdown is displayed on Web View page")
     def is_dropdown_stories_displayed(self) -> bool:
         """Check if the 'Stories' dropdown is displayed."""
         return self.is_element_displayed(WebViewLocators.DROPDOWN_STORIES, timeout=self._timeout)
 
     @property
-    @allure.step("the user checks if 'Popularity' dropdown is displayed")
+    @allure.step("the 'Popularity' dropdown is displayed on Web View page")
     def is_dropdown_popularity_displayed(self) -> bool:
         """Check if the 'Popularity' dropdown is displayed."""
         return self.is_element_displayed(WebViewLocators.DROPDOWN_POPULARITY, timeout=self._timeout)
 
     @property
-    @allure.step("the user checks if 'All Time' dropdown is displayed")
+    @allure.step("the 'All Time' dropdown is displayed on Web View page")
     def is_dropdown_all_time_displayed(self) -> bool:
         """Check if the 'All Time' dropdown is displayed."""
         return self.is_element_displayed(WebViewLocators.DROPDOWN_ALL_TIME, timeout=self._timeout)
