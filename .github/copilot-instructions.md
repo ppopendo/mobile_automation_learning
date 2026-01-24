@@ -39,6 +39,7 @@ This is a mobile automation testing project using Python with Appium for Android
 - Step descriptions should be in format: "the user {action}" (e.g., "the user clicks the login button")
 - Use `@property` decorator for getter methods that retrieve element text/attributes
 - Property step descriptions should be in format: "retrieving {what}" (e.g., "retrieving product price")
+- For properties that check boolean states (e.g., is_displayed, is_enabled), use format: "the user checks if {condition}" (e.g., "the user checks if 'Stories' dropdown is displayed")
 - Return type hints are mandatory
 
 ### Waits & Timeouts
@@ -111,6 +112,11 @@ def click_login_button(self) -> None:
 @allure.step("retrieving error message text")
 def error_message(self) -> str:
     return self.wait_for_element(ExamplePageLocators.ERROR_MESSAGE).text
+
+@property
+@allure.step("the user checks if login button is displayed")
+def is_login_button_displayed(self) -> bool:
+    return self.is_element_displayed(ExamplePageLocators.BUTTON_LOGIN)
 ```
 
 ## Dependencies

@@ -145,19 +145,19 @@ class WebViewPage(BaseAppiumGestures, HeaderBarComponent):
             return 0
 
     @property
-    @allure.step("retrieving 'Stories' dropdown display status")
+    @allure.step("the user checks if 'Stories' dropdown is displayed")
     def is_dropdown_stories_displayed(self) -> bool:
         """Check if the 'Stories' dropdown is displayed."""
         return self.is_element_displayed(WebViewLocators.DROPDOWN_STORIES, timeout=self._timeout)
 
     @property
-    @allure.step("retrieving 'Popularity' dropdown display status")
+    @allure.step("the user checks if 'Popularity' dropdown is displayed")
     def is_dropdown_popularity_displayed(self) -> bool:
         """Check if the 'Popularity' dropdown is displayed."""
         return self.is_element_displayed(WebViewLocators.DROPDOWN_POPULARITY, timeout=self._timeout)
 
     @property
-    @allure.step("retrieving 'All Time' dropdown display status")
+    @allure.step("the user checks if 'All Time' dropdown is displayed")
     def is_dropdown_all_time_displayed(self) -> bool:
         """Check if the 'All Time' dropdown is displayed."""
         return self.is_element_displayed(WebViewLocators.DROPDOWN_ALL_TIME, timeout=self._timeout)
