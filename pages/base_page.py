@@ -271,10 +271,7 @@ class BasePage:
         self.safe_send_keys(locator, text, timeout, clear_first)
 
         # Determine platform from driver capabilities to avoid using Android-specific APIs on other platforms.
-        platform_name = ""
-        capabilities = getattr(self._driver, "capabilities", {}) or {}
-        if isinstance(capabilities, dict):
-            platform_name = str(capabilities.get("platformName", "")).lower()
+        platform_name = self._driver.capabilities.get("platformName", "").lower()
 
         if platform_name != "android":
             raise NotImplementedError(
