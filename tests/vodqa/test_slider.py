@@ -75,15 +75,21 @@ class TestSliderDragGesture:
 
         Steps:
             1. Drag slider 1 thumb to 75% position
-            2. Verify slider value is updated
+            2. Verify slider value is updated to approximately 75
 
         Expected:
             - Slider 1 value reflects approximately 75% position
         """
         slider_page.drag_slider_1_to_percentage(75)
 
-        actual = {"is_displayed": slider_page.is_slider_1_displayed}
-        expected = {"is_displayed": True}
+        actual = {
+            "is_displayed": slider_page.is_slider_1_displayed,
+            "slider_value": slider_page.slider_1_value,
+        }
+        expected = {
+            "is_displayed": True,
+            "slider_value": 75.0,
+        }
 
         assert actual == expected, f"Slider state mismatch: {actual}"
 
@@ -95,15 +101,21 @@ class TestSliderDragGesture:
 
         Steps:
             1. Drag slider 2 thumb to 25% position
-            2. Verify slider value is updated
+            2. Verify slider value is updated to approximately 25
 
         Expected:
             - Slider 2 value reflects approximately 25% position
         """
         slider_page.drag_slider_2_to_percentage(25)
 
-        actual = {"is_displayed": slider_page.is_slider_2_displayed}
-        expected = {"is_displayed": True}
+        actual = {
+            "is_displayed": slider_page.is_slider_2_displayed,
+            "slider_value": slider_page.slider_2_value,
+        }
+        expected = {
+            "is_displayed": True,
+            "slider_value": 25.0,
+        }
 
         assert actual == expected, f"Slider state mismatch: {actual}"
 
@@ -111,23 +123,35 @@ class TestSliderDragGesture:
     @allure.severity(allure.severity_level.NORMAL)
     @allure.title("Test drag slider 1 to {target_percentage}% position")
     @pytest.mark.parametrize(
-        "target_percentage",
-        [0, 25, 50, 75, 100],
+        "target_percentage, expected_value",
+        [(0, 0.0), (25, 25.0), (50, 50.0), (75, 75.0), (100, 100.0)],
         ids=["0%", "25%", "50%", "75%", "100%"],
     )
-    def test_drag_slider_1_multiple_positions(self, slider_page: SliderPage, target_percentage: int) -> None:
+    def test_drag_slider_1_multiple_positions(
+        self, slider_page: SliderPage, target_percentage: int, expected_value: float
+    ) -> None:
         """Test drag gesture on slider 1 at different target positions.
 
         Args:
             target_percentage: Target slider position (0-100%).
+            expected_value: Expected slider value after drag.
 
         Expected:
             - Slider responds to drag gesture at specified position
-            - Slider remains visible after drag operation
+            - Slider value matches expected value after drag
         """
         slider_page.drag_slider_1_to_percentage(target_percentage)
 
-        assert slider_page.is_slider_1_displayed, f"Slider 1 should be visible after dragging to {target_percentage}%"
+        actual = {
+            "is_displayed": slider_page.is_slider_1_displayed,
+            "slider_value": slider_page.slider_1_value,
+        }
+        expected = {
+            "is_displayed": True,
+            "slider_value": expected_value,
+        }
+
+        assert actual == expected, f"Slider state mismatch after dragging to {target_percentage}%: {actual}"
 
     @pytest.mark.tcid("TC-02-07")
     @allure.severity(allure.severity_level.NORMAL)
@@ -145,8 +169,17 @@ class TestSliderDragGesture:
 
         Expected:
             - Drag gesture works correctly regardless of speed
-            - Slider responds to drag operation
+            - Slider value is updated to target position (50%)
         """
         slider_page.drag_slider_1_to_percentage(50, speed=speed)
 
-        assert slider_page.is_slider_1_displayed, f"Slider 1 should be visible after dragging at speed {speed}"
+        actual = {
+            "is_displayed": slider_page.is_slider_1_displayed,
+            "slider_value": slider_page.slider_1_value,
+        }
+        expected = {
+            "is_displayed": True,
+            "slider_value": 50.0,
+        }
+
+        assert actual == expected, f"Slider state mismatch at speed {speed}: {actual}"
