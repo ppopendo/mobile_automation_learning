@@ -8,6 +8,9 @@ import allure
 import pytest
 from pages.vodqa.slider_page import SliderPage
 
+# Tolerance for slider drag gesture assertions (handles device rounding differences)
+SLIDER_DRAG_TOLERANCE = 2.0
+
 
 @allure.feature("VodQA Samples")
 @allure.story("Slider")
@@ -83,18 +86,19 @@ class TestSliderDragGesture:
         slider_page.drag_slider_1_to_percentage(75)
 
         slider_value = slider_page.slider_display_value
-        tolerance = 2.0
 
         actual = {
             "is_displayed": slider_page.is_slider_1_displayed,
-            "slider_value_within_tolerance": abs(slider_value - 75.0) <= tolerance,
+            "slider_value_within_tolerance": abs(slider_value - 75.0) <= SLIDER_DRAG_TOLERANCE,
         }
         expected = {
             "is_displayed": True,
             "slider_value_within_tolerance": True,
         }
 
-        assert actual == expected, f"Slider state mismatch: actual value={slider_value}, expected=75.0±{tolerance}"
+        assert (
+            actual == expected
+        ), f"Slider state mismatch: actual value={slider_value}, expected=75.0±{SLIDER_DRAG_TOLERANCE}"
 
     @pytest.mark.tcid("TC-02-05")
     @allure.severity(allure.severity_level.NORMAL)
@@ -112,18 +116,19 @@ class TestSliderDragGesture:
         slider_page.drag_slider_2_to_percentage(25)
 
         slider_value = slider_page.slider_display_value
-        tolerance = 2.0
 
         actual = {
             "is_displayed": slider_page.is_slider_2_displayed,
-            "slider_value_within_tolerance": abs(slider_value - 25.0) <= tolerance,
+            "slider_value_within_tolerance": abs(slider_value - 25.0) <= SLIDER_DRAG_TOLERANCE,
         }
         expected = {
             "is_displayed": True,
             "slider_value_within_tolerance": True,
         }
 
-        assert actual == expected, f"Slider state mismatch: actual value={slider_value}, expected=25.0±{tolerance}"
+        assert (
+            actual == expected
+        ), f"Slider state mismatch: actual value={slider_value}, expected=25.0±{SLIDER_DRAG_TOLERANCE}"
 
     @pytest.mark.tcid("TC-02-06")
     @allure.severity(allure.severity_level.NORMAL)
@@ -149,22 +154,19 @@ class TestSliderDragGesture:
         slider_page.drag_slider_1_to_percentage(target_percentage)
 
         slider_value = slider_page.slider_display_value
-        tolerance = 2.0
 
         actual = {
             "is_displayed": slider_page.is_slider_1_displayed,
-            "slider_value_within_tolerance": abs(slider_value - expected_value) <= tolerance,
+            "slider_value_within_tolerance": abs(slider_value - expected_value) <= SLIDER_DRAG_TOLERANCE,
         }
         expected = {
             "is_displayed": True,
             "slider_value_within_tolerance": True,
         }
 
-        assert (
-            actual == expected
-        ), (
+        assert actual == expected, (
             f"Slider state mismatch after dragging to {target_percentage}%: "
-            f"actual value={slider_value}, expected={expected_value}±{tolerance}"
+            f"actual value={slider_value}, expected={expected_value}±{SLIDER_DRAG_TOLERANCE}"
         )
 
     @pytest.mark.tcid("TC-02-07")
@@ -188,11 +190,10 @@ class TestSliderDragGesture:
         slider_page.drag_slider_1_to_percentage(50, speed=speed)
 
         slider_value = slider_page.slider_display_value
-        tolerance = 2.0
 
         actual = {
             "is_displayed": slider_page.is_slider_1_displayed,
-            "slider_value_within_tolerance": abs(slider_value - 50.0) <= tolerance,
+            "slider_value_within_tolerance": abs(slider_value - 50.0) <= SLIDER_DRAG_TOLERANCE,
         }
         expected = {
             "is_displayed": True,
@@ -201,7 +202,7 @@ class TestSliderDragGesture:
 
         assert (
             actual == expected
-        ), f"Slider state mismatch at speed {speed}: actual value={slider_value}, expected=50.0±{tolerance}"
+        ), f"Slider state mismatch at speed {speed}: actual value={slider_value}, expected=50.0±{SLIDER_DRAG_TOLERANCE}"
 
 
 @allure.feature("VodQA Samples")

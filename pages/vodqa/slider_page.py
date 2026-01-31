@@ -12,6 +12,10 @@ from pages.vodqa.header_bar_component import HeaderBarComponent, HeaderBarCompon
 
 logger = logging.getLogger(__name__)
 
+# Slider border offset: avoid exact border coordinates (0% at left, 100% at right)
+# Some Appium drivers may reject out-of-bounds or exact border coordinates
+SLIDER_BORDER_OFFSET = 1
+
 
 @dataclass(frozen=True)
 class SliderPageLocators:
@@ -215,8 +219,8 @@ class SliderPage(BaseAppiumGestures, HeaderBarComponent):
         # Calculate relative position and clamp to stay within bounds
         # Some drivers may reject out-of-bounds or border coordinates
         relative_x = int(slider_width * (target_percentage / 100))
-        min_offset = 1
-        max_offset = max(slider_width - 1, min_offset)
+        min_offset = SLIDER_BORDER_OFFSET
+        max_offset = max(slider_width - SLIDER_BORDER_OFFSET, min_offset)
         clamped_offset = max(min_offset, min(relative_x, max_offset))
         target_x = start_x + clamped_offset
 
