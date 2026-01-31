@@ -48,7 +48,7 @@ class TestSlider:
     @pytest.mark.tcid("TC-02-03")
     @allure.severity(allure.severity_level.NORMAL)
     @allure.title("Test slider 1 at {percentage}% position")
-    @pytest.mark.parametrize("percentage, expected_value", [(0, 0), (50, 64.0), (100, 100.0)], ids=["0%", "50%", "100%"])
+    @pytest.mark.parametrize("percentage, expected_value", [(0, 0), (50, 64.0), (100, 128.0)], ids=["0%", "50%", "100%"])
     def test_slider_1_multiple_positions(self, slider_page: SliderPage, percentage: int, expected_value: float) -> None:
         """Test slider 1 interaction at different positions.
         Args:
