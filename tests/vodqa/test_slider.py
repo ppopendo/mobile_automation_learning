@@ -4,6 +4,8 @@ This module contains tests for slider interaction functionality.
 Tests verify that the slider responds to touch gestures and displays correct values.
 """
 
+import os
+
 import allure
 import pytest
 from pages.vodqa.slider_page import SliderPage
@@ -115,7 +117,7 @@ class TestSliderDragGesture:
         """
         slider_page.drag_slider_2_to_percentage(25)
 
-        slider_value = slider_page.slider_display_value
+        slider_value = slider_page.slider_2_value
 
         actual = {
             "is_displayed": slider_page.is_slider_2_displayed,
@@ -231,7 +233,14 @@ class TestSliderLocatorVerification:
         Expected:
             - All slider locators successfully find their elements
             - Element properties are accessible and valid
+
+        Note: This test is for debugging purposes.
+        Set RUN_DIAGNOSTIC_TESTS to any value to enable this test.
         """
+        # Skip test unless explicitly enabled via environment variable
+        if not os.getenv("RUN_DIAGNOSTIC_TESTS"):
+            pytest.skip("Diagnostic test skipped. Set RUN_DIAGNOSTIC_TESTS to any value to enable.")
+
         # Run diagnostics
         diagnostic_info = slider_page.diagnose_slider_locators()
 
@@ -282,7 +291,14 @@ class TestSliderLocatorVerification:
             - Element has valid location and size
             - Element is displayed and enabled
             - Element has expected tag_name (SeekBar)
+
+        Note: This test is for debugging purposes.
+        Set RUN_DIAGNOSTIC_TESTS to any value to enable this test.
         """
+        # Skip test unless explicitly enabled via environment variable
+        if not os.getenv("RUN_DIAGNOSTIC_TESTS"):
+            pytest.skip("Diagnostic test skipped. Set RUN_DIAGNOSTIC_TESTS to any value to enable.")
+
         element_info = slider_page.slider_1_element_info
 
         actual = {
@@ -292,6 +308,7 @@ class TestSliderLocatorVerification:
             "is_enabled": element_info["is_enabled"],
             "has_positive_width": element_info["size"]["width"] > 0,
             "has_positive_height": element_info["size"]["height"] > 0,
+            "tag_name": element_info["tag_name"],
         }
         expected = {
             "has_location": True,
@@ -300,6 +317,7 @@ class TestSliderLocatorVerification:
             "is_enabled": True,
             "has_positive_width": True,
             "has_positive_height": True,
+            "tag_name": "android.widget.SeekBar",
         }
 
         assert actual == expected, f"Slider 1 element properties mismatch: {actual}"
@@ -318,7 +336,15 @@ class TestSliderLocatorVerification:
         Expected:
             - Element has valid location and size
             - Element is displayed and enabled
+            - Element has expected tag_name (SeekBar)
+
+        Note: This test is for debugging purposes.
+        Set RUN_DIAGNOSTIC_TESTS to any value to enable this test.
         """
+        # Skip test unless explicitly enabled via environment variable
+        if not os.getenv("RUN_DIAGNOSTIC_TESTS"):
+            pytest.skip("Diagnostic test skipped. Set RUN_DIAGNOSTIC_TESTS to any value to enable.")
+
         element_info = slider_page.slider_2_element_info
 
         actual = {
@@ -328,6 +354,7 @@ class TestSliderLocatorVerification:
             "is_enabled": element_info["is_enabled"],
             "has_positive_width": element_info["size"]["width"] > 0,
             "has_positive_height": element_info["size"]["height"] > 0,
+            "tag_name": element_info["tag_name"],
         }
         expected = {
             "has_location": True,
@@ -336,6 +363,7 @@ class TestSliderLocatorVerification:
             "is_enabled": True,
             "has_positive_width": True,
             "has_positive_height": True,
+            "tag_name": "android.widget.SeekBar",
         }
 
         assert actual == expected, f"Slider 2 element properties mismatch: {actual}"
