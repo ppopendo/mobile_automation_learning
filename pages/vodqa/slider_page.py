@@ -58,6 +58,26 @@ class SliderPage(BaseAppiumGestures, HeaderBarComponent):
         """
         self._tap_slider_at_percentage(SliderPageLocators.SLIDER_2, percentage)
 
+    def _clamp_slider_offset(self, slider_width: int, percentage: int) -> int:
+        """Calculate and clamp slider offset to stay within valid bounds.
+
+        Calculates the target X offset for a slider based on percentage,
+        clamping to stay within element bounds and avoid exact border coordinates
+        that some drivers may reject.
+
+        Args:
+            slider_width: Width of the slider element in pixels.
+            percentage: Target position as percentage (0-100).
+
+        Returns:
+            Clamped offset in pixels from slider start position.
+        """
+        relative_x = int(slider_width * (percentage / 100))
+        min_offset = SLIDER_BORDER_OFFSET
+        max_offset = max(slider_width - SLIDER_BORDER_OFFSET, min_offset)
+        clamped_offset = max(min_offset, min(relative_x, max_offset))
+        return clamped_offset
+
     def _tap_slider_at_percentage(self, locator: Tuple[str, str], percentage: int) -> None:
         """Internal method to tap on a slider at a specific percentage position.
 
@@ -76,12 +96,7 @@ class SliderPage(BaseAppiumGestures, HeaderBarComponent):
         slider_width = slider_size["width"]
         center_y = slider_location["y"] + (slider_size["height"] // 2)
 
-        # Calculate relative position and clamp to stay within bounds
-        # Some drivers may reject out-of-bounds or border coordinates
-        relative_x = int(slider_width * (percentage / 100))
-        min_offset = SLIDER_BORDER_OFFSET
-        max_offset = max(slider_width - SLIDER_BORDER_OFFSET, min_offset)
-        clamped_offset = max(min_offset, min(relative_x, max_offset))
+        clamped_offset = self._clamp_slider_offset(slider_width, percentage)
         target_x = start_x + clamped_offset
 
         params = {"x": target_x, "y": center_y}
@@ -223,12 +238,7 @@ class SliderPage(BaseAppiumGestures, HeaderBarComponent):
         slider_width = slider_size["width"]
         center_y = slider_location["y"] + (slider_size["height"] // 2)
 
-        # Calculate relative position and clamp to stay within bounds
-        # Some drivers may reject out-of-bounds or border coordinates
-        relative_x = int(slider_width * (target_percentage / 100))
-        min_offset = SLIDER_BORDER_OFFSET
-        max_offset = max(slider_width - SLIDER_BORDER_OFFSET, min_offset)
-        clamped_offset = max(min_offset, min(relative_x, max_offset))
+        clamped_offset = self._clamp_slider_offset(slider_width, target_percentage)
         target_x = start_x + clamped_offset
 
         self.drag_to_coordinates(
