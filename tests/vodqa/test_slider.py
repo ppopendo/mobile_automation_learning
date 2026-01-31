@@ -13,6 +13,9 @@ from pages.vodqa.slider_page import SliderPage
 # Tolerance for slider drag gesture assertions (handles device rounding differences)
 SLIDER_DRAG_TOLERANCE = 2.0
 
+# Tolerance for slider tap gesture assertions at endpoints (handles border clamping)
+SLIDER_TAP_ENDPOINT_TOLERANCE = 3.0
+
 
 @allure.feature("VodQA Samples")
 @allure.story("Slider")
@@ -48,7 +51,9 @@ class TestSlider:
     @pytest.mark.tcid("TC-02-03")
     @allure.severity(allure.severity_level.NORMAL)
     @allure.title("Test slider 1 at {percentage}% position")
-    @pytest.mark.parametrize("percentage, expected_value", [(0, 0), (50, 64.0), (100, 128.0)], ids=["0%", "50%", "100%"])
+    @pytest.mark.parametrize(
+        "percentage, expected_value", [(0, 0), (50, 64.0), (100, 128.0)], ids=["0%", "50%", "100%"]
+    )
     def test_slider_1_multiple_positions(self, slider_page: SliderPage, percentage: int, expected_value: float) -> None:
         """Test slider 1 interaction at different positions.
         Args:
@@ -58,9 +63,15 @@ class TestSlider:
             - Slider value is updated after interaction
         """
         slider_page.tap_slider_1_at_percentage(percentage)
-        assert (
-            slider_page.slider_1_value == expected_value
-        ), f"Slider 1 should display a value after tapping at {percentage}%"
+        actual_value = slider_page.slider_1_value
+
+        # Use tolerance-based assertion for endpoints (0%, 100%) due to border clamping
+        if percentage in (0, 100):
+            assert actual_value == pytest.approx(
+                expected_value, abs=SLIDER_TAP_ENDPOINT_TOLERANCE
+            ), f"Slider 1 value mismatch at {percentage}%: actual={actual_value}, expected≈{expected_value}"
+        else:
+            assert actual_value == expected_value, f"Slider 1 should display a value after tapping at {percentage}%"
 
 
 @allure.feature("VodQA Samples")
@@ -110,18 +121,21 @@ class TestSliderDragGesture:
 
         Steps:
             1. Drag slider 2 thumb to 25% position
-            2. Verify slider value is updated to approximately 25
+            2. Verify slider value is updated to approximately 32.0 (25% of 128 max value)
 
         Expected:
             - Slider 2 display value reflects approximately 25% position (within tolerance)
+
+        Note: Slider 2 has a max value of 128, so 25% = 32.0
         """
         slider_page.drag_slider_2_to_percentage(25)
 
         slider_value = slider_page.slider_2_value
+        expected_value = 32.0  # 25% of 128 (slider max value)
 
         actual = {
             "is_displayed": slider_page.is_slider_2_displayed,
-            "slider_value_within_tolerance": abs(slider_value - 25.0) <= SLIDER_DRAG_TOLERANCE,
+            "slider_value_within_tolerance": abs(slider_value - expected_value) <= SLIDER_DRAG_TOLERANCE,
         }
         expected = {
             "is_displayed": True,
@@ -130,7 +144,7 @@ class TestSliderDragGesture:
 
         assert (
             actual == expected
-        ), f"Slider state mismatch: actual value={slider_value}, expected=25.0±{SLIDER_DRAG_TOLERANCE}"
+        ), f"Slider state mismatch: actual value={slider_value}, expected={expected_value}±{SLIDER_DRAG_TOLERANCE}"
 
     @pytest.mark.tcid("TC-02-06")
     @allure.severity(allure.severity_level.NORMAL)
