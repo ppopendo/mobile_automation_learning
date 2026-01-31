@@ -8,6 +8,9 @@ import allure
 import pytest
 from pages.vodqa.slider_page import SliderPage
 
+# Tolerance for slider drag gesture assertions (handles device rounding differences)
+SLIDER_DRAG_TOLERANCE = 2.0
+
 
 @allure.feature("VodQA Samples")
 @allure.story("Slider")
@@ -78,20 +81,24 @@ class TestSliderDragGesture:
             2. Verify slider value is updated to approximately 75
 
         Expected:
-            - Slider 1 value reflects approximately 75% position
+            - Slider 1 display value reflects approximately 75% position (within tolerance)
         """
         slider_page.drag_slider_1_to_percentage(75)
 
+        slider_value = slider_page.slider_display_value
+
         actual = {
             "is_displayed": slider_page.is_slider_1_displayed,
-            "slider_value": slider_page.slider_1_value,
+            "slider_value_within_tolerance": abs(slider_value - 75.0) <= SLIDER_DRAG_TOLERANCE,
         }
         expected = {
             "is_displayed": True,
-            "slider_value": 75.0,
+            "slider_value_within_tolerance": True,
         }
 
-        assert actual == expected, f"Slider state mismatch: {actual}"
+        assert (
+            actual == expected
+        ), f"Slider state mismatch: actual value={slider_value}, expected=75.0±{SLIDER_DRAG_TOLERANCE}"
 
     @pytest.mark.tcid("TC-02-05")
     @allure.severity(allure.severity_level.NORMAL)
@@ -104,20 +111,24 @@ class TestSliderDragGesture:
             2. Verify slider value is updated to approximately 25
 
         Expected:
-            - Slider 2 value reflects approximately 25% position
+            - Slider 2 display value reflects approximately 25% position (within tolerance)
         """
         slider_page.drag_slider_2_to_percentage(25)
 
+        slider_value = slider_page.slider_display_value
+
         actual = {
             "is_displayed": slider_page.is_slider_2_displayed,
-            "slider_value": slider_page.slider_2_value,
+            "slider_value_within_tolerance": abs(slider_value - 25.0) <= SLIDER_DRAG_TOLERANCE,
         }
         expected = {
             "is_displayed": True,
-            "slider_value": 25.0,
+            "slider_value_within_tolerance": True,
         }
 
-        assert actual == expected, f"Slider state mismatch: {actual}"
+        assert (
+            actual == expected
+        ), f"Slider state mismatch: actual value={slider_value}, expected=25.0±{SLIDER_DRAG_TOLERANCE}"
 
     @pytest.mark.tcid("TC-02-06")
     @allure.severity(allure.severity_level.NORMAL)
@@ -134,24 +145,29 @@ class TestSliderDragGesture:
 
         Args:
             target_percentage: Target slider position (0-100%).
-            expected_value: Expected slider value after drag.
+            expected_value: Expected slider display value after drag.
 
         Expected:
             - Slider responds to drag gesture at specified position
-            - Slider value matches expected value after drag
+            - Slider display value matches expected value after drag (within tolerance)
         """
         slider_page.drag_slider_1_to_percentage(target_percentage)
 
+        slider_value = slider_page.slider_display_value
+
         actual = {
             "is_displayed": slider_page.is_slider_1_displayed,
-            "slider_value": slider_page.slider_1_value,
+            "slider_value_within_tolerance": abs(slider_value - expected_value) <= SLIDER_DRAG_TOLERANCE,
         }
         expected = {
             "is_displayed": True,
-            "slider_value": expected_value,
+            "slider_value_within_tolerance": True,
         }
 
-        assert actual == expected, f"Slider state mismatch after dragging to {target_percentage}%: {actual}"
+        assert actual == expected, (
+            f"Slider state mismatch after dragging to {target_percentage}%: "
+            f"actual value={slider_value}, expected={expected_value}±{SLIDER_DRAG_TOLERANCE}"
+        )
 
     @pytest.mark.tcid("TC-02-07")
     @allure.severity(allure.severity_level.NORMAL)
@@ -169,20 +185,24 @@ class TestSliderDragGesture:
 
         Expected:
             - Drag gesture works correctly regardless of speed
-            - Slider value is updated to target position (50%)
+            - Slider display value is updated to target position (50%) within tolerance
         """
         slider_page.drag_slider_1_to_percentage(50, speed=speed)
 
+        slider_value = slider_page.slider_display_value
+
         actual = {
             "is_displayed": slider_page.is_slider_1_displayed,
-            "slider_value": slider_page.slider_1_value,
+            "slider_value_within_tolerance": abs(slider_value - 50.0) <= SLIDER_DRAG_TOLERANCE,
         }
         expected = {
             "is_displayed": True,
-            "slider_value": 50.0,
+            "slider_value_within_tolerance": True,
         }
 
-        assert actual == expected, f"Slider state mismatch at speed {speed}: {actual}"
+        assert (
+            actual == expected
+        ), f"Slider state mismatch at speed {speed}: actual value={slider_value}, expected=50.0±{SLIDER_DRAG_TOLERANCE}"
 
 
 @allure.feature("VodQA Samples")

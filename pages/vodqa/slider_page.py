@@ -12,6 +12,10 @@ from pages.vodqa.header_bar_component import HeaderBarComponent, HeaderBarCompon
 
 logger = logging.getLogger(__name__)
 
+# Slider border offset: avoid exact border coordinates (0% at left, 100% at right)
+# Some Appium drivers may reject out-of-bounds or exact border coordinates
+SLIDER_BORDER_OFFSET = 1
+
 
 @dataclass(frozen=True)
 class SliderPageLocators:
@@ -197,10 +201,12 @@ class SliderPage(BaseAppiumGestures, HeaderBarComponent):
             speed: Drag speed in pixels per second.
 
         Raises:
-            ValueError: If target_percentage is not between 0 and 100.
+            ValueError: If target_percentage is not between 0 and 100 or speed is not positive.
         """
         if not 0 <= target_percentage <= 100:
             raise ValueError(f"Target percentage must be between 0 and 100, got {target_percentage}")
+        if speed <= 0:
+            raise ValueError(f"Speed must be a positive integer, got {speed}")
 
         slider = self.wait_for_element(locator)
         slider_location = slider.location
@@ -208,17 +214,22 @@ class SliderPage(BaseAppiumGestures, HeaderBarComponent):
 
         start_x = slider_location["x"]
         slider_width = slider_size["width"]
-        target_x = start_x + int(slider_width * (target_percentage / 100))
         center_y = slider_location["y"] + (slider_size["height"] // 2)
 
-        params = {
-            "elementId": slider.id,
-            "endX": target_x,
-            "endY": center_y,
-            "speed": speed,
-        }
+        # Calculate relative position and clamp to stay within bounds
+        # Some drivers may reject out-of-bounds or border coordinates
+        relative_x = int(slider_width * (target_percentage / 100))
+        min_offset = SLIDER_BORDER_OFFSET
+        max_offset = max(slider_width - SLIDER_BORDER_OFFSET, min_offset)
+        clamped_offset = max(min_offset, min(relative_x, max_offset))
+        target_x = start_x + clamped_offset
 
-        self._driver.execute_script("mobile: dragGesture", params)
+        self.drag_to_coordinates(
+            source_locator=locator,
+            end_x=target_x,
+            end_y=center_y,
+            speed=speed,
+        )
 
     # ==================== DIAGNOSTIC METHODS ====================
 
@@ -267,7 +278,7 @@ class SliderPage(BaseAppiumGestures, HeaderBarComponent):
             }
 
             try:
-                element = self.wait_for_element(locator, timeout=5)
+                element = self.wait_for_element(locator, timeout=self._short_timeout)
                 result["found"] = True
                 result["element_info"] = {
                     "text": element.text,
