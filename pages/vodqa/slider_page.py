@@ -233,7 +233,7 @@ class SliderPage(BaseAppiumGestures, HeaderBarComponent):
 
     # ==================== DIAGNOSTIC METHODS ====================
 
-    @allure.step("diagnosing slider locators")
+    @allure.step("the user diagnoses slider locators")
     def diagnose_slider_locators(self) -> Dict[str, Any]:
         """Diagnose and verify all slider-related locators.
 
@@ -241,8 +241,14 @@ class SliderPage(BaseAppiumGestures, HeaderBarComponent):
         and collects detailed information about each element for debugging purposes.
 
         Returns:
-            Dict containing diagnostic information for each locator:
-                - locator_name: Name of the locator constant
+            Dict containing diagnostic information with the following structure:
+                - slider_1: Dict with locator diagnostic info (keys: locator_strategy, locator_value, found, element_info, error)
+                - slider_2: Dict with locator diagnostic info (keys: locator_strategy, locator_value, found, element_info, error)
+                - slider_display_value: Dict with locator diagnostic info (keys: locator_strategy, locator_value, found, element_info, error)
+                - all_locators_valid: Boolean indicating if all locators were found
+                - suggestions: List of troubleshooting suggestions (if any locator failed)
+
+            Each locator info dict contains:
                 - locator_strategy: The strategy used (e.g., ACCESSIBILITY_ID, XPATH)
                 - locator_value: The value used for finding element
                 - found: Whether the element was found
