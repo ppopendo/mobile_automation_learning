@@ -74,8 +74,15 @@ class SliderPage(BaseAppiumGestures, HeaderBarComponent):
 
         start_x = slider_location["x"]
         slider_width = slider_size["width"]
-        target_x = start_x + int(slider_width * (percentage / 100))
         center_y = slider_location["y"] + (slider_size["height"] // 2)
+
+        # Calculate relative position and clamp to stay within bounds
+        # Some drivers may reject out-of-bounds or border coordinates
+        relative_x = int(slider_width * (percentage / 100))
+        min_offset = SLIDER_BORDER_OFFSET
+        max_offset = max(slider_width - SLIDER_BORDER_OFFSET, min_offset)
+        clamped_offset = max(min_offset, min(relative_x, max_offset))
+        target_x = start_x + clamped_offset
 
         params = {"x": target_x, "y": center_y}
         self._driver.execute_script("mobile: clickGesture", params)
