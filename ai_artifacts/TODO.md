@@ -14,7 +14,7 @@ This document tracks remaining tasks, improvements, and technical debt for the m
 ### Slider Feature
 - [x] **Drag Gesture**: Add strict drag gesture tests (currently mostly tapping).
 - [x] **Value Assertion**: Add assertion for actual slider value text changes (currently validating position/response).
-- [ ] **Locator Verification**: Verify `SLIDER_ELEMENT` and `SLIDER_VALUE_TEXT` locators during a debug session.
+- [x] **Locator Verification**: Verify `SLIDER_ELEMENT` and `SLIDER_VALUE_TEXT` locators during a debug session.
 
 ### Photo View Feature
 - [ ] **Pan Gestures**: Implement and test pan gestures in multiple directions (Up/Down/Left/Right).

@@ -183,3 +183,139 @@ class TestSliderDragGesture:
         }
 
         assert actual == expected, f"Slider state mismatch at speed {speed}: {actual}"
+
+
+@allure.feature("VodQA Samples")
+@allure.story("Slider Locator Verification")
+class TestSliderLocatorVerification:
+    """Test class for Slider locator verification and diagnostics.
+
+    These tests verify that all slider locators are valid and working correctly.
+    Use these tests during debug sessions to troubleshoot locator issues.
+    """
+
+    @pytest.mark.tcid("TC-02-08")
+    @allure.severity(allure.severity_level.CRITICAL)
+    @allure.title("Test slider locators diagnostic")
+    def test_slider_locators_diagnostic(self, slider_page: SliderPage) -> None:
+        """Verify all slider locators are valid and elements are found.
+
+        This diagnostic test attempts to find all slider elements using their
+        defined locators and reports detailed information about each element.
+
+        Steps:
+            1. Run slider locators diagnostics
+            2. Attach diagnostic info to Allure report
+            3. Verify all locators found their elements
+
+        Expected:
+            - All slider locators successfully find their elements
+            - Element properties are accessible and valid
+        """
+        # Run diagnostics
+        diagnostic_info = slider_page.diagnose_slider_locators()
+
+        # Attach diagnostic info to Allure report
+        allure.attach(
+            f"Slider 1 locator:\n"
+            f"  Strategy: {diagnostic_info['slider_1'].get('locator_strategy')}\n"
+            f"  Value: {diagnostic_info['slider_1'].get('locator_value')}\n"
+            f"  Found: {diagnostic_info['slider_1'].get('found')}\n"
+            f"  Element info: {diagnostic_info['slider_1'].get('element_info')}\n\n"
+            f"Slider 2 locator:\n"
+            f"  Strategy: {diagnostic_info['slider_2'].get('locator_strategy')}\n"
+            f"  Value: {diagnostic_info['slider_2'].get('locator_value')}\n"
+            f"  Found: {diagnostic_info['slider_2'].get('found')}\n"
+            f"  Element info: {diagnostic_info['slider_2'].get('element_info')}\n\n"
+            f"Slider Display Value locator:\n"
+            f"  Strategy: {diagnostic_info['slider_display_value'].get('locator_strategy')}\n"
+            f"  Value: {diagnostic_info['slider_display_value'].get('locator_value')}\n"
+            f"  Found: {diagnostic_info['slider_display_value'].get('found')}\n"
+            f"  Element info: {diagnostic_info['slider_display_value'].get('element_info')}\n\n"
+            f"All locators valid: {diagnostic_info['all_locators_valid']}\n"
+            f"Suggestions: {', '.join(diagnostic_info['suggestions']) if diagnostic_info['suggestions'] else 'None'}",
+            name="Slider Locators Diagnostic Report",
+            attachment_type=allure.attachment_type.TEXT,
+        )
+
+        # Assert all locators are valid
+        assert diagnostic_info["all_locators_valid"], (
+            f"Not all slider locators are valid. "
+            f"Slider 1 found: {diagnostic_info['slider_1'].get('found')}, "
+            f"Slider 2 found: {diagnostic_info['slider_2'].get('found')}, "
+            f"Display value found: {diagnostic_info['slider_display_value'].get('found')}. "
+            f"Suggestions: {diagnostic_info['suggestions']}"
+        )
+
+    @pytest.mark.tcid("TC-02-09")
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.title("Test slider 1 element properties are accessible")
+    def test_slider_1_element_properties(self, slider_page: SliderPage) -> None:
+        """Verify slider 1 element properties are accessible.
+
+        Steps:
+            1. Get slider 1 element info
+            2. Verify all expected properties are present
+            3. Verify element is displayed and enabled
+
+        Expected:
+            - Element has valid location and size
+            - Element is displayed and enabled
+            - Element has expected tag_name (SeekBar)
+        """
+        element_info = slider_page.slider_1_element_info
+
+        actual = {
+            "has_location": element_info["location"] is not None,
+            "has_size": element_info["size"] is not None,
+            "is_displayed": element_info["is_displayed"],
+            "is_enabled": element_info["is_enabled"],
+            "has_positive_width": element_info["size"]["width"] > 0,
+            "has_positive_height": element_info["size"]["height"] > 0,
+        }
+        expected = {
+            "has_location": True,
+            "has_size": True,
+            "is_displayed": True,
+            "is_enabled": True,
+            "has_positive_width": True,
+            "has_positive_height": True,
+        }
+
+        assert actual == expected, f"Slider 1 element properties mismatch: {actual}"
+
+    @pytest.mark.tcid("TC-02-10")
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.title("Test slider 2 element properties are accessible")
+    def test_slider_2_element_properties(self, slider_page: SliderPage) -> None:
+        """Verify slider 2 element properties are accessible.
+
+        Steps:
+            1. Get slider 2 element info
+            2. Verify all expected properties are present
+            3. Verify element is displayed and enabled
+
+        Expected:
+            - Element has valid location and size
+            - Element is displayed and enabled
+        """
+        element_info = slider_page.slider_2_element_info
+
+        actual = {
+            "has_location": element_info["location"] is not None,
+            "has_size": element_info["size"] is not None,
+            "is_displayed": element_info["is_displayed"],
+            "is_enabled": element_info["is_enabled"],
+            "has_positive_width": element_info["size"]["width"] > 0,
+            "has_positive_height": element_info["size"]["height"] > 0,
+        }
+        expected = {
+            "has_location": True,
+            "has_size": True,
+            "is_displayed": True,
+            "is_enabled": True,
+            "has_positive_width": True,
+            "has_positive_height": True,
+        }
+
+        assert actual == expected, f"Slider 2 element properties mismatch: {actual}"

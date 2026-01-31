@@ -1,13 +1,16 @@
 """Page Object for Slider feature in VodQA application."""
 
+import logging
 from dataclasses import dataclass, field
-from typing import Tuple
+from typing import Any, Dict, List, Tuple
 
 import allure
 from appium.webdriver.common.appiumby import AppiumBy
 
 from pages.base_appium_gestures import BaseAppiumGestures
 from pages.vodqa.header_bar_component import HeaderBarComponent, HeaderBarComponentLocators
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -216,3 +219,139 @@ class SliderPage(BaseAppiumGestures, HeaderBarComponent):
         }
 
         self._driver.execute_script("mobile: dragGesture", params)
+
+    # ==================== DIAGNOSTIC METHODS ====================
+
+    @allure.step("diagnosing slider locators")
+    def diagnose_slider_locators(self) -> Dict[str, Any]:
+        """Diagnose and verify all slider-related locators.
+
+        This method attempts to find all slider elements using their defined locators
+        and collects detailed information about each element for debugging purposes.
+
+        Returns:
+            Dict containing diagnostic information for each locator:
+                - locator_name: Name of the locator constant
+                - locator_strategy: The strategy used (e.g., ACCESSIBILITY_ID, XPATH)
+                - locator_value: The value used for finding element
+                - found: Whether the element was found
+                - element_info: Dict with element details (if found)
+                - error: Error message (if not found)
+        """
+        diagnostic_results: Dict[str, Any] = {
+            "slider_1": {},
+            "slider_2": {},
+            "slider_display_value": {},
+            "all_locators_valid": True,
+            "suggestions": [],
+        }
+
+        locators_to_check: List[Tuple[str, Tuple[str, str]]] = [
+            ("slider_1", SliderPageLocators.SLIDER_1),
+            ("slider_2", SliderPageLocators.SLIDER_2),
+            ("slider_display_value", SliderPageLocators.SLIDER_DISPLAY_VALUE),
+        ]
+
+        logger.info("=" * 60)
+        logger.info("🔍 Slider Locators Diagnostic Report")
+        logger.info("=" * 60)
+
+        for locator_name, locator in locators_to_check:
+            strategy, value = locator
+            result: Dict[str, Any] = {
+                "locator_strategy": strategy,
+                "locator_value": value,
+                "found": False,
+                "element_info": None,
+                "error": None,
+            }
+
+            try:
+                element = self.wait_for_element(locator, timeout=5)
+                result["found"] = True
+                result["element_info"] = {
+                    "text": element.text,
+                    "location": element.location,
+                    "size": element.size,
+                    "is_displayed": element.is_displayed(),
+                    "is_enabled": element.is_enabled(),
+                    "tag_name": element.tag_name,
+                    "content_desc": element.get_attribute("content-desc"),
+                    "resource_id": element.get_attribute("resource-id"),
+                    "class_name": element.get_attribute("className"),
+                }
+                logger.info(f"✅ {locator_name}: FOUND")
+                logger.info(f"   Strategy: {strategy}")
+                logger.info(f"   Value: {value}")
+                logger.info(f"   Text: '{element.text}'")
+                logger.info(f"   Location: {element.location}")
+                logger.info(f"   Size: {element.size}")
+                logger.info(f"   Tag: {element.tag_name}")
+                logger.info(f"   Content-desc: {element.get_attribute('content-desc')}")
+            except Exception as e:
+                result["found"] = False
+                result["error"] = str(e)
+                diagnostic_results["all_locators_valid"] = False
+                logger.warning(f"❌ {locator_name}: NOT FOUND")
+                logger.warning(f"   Strategy: {strategy}")
+                logger.warning(f"   Value: {value}")
+                logger.warning(f"   Error: {str(e)}")
+
+            diagnostic_results[locator_name] = result
+
+        # Add suggestions if any locator failed
+        if not diagnostic_results["all_locators_valid"]:
+            suggestions = [
+                "1. Verify that you are on the Slider page before running diagnostics",
+                "2. Use Appium Inspector to examine the current UI hierarchy",
+                "3. Check if element accessibility IDs have changed in a new app version",
+                "4. Consider alternative locator strategies (XPATH, CLASS_NAME)",
+                "5. Increase timeout if elements are slow to load",
+            ]
+            diagnostic_results["suggestions"] = suggestions
+            for suggestion in suggestions:
+                logger.info(f"   {suggestion}")
+
+        logger.info("=" * 60)
+
+        return diagnostic_results
+
+    @property
+    @allure.step("retrieving slider 1 element details")
+    def slider_1_element_info(self) -> Dict[str, Any]:
+        """Get detailed information about slider 1 element.
+
+        Returns:
+            Dict containing element properties: text, location, size, attributes.
+        """
+        element = self.wait_for_element(SliderPageLocators.SLIDER_1)
+        return {
+            "text": element.text,
+            "location": element.location,
+            "size": element.size,
+            "is_displayed": element.is_displayed(),
+            "is_enabled": element.is_enabled(),
+            "tag_name": element.tag_name,
+            "content_desc": element.get_attribute("content-desc"),
+            "resource_id": element.get_attribute("resource-id"),
+        }
+
+    @property
+    @allure.step("retrieving slider 2 element details")
+    def slider_2_element_info(self) -> Dict[str, Any]:
+        """Get detailed information about slider 2 element.
+
+        Returns:
+            Dict containing element properties: text, location, size, attributes.
+        """
+        element = self.wait_for_element(SliderPageLocators.SLIDER_2)
+        return {
+            "text": element.text,
+            "location": element.location,
+            "size": element.size,
+            "is_displayed": element.is_displayed(),
+            "is_enabled": element.is_enabled(),
+            "tag_name": element.tag_name,
+            "content_desc": element.get_attribute("content-desc"),
+            "resource_id": element.get_attribute("resource-id"),
+        }
