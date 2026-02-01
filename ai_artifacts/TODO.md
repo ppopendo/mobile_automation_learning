@@ -17,7 +17,7 @@ This document tracks remaining tasks, improvements, and technical debt for the m
 - [x] **Locator Verification**: Verify `SLIDER_ELEMENT` and `SLIDER_VALUE_TEXT` locators during a debug session.
 
 ### Photo View Feature
-- [ ] **Pan Gestures**: Implement and test pan gestures in multiple directions (Up/Down/Left/Right).
+- [x] **Pan Gestures**: Implement and test pan gestures in multiple directions (Up/Down/Left/Right).
 
 ### Carousel Feature
 - [ ] **Edge Cases**: Add tests for boundary conditions (swiping past first/last item).
