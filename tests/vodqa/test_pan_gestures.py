@@ -4,6 +4,8 @@ This module contains tests for pan gestures (swipe-based image panning)
 in multiple directions (Up, Down, Left, Right) using the Photo View page.
 """
 
+from typing import Union
+
 import allure
 import pytest
 
@@ -22,15 +24,33 @@ class TestPanGestures:
         """Verify that pan up gesture works on photo element.
 
         Expected:
-            - pan_up_on_photo method executes successfully
-            - Pan up gesture is performed on photo element
+            - Zoom in to make photo larger than viewport
+            - Pan up gesture changes photo location vertically
             - Photo image remains displayed after gesture
         """
-        # Act - perform pan up on photo element
-        photo_view_page.pan_up_on_photo()
+        # Arrange - zoom in to enable panning and get initial location
+        photo_view_page.pinch_open_on_photo(percentage=0.8)
+        initial_location = photo_view_page.photo_image_location
 
-        # Assert - verify photo is still displayed after gesture
-        assert photo_view_page.is_photo_displayed, "Photo should be displayed after pan up gesture"
+        # Act - perform pan up on photo element
+        photo_view_page.pan_up_on_photo(percentage=0.5)
+
+        # Assert - verify photo location changed (y-coordinate should decrease when panning up)
+        final_location = photo_view_page.photo_image_location
+        actual = {
+            "is_displayed": photo_view_page.is_photo_displayed,
+            "y_changed": initial_location["y"] != final_location["y"],
+        }
+
+        expected = {
+            "is_displayed": True,
+            "y_changed": True,
+        }
+
+        assert actual == expected, (
+            f"Pan up failed: initial_y={initial_location['y']}, "
+            f"final_y={final_location['y']}, actual={actual}"
+        )
 
     @pytest.mark.tcid("TC-10-02")
     @allure.severity(allure.severity_level.NORMAL)
@@ -39,15 +59,33 @@ class TestPanGestures:
         """Verify that pan down gesture works on photo element.
 
         Expected:
-            - pan_down_on_photo method executes successfully
-            - Pan down gesture is performed on photo element
+            - Zoom in to make photo larger than viewport
+            - Pan down gesture changes photo location vertically
             - Photo image remains displayed after gesture
         """
-        # Act - perform pan down on photo element
-        photo_view_page.pan_down_on_photo()
+        # Arrange - zoom in to enable panning and get initial location
+        photo_view_page.pinch_open_on_photo(percentage=0.8)
+        initial_location = photo_view_page.photo_image_location
 
-        # Assert - verify photo is still displayed after gesture
-        assert photo_view_page.is_photo_displayed, "Photo should be displayed after pan down gesture"
+        # Act - perform pan down on photo element
+        photo_view_page.pan_down_on_photo(percentage=0.5)
+
+        # Assert - verify photo location changed (y-coordinate should increase when panning down)
+        final_location = photo_view_page.photo_image_location
+        actual = {
+            "is_displayed": photo_view_page.is_photo_displayed,
+            "y_changed": initial_location["y"] != final_location["y"],
+        }
+
+        expected = {
+            "is_displayed": True,
+            "y_changed": True,
+        }
+
+        assert actual == expected, (
+            f"Pan down failed: initial_y={initial_location['y']}, "
+            f"final_y={final_location['y']}, actual={actual}"
+        )
 
     @pytest.mark.tcid("TC-10-03")
     @allure.severity(allure.severity_level.NORMAL)
@@ -56,15 +94,33 @@ class TestPanGestures:
         """Verify that pan left gesture works on photo element.
 
         Expected:
-            - pan_left_on_photo method executes successfully
-            - Pan left gesture is performed on photo element
+            - Zoom in to make photo larger than viewport
+            - Pan left gesture changes photo location horizontally
             - Photo image remains displayed after gesture
         """
-        # Act - perform pan left on photo element
-        photo_view_page.pan_left_on_photo()
+        # Arrange - zoom in to enable panning and get initial location
+        photo_view_page.pinch_open_on_photo(percentage=0.8)
+        initial_location = photo_view_page.photo_image_location
 
-        # Assert - verify photo is still displayed after gesture
-        assert photo_view_page.is_photo_displayed, "Photo should be displayed after pan left gesture"
+        # Act - perform pan left on photo element
+        photo_view_page.pan_left_on_photo(percentage=0.5)
+
+        # Assert - verify photo location changed (x-coordinate should decrease when panning left)
+        final_location = photo_view_page.photo_image_location
+        actual = {
+            "is_displayed": photo_view_page.is_photo_displayed,
+            "x_changed": initial_location["x"] != final_location["x"],
+        }
+
+        expected = {
+            "is_displayed": True,
+            "x_changed": True,
+        }
+
+        assert actual == expected, (
+            f"Pan left failed: initial_x={initial_location['x']}, "
+            f"final_x={final_location['x']}, actual={actual}"
+        )
 
     @pytest.mark.tcid("TC-10-04")
     @allure.severity(allure.severity_level.NORMAL)
@@ -73,15 +129,33 @@ class TestPanGestures:
         """Verify that pan right gesture works on photo element.
 
         Expected:
-            - pan_right_on_photo method executes successfully
-            - Pan right gesture is performed on photo element
+            - Zoom in to make photo larger than viewport
+            - Pan right gesture changes photo location horizontally
             - Photo image remains displayed after gesture
         """
-        # Act - perform pan right on photo element
-        photo_view_page.pan_right_on_photo()
+        # Arrange - zoom in to enable panning and get initial location
+        photo_view_page.pinch_open_on_photo(percentage=0.8)
+        initial_location = photo_view_page.photo_image_location
 
-        # Assert - verify photo is still displayed after gesture
-        assert photo_view_page.is_photo_displayed, "Photo should be displayed after pan right gesture"
+        # Act - perform pan right on photo element
+        photo_view_page.pan_right_on_photo(percentage=0.5)
+
+        # Assert - verify photo location changed (x-coordinate should increase when panning right)
+        final_location = photo_view_page.photo_image_location
+        actual = {
+            "is_displayed": photo_view_page.is_photo_displayed,
+            "x_changed": initial_location["x"] != final_location["x"],
+        }
+
+        expected = {
+            "is_displayed": True,
+            "x_changed": True,
+        }
+
+        assert actual == expected, (
+            f"Pan right failed: initial_x={initial_location['x']}, "
+            f"final_x={final_location['x']}, actual={actual}"
+        )
 
     @pytest.mark.tcid("TC-10-05")
     @allure.severity(allure.severity_level.NORMAL)
@@ -90,15 +164,33 @@ class TestPanGestures:
         """Verify that pan up gesture works on screen center.
 
         Expected:
-            - pan_up_on_screen method executes successfully
-            - Pan up gesture is performed on screen center
+            - Zoom in to make photo larger than viewport
+            - Pan up gesture on screen center changes photo location
             - Photo image remains displayed after gesture
         """
-        # Act - perform pan up on screen center
-        photo_view_page.pan_up_on_screen()
+        # Arrange - zoom in to enable panning and get initial location
+        photo_view_page.pinch_open_on_screen(percentage=0.8)
+        initial_location = photo_view_page.photo_image_location
 
-        # Assert - verify photo is still displayed after gesture
-        assert photo_view_page.is_photo_displayed, "Photo should be displayed after pan up gesture on screen"
+        # Act - perform pan up on screen center
+        photo_view_page.pan_up_on_screen(percentage=0.5)
+
+        # Assert - verify photo location changed
+        final_location = photo_view_page.photo_image_location
+        actual = {
+            "is_displayed": photo_view_page.is_photo_displayed,
+            "y_changed": initial_location["y"] != final_location["y"],
+        }
+
+        expected = {
+            "is_displayed": True,
+            "y_changed": True,
+        }
+
+        assert actual == expected, (
+            f"Pan up on screen failed: initial_y={initial_location['y']}, "
+            f"final_y={final_location['y']}, actual={actual}"
+        )
 
     @pytest.mark.tcid("TC-10-06")
     @allure.severity(allure.severity_level.NORMAL)
@@ -107,15 +199,33 @@ class TestPanGestures:
         """Verify that pan down gesture works on screen center.
 
         Expected:
-            - pan_down_on_screen method executes successfully
-            - Pan down gesture is performed on screen center
+            - Zoom in to make photo larger than viewport
+            - Pan down gesture on screen center changes photo location
             - Photo image remains displayed after gesture
         """
-        # Act - perform pan down on screen center
-        photo_view_page.pan_down_on_screen()
+        # Arrange - zoom in to enable panning and get initial location
+        photo_view_page.pinch_open_on_screen(percentage=0.8)
+        initial_location = photo_view_page.photo_image_location
 
-        # Assert - verify photo is still displayed after gesture
-        assert photo_view_page.is_photo_displayed, "Photo should be displayed after pan down gesture on screen"
+        # Act - perform pan down on screen center
+        photo_view_page.pan_down_on_screen(percentage=0.5)
+
+        # Assert - verify photo location changed
+        final_location = photo_view_page.photo_image_location
+        actual = {
+            "is_displayed": photo_view_page.is_photo_displayed,
+            "y_changed": initial_location["y"] != final_location["y"],
+        }
+
+        expected = {
+            "is_displayed": True,
+            "y_changed": True,
+        }
+
+        assert actual == expected, (
+            f"Pan down on screen failed: initial_y={initial_location['y']}, "
+            f"final_y={final_location['y']}, actual={actual}"
+        )
 
     @pytest.mark.tcid("TC-10-07")
     @allure.severity(allure.severity_level.NORMAL)
@@ -124,15 +234,33 @@ class TestPanGestures:
         """Verify that pan left gesture works on screen center.
 
         Expected:
-            - pan_left_on_screen method executes successfully
-            - Pan left gesture is performed on screen center
+            - Zoom in to make photo larger than viewport
+            - Pan left gesture on screen center changes photo location
             - Photo image remains displayed after gesture
         """
-        # Act - perform pan left on screen center
-        photo_view_page.pan_left_on_screen()
+        # Arrange - zoom in to enable panning and get initial location
+        photo_view_page.pinch_open_on_screen(percentage=0.8)
+        initial_location = photo_view_page.photo_image_location
 
-        # Assert - verify photo is still displayed after gesture
-        assert photo_view_page.is_photo_displayed, "Photo should be displayed after pan left gesture on screen"
+        # Act - perform pan left on screen center
+        photo_view_page.pan_left_on_screen(percentage=0.5)
+
+        # Assert - verify photo location changed
+        final_location = photo_view_page.photo_image_location
+        actual = {
+            "is_displayed": photo_view_page.is_photo_displayed,
+            "x_changed": initial_location["x"] != final_location["x"],
+        }
+
+        expected = {
+            "is_displayed": True,
+            "x_changed": True,
+        }
+
+        assert actual == expected, (
+            f"Pan left on screen failed: initial_x={initial_location['x']}, "
+            f"final_x={final_location['x']}, actual={actual}"
+        )
 
     @pytest.mark.tcid("TC-10-08")
     @allure.severity(allure.severity_level.NORMAL)
@@ -141,15 +269,33 @@ class TestPanGestures:
         """Verify that pan right gesture works on screen center.
 
         Expected:
-            - pan_right_on_screen method executes successfully
-            - Pan right gesture is performed on screen center
+            - Zoom in to make photo larger than viewport
+            - Pan right gesture on screen center changes photo location
             - Photo image remains displayed after gesture
         """
-        # Act - perform pan right on screen center
-        photo_view_page.pan_right_on_screen()
+        # Arrange - zoom in to enable panning and get initial location
+        photo_view_page.pinch_open_on_screen(percentage=0.8)
+        initial_location = photo_view_page.photo_image_location
 
-        # Assert - verify photo is still displayed after gesture
-        assert photo_view_page.is_photo_displayed, "Photo should be displayed after pan right gesture on screen"
+        # Act - perform pan right on screen center
+        photo_view_page.pan_right_on_screen(percentage=0.5)
+
+        # Assert - verify photo location changed
+        final_location = photo_view_page.photo_image_location
+        actual = {
+            "is_displayed": photo_view_page.is_photo_displayed,
+            "x_changed": initial_location["x"] != final_location["x"],
+        }
+
+        expected = {
+            "is_displayed": True,
+            "x_changed": True,
+        }
+
+        assert actual == expected, (
+            f"Pan right on screen failed: initial_x={initial_location['x']}, "
+            f"final_x={final_location['x']}, actual={actual}"
+        )
 
     @pytest.mark.tcid("TC-10-09")
     @allure.severity(allure.severity_level.NORMAL)
@@ -237,6 +383,46 @@ class TestPanGestures:
         # Assert - verify photo is still displayed after all gestures
         assert photo_view_page.is_photo_displayed, "Photo should be displayed after sequential pan gestures"
 
+    @pytest.mark.tcid("TC-10-10-A")
+    @allure.severity(allure.severity_level.NORMAL)
+    @allure.title("Test pan gestures validate parameters")
+    @pytest.mark.parametrize(
+        "method,param,value,error_match",
+        [
+            ("pan_up_on_photo", "percentage", 1.5, "Percentage must be between 0.0 and 1.0"),
+            ("pan_down_on_photo", "percentage", -0.1, "Percentage must be between 0.0 and 1.0"),
+            ("pan_left_on_photo", "percentage", 2.0, "Percentage must be between 0.0 and 1.0"),
+            ("pan_right_on_photo", "percentage", -1.0, "Percentage must be between 0.0 and 1.0"),
+            ("pan_up_on_photo", "speed", 0, "Speed must be a positive integer"),
+            ("pan_down_on_photo", "speed", -100, "Speed must be a positive integer"),
+            ("pan_left_on_screen", "speed", -50, "Speed must be a positive integer"),
+            ("pan_right_on_screen", "speed", 0, "Speed must be a positive integer"),
+        ],
+        ids=[
+            "pan_up-invalid-percentage-high",
+            "pan_down-invalid-percentage-negative",
+            "pan_left-invalid-percentage-high",
+            "pan_right-invalid-percentage-negative",
+            "pan_up-invalid-speed-zero",
+            "pan_down-invalid-speed-negative",
+            "pan_left_screen-invalid-speed-negative",
+            "pan_right_screen-invalid-speed-zero",
+        ],
+    )
+    def test_pan_gestures_invalid_parameters(
+        self, photo_view_page: PhotoViewPage, method: str, param: str, value: Union[int, float], error_match: str
+    ) -> None:
+        """Verify that pan gestures validate parameters.
+
+        Expected:
+            - ValueError is raised for invalid percentage or speed
+            - Error message is descriptive
+        """
+        # Act & Assert - attempt to call method with invalid parameter
+        kwargs = {param: value}
+        with pytest.raises(ValueError, match=error_match):
+            getattr(photo_view_page, method)(**kwargs)
+
     @pytest.mark.tcid("TC-10-11")
     @allure.severity(allure.severity_level.NORMAL)
     @allure.title("Test zoom in then pan gesture combination")
@@ -245,25 +431,35 @@ class TestPanGestures:
 
         Expected:
             - Pinch open (zoom in) executes successfully
-            - Pan gesture executes successfully on zoomed image
+            - Pan gestures change photo location on zoomed image
             - Photo image remains displayed after combined gestures
         """
-        # Act - zoom in first, then pan
-        photo_view_page.pinch_open_on_photo(percentage=0.5)
-        photo_view_page.pan_up_on_photo(percentage=0.3)
-        photo_view_page.pan_left_on_photo(percentage=0.3)
+        # Act - zoom in first
+        photo_view_page.pinch_open_on_photo(percentage=0.8)
+        location_after_zoom = photo_view_page.photo_image_location
 
-        # Assert - verify photo is still displayed
+        # Act - pan in two directions
+        photo_view_page.pan_up_on_photo(percentage=0.3)
+        location_after_pan_up = photo_view_page.photo_image_location
+
+        photo_view_page.pan_left_on_photo(percentage=0.3)
+        location_after_pan_left = photo_view_page.photo_image_location
+
+        # Assert - verify location changed after each pan and photo is still displayed
         actual = {
             "is_displayed": photo_view_page.is_photo_displayed,
+            "y_changed_after_pan_up": location_after_zoom["y"] != location_after_pan_up["y"],
+            "x_changed_after_pan_left": location_after_pan_up["x"] != location_after_pan_left["x"],
             "size_width_valid": photo_view_page.photo_image_size["width"] > 0,
             "size_height_valid": photo_view_page.photo_image_size["height"] > 0,
         }
 
         expected = {
             "is_displayed": True,
+            "y_changed_after_pan_up": True,
+            "x_changed_after_pan_left": True,
             "size_width_valid": True,
             "size_height_valid": True,
         }
 
-        assert actual == expected, f"Photo state mismatch after zoom + pan: {actual}"
+        assert actual == expected, f"Zoom + pan combination test failed: {actual}"
