@@ -39,12 +39,12 @@ class TestPanGestures:
         final_location = photo_view_page.photo_image_location
         actual = {
             "is_photo_displayed": photo_view_page.is_photo_displayed,
-            "coordinate_y_changed": initial_location["y"] != final_location["y"],
+            "coordinate_y_decreased": final_location["y"] < initial_location["y"],
         }
 
         expected = {
             "is_photo_displayed": True,
-            "coordinate_y_changed": True,
+            "coordinate_y_decreased": True,
         }
 
         assert actual == expected, (
@@ -73,12 +73,12 @@ class TestPanGestures:
         final_location = photo_view_page.photo_image_location
         actual = {
             "is_photo_displayed": photo_view_page.is_photo_displayed,
-            "coordinate_y_changed": initial_location["y"] != final_location["y"],
+            "coordinate_y_increased": final_location["y"] > initial_location["y"],
         }
 
         expected = {
             "is_photo_displayed": True,
-            "coordinate_y_changed": True,
+            "coordinate_y_increased": True,
         }
 
         assert actual == expected, (
@@ -107,12 +107,12 @@ class TestPanGestures:
         final_location = photo_view_page.photo_image_location
         actual = {
             "is_photo_displayed": photo_view_page.is_photo_displayed,
-            "coordinate_x_changed": initial_location["x"] != final_location["x"],
+            "coordinate_x_decreased": final_location["x"] < initial_location["x"],
         }
 
         expected = {
             "is_photo_displayed": True,
-            "coordinate_x_changed": True,
+            "coordinate_x_decreased": True,
         }
 
         assert actual == expected, (
@@ -141,12 +141,12 @@ class TestPanGestures:
         final_location = photo_view_page.photo_image_location
         actual = {
             "is_photo_displayed": photo_view_page.is_photo_displayed,
-            "coordinate_x_changed": initial_location["x"] != final_location["x"],
+            "coordinate_x_increased": final_location["x"] > initial_location["x"],
         }
 
         expected = {
             "is_photo_displayed": True,
-            "coordinate_x_changed": True,
+            "coordinate_x_increased": True,
         }
 
         assert actual == expected, (
@@ -329,36 +329,44 @@ class TestPanGestures:
             percentage: Pan distance as percentage (0.25, 0.5).
 
         Expected:
+            - Zoom in to make photo larger than viewport
             - Pan method works with different percentages
-            - Operation completes successfully
-            - Photo image remains displayed and has valid dimensions
+            - Relevant coordinate (x or y) changes after pan
+            - Photo image remains displayed
         """
-        # Arrange - get pan method based on direction
+        # Arrange - get pan method and zoom in to enable meaningful panning
         pan_methods = {
             "up": photo_view_page.pan_up_on_photo,
             "down": photo_view_page.pan_down_on_photo,
             "left": photo_view_page.pan_left_on_photo,
             "right": photo_view_page.pan_right_on_photo,
         }
+        photo_view_page.pinch_open_on_photo(percentage=0.8)
+        initial_location = photo_view_page.photo_image_location
+
+        # Determine which coordinate should change based on pan direction
+        coordinate_key = "y" if direction in ("up", "down") else "x"
 
         # Act - perform pan with specified direction and percentage
         pan_methods[direction](percentage=percentage)
 
-        # Assert - verify photo is displayed and has valid size
-        size = photo_view_page.photo_image_size
+        # Assert - verify photo is displayed and relevant coordinate changed
+        final_location = photo_view_page.photo_image_location
         actual = {
             "is_photo_displayed": photo_view_page.is_photo_displayed,
-            "photo_width_is_valid": size["width"] > 0,
-            "photo_height_is_valid": size["height"] > 0,
+            "coordinate_changed": initial_location[coordinate_key] != final_location[coordinate_key],
         }
 
         expected = {
             "is_photo_displayed": True,
-            "photo_width_is_valid": True,
-            "photo_height_is_valid": True,
+            "coordinate_changed": True,
         }
 
-        assert actual == expected, f"Photo state mismatch after pan {direction}: {actual}"
+        assert actual == expected, (
+            f"Pan {direction} failed for percentage {percentage}: "
+            f"initial_{coordinate_key}={initial_location[coordinate_key]}, "
+            f"final_{coordinate_key}={final_location[coordinate_key]}, actual={actual}"
+        )
 
     @pytest.mark.tcid("TC-10-10")
     @allure.severity(allure.severity_level.NORMAL)
@@ -367,17 +375,55 @@ class TestPanGestures:
         """Verify that sequential pan gestures in all directions work correctly.
 
         Expected:
+            - Zoom in to make photo larger than viewport
             - Pan gestures in all four directions execute successfully
+            - Photo location changes at least once across all gestures
             - Photo image remains displayed throughout all gestures
         """
-        # Act - perform pan gestures in all directions sequentially
-        photo_view_page.pan_up_on_photo(percentage=0.3)
-        photo_view_page.pan_down_on_photo(percentage=0.3)
-        photo_view_page.pan_left_on_photo(percentage=0.3)
-        photo_view_page.pan_right_on_photo(percentage=0.3)
+        # Arrange - zoom in to enable panning and get initial location
+        photo_view_page.pinch_open_on_photo(percentage=0.8)
+        initial_location = photo_view_page.photo_image_location
 
-        # Assert - verify photo is still displayed after all gestures
-        assert photo_view_page.is_photo_displayed, "Photo should be displayed after sequential pan gestures"
+        # Act - perform pan gestures in all directions sequentially and track locations
+        photo_view_page.pan_up_on_photo(percentage=0.3)
+        location_after_up = photo_view_page.photo_image_location
+
+        photo_view_page.pan_down_on_photo(percentage=0.3)
+        location_after_down = photo_view_page.photo_image_location
+
+        photo_view_page.pan_left_on_photo(percentage=0.3)
+        location_after_left = photo_view_page.photo_image_location
+
+        photo_view_page.pan_right_on_photo(percentage=0.3)
+        location_after_right = photo_view_page.photo_image_location
+
+        # Assert - verify at least one location change and photo still displayed
+        locations = [
+            location_after_up,
+            location_after_down,
+            location_after_left,
+            location_after_right,
+        ]
+        location_changed = any(
+            loc["x"] != initial_location["x"] or loc["y"] != initial_location["y"] for loc in locations
+        )
+
+        actual = {
+            "is_photo_displayed": photo_view_page.is_photo_displayed,
+            "location_changed": location_changed,
+        }
+
+        expected = {
+            "is_photo_displayed": True,
+            "location_changed": True,
+        }
+
+        assert actual == expected, (
+            "Sequential pan gestures did not change photo location as expected. "
+            f"initial_location={initial_location}, "
+            f"locations={locations}, "
+            f"actual={actual}"
+        )
 
     @pytest.mark.tcid("TC-10-10-A")
     @allure.severity(allure.severity_level.NORMAL)
