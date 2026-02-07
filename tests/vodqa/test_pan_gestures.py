@@ -331,7 +331,7 @@ class TestPanGestures:
         Expected:
             - Zoom in to make photo larger than viewport
             - Pan method works with different percentages
-            - Relevant coordinate (x or y) changes after pan
+            - Coordinate moves in the expected direction
             - Photo image remains displayed
         """
         # Arrange - get pan method and zoom in to enable meaningful panning
@@ -344,22 +344,31 @@ class TestPanGestures:
         photo_view_page.pinch_open_on_photo(percentage=0.8)
         initial_location = photo_view_page.photo_image_location
 
-        # Determine which coordinate should change based on pan direction
+        # Determine which coordinate should change and in which direction
         coordinate_key = "y" if direction in ("up", "down") else "x"
 
         # Act - perform pan with specified direction and percentage
         pan_methods[direction](percentage=percentage)
 
-        # Assert - verify photo is displayed and relevant coordinate changed
+        # Assert - verify photo is displayed and coordinate moved in expected direction
         final_location = photo_view_page.photo_image_location
+        if direction == "up":
+            coordinate_moved_correctly = final_location["y"] < initial_location["y"]
+        elif direction == "down":
+            coordinate_moved_correctly = final_location["y"] > initial_location["y"]
+        elif direction == "left":
+            coordinate_moved_correctly = final_location["x"] < initial_location["x"]
+        else:  # right
+            coordinate_moved_correctly = final_location["x"] > initial_location["x"]
+
         actual = {
             "is_photo_displayed": photo_view_page.is_photo_displayed,
-            "coordinate_changed": initial_location[coordinate_key] != final_location[coordinate_key],
+            "coordinate_moved_correctly": coordinate_moved_correctly,
         }
 
         expected = {
             "is_photo_displayed": True,
-            "coordinate_changed": True,
+            "coordinate_moved_correctly": True,
         }
 
         assert actual == expected, (
