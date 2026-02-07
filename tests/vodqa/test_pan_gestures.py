@@ -38,13 +38,13 @@ class TestPanGestures:
         # Assert - verify photo location changed (y-coordinate should decrease when panning up)
         final_location = photo_view_page.photo_image_location
         actual = {
-            "is_displayed": photo_view_page.is_photo_displayed,
-            "y_changed": initial_location["y"] != final_location["y"],
+            "is_photo_displayed": photo_view_page.is_photo_displayed,
+            "coordinate_y_changed": initial_location["y"] != final_location["y"],
         }
 
         expected = {
-            "is_displayed": True,
-            "y_changed": True,
+            "is_photo_displayed": True,
+            "coordinate_y_changed": True,
         }
 
         assert actual == expected, (
@@ -72,13 +72,13 @@ class TestPanGestures:
         # Assert - verify photo location changed (y-coordinate should increase when panning down)
         final_location = photo_view_page.photo_image_location
         actual = {
-            "is_displayed": photo_view_page.is_photo_displayed,
-            "y_changed": initial_location["y"] != final_location["y"],
+            "is_photo_displayed": photo_view_page.is_photo_displayed,
+            "coordinate_y_changed": initial_location["y"] != final_location["y"],
         }
 
         expected = {
-            "is_displayed": True,
-            "y_changed": True,
+            "is_photo_displayed": True,
+            "coordinate_y_changed": True,
         }
 
         assert actual == expected, (
@@ -106,13 +106,13 @@ class TestPanGestures:
         # Assert - verify photo location changed (x-coordinate should decrease when panning left)
         final_location = photo_view_page.photo_image_location
         actual = {
-            "is_displayed": photo_view_page.is_photo_displayed,
-            "x_changed": initial_location["x"] != final_location["x"],
+            "is_photo_displayed": photo_view_page.is_photo_displayed,
+            "coordinate_x_changed": initial_location["x"] != final_location["x"],
         }
 
         expected = {
-            "is_displayed": True,
-            "x_changed": True,
+            "is_photo_displayed": True,
+            "coordinate_x_changed": True,
         }
 
         assert actual == expected, (
@@ -140,13 +140,13 @@ class TestPanGestures:
         # Assert - verify photo location changed (x-coordinate should increase when panning right)
         final_location = photo_view_page.photo_image_location
         actual = {
-            "is_displayed": photo_view_page.is_photo_displayed,
-            "x_changed": initial_location["x"] != final_location["x"],
+            "is_photo_displayed": photo_view_page.is_photo_displayed,
+            "coordinate_x_changed": initial_location["x"] != final_location["x"],
         }
 
         expected = {
-            "is_displayed": True,
-            "x_changed": True,
+            "is_photo_displayed": True,
+            "coordinate_x_changed": True,
         }
 
         assert actual == expected, (
@@ -174,13 +174,13 @@ class TestPanGestures:
         # Assert - verify photo location changed
         final_location = photo_view_page.photo_image_location
         actual = {
-            "is_displayed": photo_view_page.is_photo_displayed,
-            "y_changed": initial_location["y"] != final_location["y"],
+            "is_photo_displayed": photo_view_page.is_photo_displayed,
+            "coordinate_y_changed": initial_location["y"] != final_location["y"],
         }
 
         expected = {
-            "is_displayed": True,
-            "y_changed": True,
+            "is_photo_displayed": True,
+            "coordinate_y_changed": True,
         }
 
         assert actual == expected, (
@@ -209,13 +209,13 @@ class TestPanGestures:
         # Assert - verify photo location changed
         final_location = photo_view_page.photo_image_location
         actual = {
-            "is_displayed": photo_view_page.is_photo_displayed,
-            "y_changed": initial_location["y"] != final_location["y"],
+            "is_photo_displayed": photo_view_page.is_photo_displayed,
+            "coordinate_y_changed": initial_location["y"] != final_location["y"],
         }
 
         expected = {
-            "is_displayed": True,
-            "y_changed": True,
+            "is_photo_displayed": True,
+            "coordinate_y_changed": True,
         }
 
         assert actual == expected, (
@@ -244,13 +244,13 @@ class TestPanGestures:
         # Assert - verify photo location changed
         final_location = photo_view_page.photo_image_location
         actual = {
-            "is_displayed": photo_view_page.is_photo_displayed,
-            "x_changed": initial_location["x"] != final_location["x"],
+            "is_photo_displayed": photo_view_page.is_photo_displayed,
+            "coordinate_x_changed": initial_location["x"] != final_location["x"],
         }
 
         expected = {
-            "is_displayed": True,
-            "x_changed": True,
+            "is_photo_displayed": True,
+            "coordinate_x_changed": True,
         }
 
         assert actual == expected, (
@@ -279,13 +279,13 @@ class TestPanGestures:
         # Assert - verify photo location changed
         final_location = photo_view_page.photo_image_location
         actual = {
-            "is_displayed": photo_view_page.is_photo_displayed,
-            "x_changed": initial_location["x"] != final_location["x"],
+            "is_photo_displayed": photo_view_page.is_photo_displayed,
+            "coordinate_x_changed": initial_location["x"] != final_location["x"],
         }
 
         expected = {
-            "is_displayed": True,
-            "x_changed": True,
+            "is_photo_displayed": True,
+            "coordinate_x_changed": True,
         }
 
         assert actual == expected, (
@@ -347,15 +347,15 @@ class TestPanGestures:
         # Assert - verify photo is displayed and has valid size
         size = photo_view_page.photo_image_size
         actual = {
-            "is_displayed": photo_view_page.is_photo_displayed,
-            "width_valid": size["width"] > 0,
-            "height_valid": size["height"] > 0,
+            "is_photo_displayed": photo_view_page.is_photo_displayed,
+            "photo_width_is_valid": size["width"] > 0,
+            "photo_height_is_valid": size["height"] > 0,
         }
 
         expected = {
-            "is_displayed": True,
-            "width_valid": True,
-            "height_valid": True,
+            "is_photo_displayed": True,
+            "photo_width_is_valid": True,
+            "photo_height_is_valid": True,
         }
 
         assert actual == expected, f"Photo state mismatch after pan {direction}: {actual}"
@@ -443,19 +443,19 @@ class TestPanGestures:
 
         # Assert - verify location changed after each pan and photo is still displayed
         actual = {
-            "is_displayed": photo_view_page.is_photo_displayed,
-            "y_changed_after_pan_up": location_after_zoom["y"] != location_after_pan_up["y"],
-            "x_changed_after_pan_left": location_after_pan_up["x"] != location_after_pan_left["x"],
-            "size_width_valid": photo_view_page.photo_image_size["width"] > 0,
-            "size_height_valid": photo_view_page.photo_image_size["height"] > 0,
+            "is_photo_displayed": photo_view_page.is_photo_displayed,
+            "coordinate_y_changed_after_pan_up": location_after_zoom["y"] != location_after_pan_up["y"],
+            "coordinate_x_changed_after_pan_left": location_after_pan_up["x"] != location_after_pan_left["x"],
+            "photo_width_is_valid": photo_view_page.photo_image_size["width"] > 0,
+            "photo_height_is_valid": photo_view_page.photo_image_size["height"] > 0,
         }
 
         expected = {
-            "is_displayed": True,
-            "y_changed_after_pan_up": True,
-            "x_changed_after_pan_left": True,
-            "size_width_valid": True,
-            "size_height_valid": True,
+            "is_photo_displayed": True,
+            "coordinate_y_changed_after_pan_up": True,
+            "coordinate_x_changed_after_pan_left": True,
+            "photo_width_is_valid": True,
+            "photo_height_is_valid": True,
         }
 
         assert actual == expected, f"Zoom + pan combination test failed: {actual}"
