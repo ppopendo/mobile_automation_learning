@@ -48,8 +48,7 @@ class TestPanGestures:
         }
 
         assert actual == expected, (
-            f"Pan up failed: initial_y={initial_location['y']}, "
-            f"final_y={final_location['y']}, actual={actual}"
+            f"Pan up failed: initial_y={initial_location['y']}, " f"final_y={final_location['y']}, actual={actual}"
         )
 
     @pytest.mark.tcid("TC-10-02")
@@ -83,8 +82,7 @@ class TestPanGestures:
         }
 
         assert actual == expected, (
-            f"Pan down failed: initial_y={initial_location['y']}, "
-            f"final_y={final_location['y']}, actual={actual}"
+            f"Pan down failed: initial_y={initial_location['y']}, " f"final_y={final_location['y']}, actual={actual}"
         )
 
     @pytest.mark.tcid("TC-10-03")
@@ -118,8 +116,7 @@ class TestPanGestures:
         }
 
         assert actual == expected, (
-            f"Pan left failed: initial_x={initial_location['x']}, "
-            f"final_x={final_location['x']}, actual={actual}"
+            f"Pan left failed: initial_x={initial_location['x']}, " f"final_x={final_location['x']}, actual={actual}"
         )
 
     @pytest.mark.tcid("TC-10-04")
@@ -153,8 +150,7 @@ class TestPanGestures:
         }
 
         assert actual == expected, (
-            f"Pan right failed: initial_x={initial_location['x']}, "
-            f"final_x={final_location['x']}, actual={actual}"
+            f"Pan right failed: initial_x={initial_location['x']}, " f"final_x={final_location['x']}, actual={actual}"
         )
 
     @pytest.mark.tcid("TC-10-05")
