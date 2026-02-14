@@ -84,3 +84,96 @@ class PhotoViewPage(BaseAppiumGestures, HeaderBarComponent):
         """
         element = self.wait_for_element(PhotoViewPageLocators.PHOTO_IMAGE)
         return element.size
+
+    @property
+    @allure.step("retrieving photo image location")
+    def photo_image_location(self) -> Dict[str, int]:
+        """Get the current location of the photo image element.
+
+        Returns:
+            dict: Dictionary with 'x' and 'y' keys representing top-left coordinates.
+        """
+        element = self.wait_for_element(PhotoViewPageLocators.PHOTO_IMAGE)
+        return element.location
+
+    # ==================== PAN GESTURES ====================
+
+    @allure.step("the user performs pan up on photo")
+    def pan_up_on_photo(self, percentage: float = 0.5, speed: int = 2500) -> None:
+        """Perform pan up gesture on the photo image.
+
+        Args:
+            percentage: Pan distance as percentage of element height (0.0-1.0).
+            speed: Pan speed in pixels per second.
+        """
+        self.swipe_up(locator=PhotoViewPageLocators.PHOTO_IMAGE, percentage=percentage, speed=speed)
+
+    @allure.step("the user performs pan down on photo")
+    def pan_down_on_photo(self, percentage: float = 0.5, speed: int = 2500) -> None:
+        """Perform pan down gesture on the photo image.
+
+        Args:
+            percentage: Pan distance as percentage of element height (0.0-1.0).
+            speed: Pan speed in pixels per second.
+        """
+        self.swipe_down(locator=PhotoViewPageLocators.PHOTO_IMAGE, percentage=percentage, speed=speed)
+
+    @allure.step("the user performs pan left on photo")
+    def pan_left_on_photo(self, percentage: float = 0.5, speed: int = 2500) -> None:
+        """Perform pan left gesture on the photo image.
+
+        Args:
+            percentage: Pan distance as percentage of element width (0.0-1.0).
+            speed: Pan speed in pixels per second.
+        """
+        self.swipe_left(locator=PhotoViewPageLocators.PHOTO_IMAGE, percentage=percentage, speed=speed)
+
+    @allure.step("the user performs pan right on photo")
+    def pan_right_on_photo(self, percentage: float = 0.5, speed: int = 2500) -> None:
+        """Perform pan right gesture on the photo image.
+
+        Args:
+            percentage: Pan distance as percentage of element width (0.0-1.0).
+            speed: Pan speed in pixels per second.
+        """
+        self.swipe_right(locator=PhotoViewPageLocators.PHOTO_IMAGE, percentage=percentage, speed=speed)
+
+    @allure.step("the user performs pan up on screen center")
+    def pan_up_on_screen(self, percentage: float = 0.5, speed: int = 2500) -> None:
+        """Perform pan up gesture on screen center.
+
+        Args:
+            percentage: Pan distance as percentage of screen height (0.0-1.0).
+            speed: Pan speed in pixels per second.
+        """
+        self.swipe_up(percentage=percentage, speed=speed)
+
+    @allure.step("the user performs pan down on screen center")
+    def pan_down_on_screen(self, percentage: float = 0.5, speed: int = 2500) -> None:
+        """Perform pan down gesture on screen center.
+
+        Args:
+            percentage: Pan distance as percentage of screen height (0.0-1.0).
+            speed: Pan speed in pixels per second.
+        """
+        self.swipe_down(percentage=percentage, speed=speed)
+
+    @allure.step("the user performs pan left on screen center")
+    def pan_left_on_screen(self, percentage: float = 0.5, speed: int = 2500) -> None:
+        """Perform pan left gesture on screen center.
+
+        Args:
+            percentage: Pan distance as percentage of screen width (0.0-1.0).
+            speed: Pan speed in pixels per second.
+        """
+        self.swipe_left(percentage=percentage, speed=speed)
+
+    @allure.step("the user performs pan right on screen center")
+    def pan_right_on_screen(self, percentage: float = 0.5, speed: int = 2500) -> None:
+        """Perform pan right gesture on screen center.
+
+        Args:
+            percentage: Pan distance as percentage of screen width (0.0-1.0).
+            speed: Pan speed in pixels per second.
+        """
+        self.swipe_right(percentage=percentage, speed=speed)
