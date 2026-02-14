@@ -223,7 +223,7 @@ class TestCarouselEdgeCases:
         carousel_page.navigate_to_first_position()
         start_position = carousel_page.carousel_id
 
-        # Act - traverse forward to last
+        # Act - traverse forward to last (4 swipes to ensure we reach 3/3 and test boundary)
         carousel_page.fling_on_carousel_item(direction="left")
         position_forward_1 = carousel_page.carousel_id
         carousel_page.fling_on_carousel_item(direction="left")
@@ -233,7 +233,7 @@ class TestCarouselEdgeCases:
         carousel_page.fling_on_carousel_item(direction="left")
         position_forward_4 = carousel_page.carousel_id
 
-        # Act - traverse backward to first
+        # Act - traverse backward to first (4 swipes to ensure we reach 1/3 and test boundary)
         carousel_page.fling_on_carousel_item(direction="right")
         position_backward_1 = carousel_page.carousel_id
         carousel_page.fling_on_carousel_item(direction="right")
