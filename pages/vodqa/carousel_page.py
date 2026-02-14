@@ -25,6 +25,8 @@ class CarouselPage(BaseAppiumGestures, HeaderBarComponent):
     The carousel has 3 positions: 1/3, 2/3, and 3/3.
     """
 
+    # Note: This constant serves as documentation for the swipe count used in navigation methods.
+    # It cannot be used programmatically due to the requirement to avoid loops.
     # Maximum swipes needed to reach boundary positions (3 items + 2 extra for safety)
     MAX_SWIPES_TO_BOUNDARY = 5
 
