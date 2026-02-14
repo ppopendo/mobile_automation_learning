@@ -1,5 +1,6 @@
 """Page Object for Carousel feature in VodQA application."""
 
+import time
 from dataclasses import dataclass, field
 from typing import Tuple
 
@@ -58,7 +59,9 @@ class CarouselPage(BaseAppiumGestures, HeaderBarComponent):
         valid_directions = ("left", "right")
         if direction not in valid_directions:
             raise ValueError(f"Invalid direction '{direction}'. Must be one of: {valid_directions}")
-        return self.fling_element(direction=direction, locator=CarouselPageLocators.CAROUSEL_ITEM, speed=speed)
+        result = self.fling_element(direction=direction, locator=CarouselPageLocators.CAROUSEL_ITEM, speed=speed)
+        time.sleep(0.5)
+        return result
 
     @property
     @allure.step("retrieving carousel ID")
@@ -76,6 +79,7 @@ class CarouselPage(BaseAppiumGestures, HeaderBarComponent):
 
         Performs MAX_SWIPES_TO_BOUNDARY swipes to ensure we reach position 1/3.
         Extra swipes beyond the boundary are safe as the carousel stops at the edge.
+        Verifies that we reached the first position after navigation.
         """
         # 5 swipes = 3 positions to traverse + 2 extra to ensure we reach boundary
         self.fling_on_carousel_item(direction="right")
@@ -83,6 +87,8 @@ class CarouselPage(BaseAppiumGestures, HeaderBarComponent):
         self.fling_on_carousel_item(direction="right")
         self.fling_on_carousel_item(direction="right")
         self.fling_on_carousel_item(direction="right")
+        time.sleep(0.3)
+        assert self.carousel_id == "1 / 3", f"Failed to navigate to first position, current: {self.carousel_id}"
 
     @allure.step("the user navigates to last carousel position")
     def navigate_to_last_position(self) -> None:
@@ -90,6 +96,7 @@ class CarouselPage(BaseAppiumGestures, HeaderBarComponent):
 
         Performs MAX_SWIPES_TO_BOUNDARY swipes to ensure we reach position 3/3.
         Extra swipes beyond the boundary are safe as the carousel stops at the edge.
+        Verifies that we reached the last position after navigation.
         """
         # 5 swipes = 3 positions to traverse + 2 extra to ensure we reach boundary
         self.fling_on_carousel_item(direction="left")
@@ -97,3 +104,5 @@ class CarouselPage(BaseAppiumGestures, HeaderBarComponent):
         self.fling_on_carousel_item(direction="left")
         self.fling_on_carousel_item(direction="left")
         self.fling_on_carousel_item(direction="left")
+        time.sleep(0.3)
+        assert self.carousel_id == "3 / 3", f"Failed to navigate to last position, current: {self.carousel_id}"
