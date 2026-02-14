@@ -53,6 +53,10 @@ class CarouselPage(BaseAppiumGestures, HeaderBarComponent):
     def fling_on_carousel_item(self, direction: str, speed: int = 5000) -> bool:
         """Perform fling gesture on carousel item in specified direction.
 
+        Note: This method includes a wait after the fling to ensure the carousel
+        animation completes before the next operation. This improves test stability
+        at the cost of slightly longer execution time.
+
         Args:
             direction: Fling direction - 'left' or 'right'.
             speed: Fling speed in pixels per second.
@@ -84,9 +88,12 @@ class CarouselPage(BaseAppiumGestures, HeaderBarComponent):
     def navigate_to_first_position(self) -> None:
         """Navigate to the first carousel position by swiping right multiple times.
 
+        This is a helper method that guarantees the carousel is at position 1/3.
         Performs MAX_SWIPES_TO_BOUNDARY swipes to ensure we reach position 1/3.
         Extra swipes beyond the boundary are safe as the carousel stops at the edge.
-        Verifies that we reached the first position after navigation.
+        
+        Raises:
+            AssertionError: If the carousel fails to reach the first position after navigation.
         """
         # 5 swipes = 3 positions to traverse + 2 extra to ensure we reach boundary
         self.fling_on_carousel_item(direction="right")
@@ -104,9 +111,12 @@ class CarouselPage(BaseAppiumGestures, HeaderBarComponent):
     def navigate_to_last_position(self) -> None:
         """Navigate to the last carousel position by swiping left multiple times.
 
+        This is a helper method that guarantees the carousel is at position 3/3.
         Performs MAX_SWIPES_TO_BOUNDARY swipes to ensure we reach position 3/3.
         Extra swipes beyond the boundary are safe as the carousel stops at the edge.
-        Verifies that we reached the last position after navigation.
+        
+        Raises:
+            AssertionError: If the carousel fails to reach the last position after navigation.
         """
         # 5 swipes = 3 positions to traverse + 2 extra to ensure we reach boundary
         self.fling_on_carousel_item(direction="left")
