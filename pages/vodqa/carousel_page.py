@@ -87,7 +87,7 @@ class CarouselPage(BaseAppiumGestures, HeaderBarComponent):
         self.fling_on_carousel_item(direction="right")
         self.fling_on_carousel_item(direction="right")
         self.fling_on_carousel_item(direction="right")
-        time.sleep(0.3)
+        time.sleep(0.5)
         assert self.carousel_id == "1 / 3", f"Failed to navigate to first position, current: {self.carousel_id}"
 
     @allure.step("the user navigates to last carousel position")
@@ -104,5 +104,5 @@ class CarouselPage(BaseAppiumGestures, HeaderBarComponent):
         self.fling_on_carousel_item(direction="left")
         self.fling_on_carousel_item(direction="left")
         self.fling_on_carousel_item(direction="left")
-        time.sleep(0.3)
+        time.sleep(0.5)
         assert self.carousel_id == "3 / 3", f"Failed to navigate to last position, current: {self.carousel_id}"
