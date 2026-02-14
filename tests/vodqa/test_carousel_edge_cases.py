@@ -28,12 +28,8 @@ class TestCarouselEdgeCases:
         Expected:
             - Carousel ID remains "1 / 3" after attempting to swipe past first item
         """
-        # Arrange - ensure we're at the first item by swiping right until we can't
-        for _ in range(5):  # Max attempts to reach first item
-            carousel_page.fling_on_carousel_item(direction="right")
-            if carousel_page.carousel_id == "1 / 3":
-                break
-
+        # Arrange - ensure we're at the first item
+        carousel_page.navigate_to_first_position()
         initial_id = carousel_page.carousel_id
 
         # Act - attempt to swipe right past first item
@@ -66,12 +62,8 @@ class TestCarouselEdgeCases:
         Expected:
             - Carousel ID remains "3 / 3" after attempting to swipe past last item
         """
-        # Arrange - ensure we're at the last item by swiping left until we can't
-        for _ in range(5):  # Max attempts to reach last item
-            carousel_page.fling_on_carousel_item(direction="left")
-            if carousel_page.carousel_id == "3 / 3":
-                break
-
+        # Arrange - ensure we're at the last item
+        carousel_page.navigate_to_last_position()
         initial_id = carousel_page.carousel_id
 
         # Act - attempt to swipe left past last item
@@ -105,10 +97,7 @@ class TestCarouselEdgeCases:
             - Method returns False when at first boundary
         """
         # Arrange - navigate to first item
-        for _ in range(5):
-            carousel_page.fling_on_carousel_item(direction="right")
-            if carousel_page.carousel_id == "1 / 3":
-                break
+        carousel_page.navigate_to_first_position()
 
         # Act - attempt to fling right past first item
         can_continue = carousel_page.fling_on_carousel_item(direction="right")
@@ -131,10 +120,7 @@ class TestCarouselEdgeCases:
             - Method returns False when at last boundary
         """
         # Arrange - navigate to last item
-        for _ in range(5):
-            carousel_page.fling_on_carousel_item(direction="left")
-            if carousel_page.carousel_id == "3 / 3":
-                break
+        carousel_page.navigate_to_last_position()
 
         # Act - attempt to fling left past last item
         can_continue = carousel_page.fling_on_carousel_item(direction="left")
@@ -157,21 +143,20 @@ class TestCarouselEdgeCases:
             - Carousel ID remains "1 / 3" after multiple right swipes
         """
         # Arrange - navigate to first item
-        for _ in range(5):
-            carousel_page.fling_on_carousel_item(direction="right")
-            if carousel_page.carousel_id == "1 / 3":
-                break
+        carousel_page.navigate_to_first_position()
 
         # Act - perform multiple right swipes and collect positions
-        positions_after_swipes = []
-        for _ in range(3):
-            carousel_page.fling_on_carousel_item(direction="right")
-            positions_after_swipes.append(carousel_page.carousel_id)
+        carousel_page.fling_on_carousel_item(direction="right")
+        position_1 = carousel_page.carousel_id
+        carousel_page.fling_on_carousel_item(direction="right")
+        position_2 = carousel_page.carousel_id
+        carousel_page.fling_on_carousel_item(direction="right")
+        position_3 = carousel_page.carousel_id
 
         # Assert
         actual = {
-            "all_positions_at_first": all(pos == "1 / 3" for pos in positions_after_swipes),
-            "positions": positions_after_swipes,
+            "all_positions_at_first": position_1 == "1 / 3" and position_2 == "1 / 3" and position_3 == "1 / 3",
+            "positions": [position_1, position_2, position_3],
         }
 
         expected = {
@@ -196,21 +181,20 @@ class TestCarouselEdgeCases:
             - Carousel ID remains "3 / 3" after multiple left swipes
         """
         # Arrange - navigate to last item
-        for _ in range(5):
-            carousel_page.fling_on_carousel_item(direction="left")
-            if carousel_page.carousel_id == "3 / 3":
-                break
+        carousel_page.navigate_to_last_position()
 
         # Act - perform multiple left swipes and collect positions
-        positions_after_swipes = []
-        for _ in range(3):
-            carousel_page.fling_on_carousel_item(direction="left")
-            positions_after_swipes.append(carousel_page.carousel_id)
+        carousel_page.fling_on_carousel_item(direction="left")
+        position_1 = carousel_page.carousel_id
+        carousel_page.fling_on_carousel_item(direction="left")
+        position_2 = carousel_page.carousel_id
+        carousel_page.fling_on_carousel_item(direction="left")
+        position_3 = carousel_page.carousel_id
 
         # Assert
         actual = {
-            "all_positions_at_last": all(pos == "3 / 3" for pos in positions_after_swipes),
-            "positions": positions_after_swipes,
+            "all_positions_at_last": position_1 == "3 / 3" and position_2 == "3 / 3" and position_3 == "3 / 3",
+            "positions": [position_1, position_2, position_3],
         }
 
         expected = {
@@ -236,39 +220,53 @@ class TestCarouselEdgeCases:
             - All three positions (1/3, 2/3, 3/3) are visited during traversal
         """
         # Arrange - navigate to first item
-        for _ in range(5):
-            carousel_page.fling_on_carousel_item(direction="right")
-            if carousel_page.carousel_id == "1 / 3":
-                break
-
+        carousel_page.navigate_to_first_position()
         start_position = carousel_page.carousel_id
-        forward_positions = [start_position]
-        backward_positions = []
 
-        # Act - traverse forward to last
-        for _ in range(5):
-            carousel_page.fling_on_carousel_item(direction="left")
-            current = carousel_page.carousel_id
-            if current not in forward_positions:
-                forward_positions.append(current)
-            if current == "3 / 3":
-                break
+        # Act - traverse forward to last (4 swipes to ensure we reach 3/3 and test boundary)
+        carousel_page.fling_on_carousel_item(direction="left")
+        position_forward_1 = carousel_page.carousel_id
+        carousel_page.fling_on_carousel_item(direction="left")
+        position_forward_2 = carousel_page.carousel_id
+        carousel_page.fling_on_carousel_item(direction="left")
+        position_forward_3 = carousel_page.carousel_id
+        carousel_page.fling_on_carousel_item(direction="left")
+        position_forward_4 = carousel_page.carousel_id
 
-        # Act - traverse backward to first
-        backward_positions.append(carousel_page.carousel_id)
-        for _ in range(5):
-            carousel_page.fling_on_carousel_item(direction="right")
-            current = carousel_page.carousel_id
-            if current not in backward_positions:
-                backward_positions.append(current)
-            if current == "1 / 3":
-                break
+        # Act - traverse backward to first (4 swipes to ensure we reach 1/3 and test boundary)
+        carousel_page.fling_on_carousel_item(direction="right")
+        position_backward_1 = carousel_page.carousel_id
+        carousel_page.fling_on_carousel_item(direction="right")
+        position_backward_2 = carousel_page.carousel_id
+        carousel_page.fling_on_carousel_item(direction="right")
+        position_backward_3 = carousel_page.carousel_id
+        carousel_page.fling_on_carousel_item(direction="right")
+        position_backward_4 = carousel_page.carousel_id
+
+        forward_positions = [
+            start_position,
+            position_forward_1,
+            position_forward_2,
+            position_forward_3,
+            position_forward_4,
+        ]
+        backward_positions = [
+            position_forward_4,
+            position_backward_1,
+            position_backward_2,
+            position_backward_3,
+            position_backward_4,
+        ]
 
         # Assert
         actual = {
             "start_position": start_position,
-            "forward_visited_all": set(forward_positions) == {"1 / 3", "2 / 3", "3 / 3"},
-            "backward_visited_all": set(backward_positions) == {"1 / 3", "2 / 3", "3 / 3"},
+            "forward_visited_all": "1 / 3" in forward_positions
+            and "2 / 3" in forward_positions
+            and "3 / 3" in forward_positions,
+            "backward_visited_all": "1 / 3" in backward_positions
+            and "2 / 3" in backward_positions
+            and "3 / 3" in backward_positions,
             "ended_at_first": carousel_page.carousel_id == "1 / 3",
         }
 
