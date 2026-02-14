@@ -30,6 +30,13 @@ class CarouselPage(BaseAppiumGestures, HeaderBarComponent):
     # The swipe calls are intentionally inlined (no loops) to comply with project guidelines.
     # Maximum swipes needed to reach boundary positions (3 items + 2 extra for safety)
     MAX_SWIPES_TO_BOUNDARY = 5
+    
+    # Wait duration in seconds for carousel animation to complete after fling gesture
+    ANIMATION_COMPLETE_WAIT = 0.5
+    
+    # Carousel boundary position constants
+    FIRST_POSITION = "1 / 3"
+    LAST_POSITION = "3 / 3"
 
     @allure.step("the user waits until the carousel page is loaded")
     def wait_until_page_is_loaded(self) -> None:
@@ -60,7 +67,7 @@ class CarouselPage(BaseAppiumGestures, HeaderBarComponent):
         if direction not in valid_directions:
             raise ValueError(f"Invalid direction '{direction}'. Must be one of: {valid_directions}")
         result = self.fling_element(direction=direction, locator=CarouselPageLocators.CAROUSEL_ITEM, speed=speed)
-        time.sleep(0.5)
+        time.sleep(self.ANIMATION_COMPLETE_WAIT)
         return result
 
     @property
@@ -87,8 +94,11 @@ class CarouselPage(BaseAppiumGestures, HeaderBarComponent):
         self.fling_on_carousel_item(direction="right")
         self.fling_on_carousel_item(direction="right")
         self.fling_on_carousel_item(direction="right")
-        time.sleep(0.5)
-        assert self.carousel_id == "1 / 3", f"Failed to navigate to first position, current: {self.carousel_id}"
+        time.sleep(self.ANIMATION_COMPLETE_WAIT)
+        current_position = self.carousel_id
+        assert (
+            current_position == self.FIRST_POSITION
+        ), f"Failed to navigate to first position, expected: {self.FIRST_POSITION}, actual: {current_position}"
 
     @allure.step("the user navigates to last carousel position")
     def navigate_to_last_position(self) -> None:
@@ -104,5 +114,8 @@ class CarouselPage(BaseAppiumGestures, HeaderBarComponent):
         self.fling_on_carousel_item(direction="left")
         self.fling_on_carousel_item(direction="left")
         self.fling_on_carousel_item(direction="left")
-        time.sleep(0.5)
-        assert self.carousel_id == "3 / 3", f"Failed to navigate to last position, current: {self.carousel_id}"
+        time.sleep(self.ANIMATION_COMPLETE_WAIT)
+        current_position = self.carousel_id
+        assert (
+            current_position == self.LAST_POSITION
+        ), f"Failed to navigate to last position, expected: {self.LAST_POSITION}, actual: {current_position}"
