@@ -63,3 +63,27 @@ class CarouselPage(BaseAppiumGestures, HeaderBarComponent):
             str: Carousel ID text (e.g., '1 / 3', '2 / 3', '3 / 3').
         """
         return self.wait_for_element(CarouselPageLocators.CAROUSEL_ID).text
+
+    @allure.step("the user navigates to first carousel position")
+    def navigate_to_first_position(self) -> None:
+        """Navigate to the first carousel position by swiping right multiple times.
+
+        Performs enough swipes to ensure we reach the first position (1 / 3).
+        """
+        self.fling_on_carousel_item(direction="right")
+        self.fling_on_carousel_item(direction="right")
+        self.fling_on_carousel_item(direction="right")
+        self.fling_on_carousel_item(direction="right")
+        self.fling_on_carousel_item(direction="right")
+
+    @allure.step("the user navigates to last carousel position")
+    def navigate_to_last_position(self) -> None:
+        """Navigate to the last carousel position by swiping left multiple times.
+
+        Performs enough swipes to ensure we reach the last position (3 / 3).
+        """
+        self.fling_on_carousel_item(direction="left")
+        self.fling_on_carousel_item(direction="left")
+        self.fling_on_carousel_item(direction="left")
+        self.fling_on_carousel_item(direction="left")
+        self.fling_on_carousel_item(direction="left")
