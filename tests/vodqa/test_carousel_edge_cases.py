@@ -16,13 +16,13 @@ class TestCarouselEdgeCases:
 
     @pytest.mark.tcid("TC-CAROUSEL-EDGE-01")
     @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test swiping left past first item does not change position")
-    def test_swipe_left_at_first_item_stays_at_first(self, carousel_page: CarouselPage) -> None:
-        """Verify that swiping left when at first item keeps carousel at first position.
+    @allure.title("Test swiping right past first item does not change position")
+    def test_swipe_right_at_first_item_stays_at_first(self, carousel_page: CarouselPage) -> None:
+        """Verify that swiping right when at first item keeps carousel at first position.
 
         Test scenario:
-        1. Navigate to first carousel item (1 / 3) by swiping left multiple times
-        2. Attempt to swipe left again (past first item)
+        1. Navigate to first carousel item (1 / 3) by swiping right multiple times
+        2. Attempt to swipe right again (past first item)
         3. Verify carousel remains at first position
 
         Expected:
@@ -32,8 +32,8 @@ class TestCarouselEdgeCases:
         carousel_page.navigate_to_first_position()
         initial_id = carousel_page.carousel_id
 
-        # Act - attempt to swipe left past first item
-        carousel_page.fling_on_carousel_item(direction="left")
+        # Act - attempt to swipe right past first item
+        carousel_page.fling_on_carousel_item(direction="right")
 
         # Assert
         actual = {
@@ -50,13 +50,13 @@ class TestCarouselEdgeCases:
 
     @pytest.mark.tcid("TC-CAROUSEL-EDGE-02")
     @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test swiping right past last item does not change position")
-    def test_swipe_right_at_last_item_stays_at_last(self, carousel_page: CarouselPage) -> None:
-        """Verify that swiping right when at last item keeps carousel at last position.
+    @allure.title("Test swiping left past last item does not change position")
+    def test_swipe_left_at_last_item_stays_at_last(self, carousel_page: CarouselPage) -> None:
+        """Verify that swiping left when at last item keeps carousel at last position.
 
         Test scenario:
-        1. Navigate to last carousel item (3 / 3) by swiping right multiple times
-        2. Attempt to swipe right again (past last item)
+        1. Navigate to last carousel item (3 / 3) by swiping left multiple times
+        2. Attempt to swipe left again (past last item)
         3. Verify carousel remains at last position
 
         Expected:
@@ -66,8 +66,8 @@ class TestCarouselEdgeCases:
         carousel_page.navigate_to_last_position()
         initial_id = carousel_page.carousel_id
 
-        # Act - attempt to swipe right past last item
-        carousel_page.fling_on_carousel_item(direction="right")
+        # Act - attempt to swipe left past last item
+        carousel_page.fling_on_carousel_item(direction="left")
 
         # Assert
         actual = {
@@ -90,7 +90,7 @@ class TestCarouselEdgeCases:
 
         Test scenario:
         1. Navigate to first carousel item (1 / 3)
-        2. Attempt to fling left (past first item)
+        2. Attempt to fling right (past first item)
         3. Verify method returns False indicating no more content
 
         Expected:
@@ -99,8 +99,8 @@ class TestCarouselEdgeCases:
         # Arrange - navigate to first item
         carousel_page.navigate_to_first_position()
 
-        # Act - attempt to fling left past first item
-        can_continue = carousel_page.fling_on_carousel_item(direction="left")
+        # Act - attempt to fling right past first item
+        can_continue = carousel_page.fling_on_carousel_item(direction="right")
 
         # Assert
         assert can_continue is False, "fling_on_carousel_item should return False at first boundary"
@@ -113,7 +113,7 @@ class TestCarouselEdgeCases:
 
         Test scenario:
         1. Navigate to last carousel item (3 / 3)
-        2. Attempt to fling right (past last item)
+        2. Attempt to fling left (past last item)
         3. Verify method returns False indicating no more content
 
         Expected:
@@ -122,35 +122,35 @@ class TestCarouselEdgeCases:
         # Arrange - navigate to last item
         carousel_page.navigate_to_last_position()
 
-        # Act - attempt to fling right past last item
-        can_continue = carousel_page.fling_on_carousel_item(direction="right")
+        # Act - attempt to fling left past last item
+        can_continue = carousel_page.fling_on_carousel_item(direction="left")
 
         # Assert
         assert can_continue is False, "fling_on_carousel_item should return False at last boundary"
 
     @pytest.mark.tcid("TC-CAROUSEL-EDGE-05")
     @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test multiple swipes left at first position remain stable")
-    def test_multiple_swipes_left_at_first_position_stays_stable(self, carousel_page: CarouselPage) -> None:
-        """Verify that multiple left swipes at first position keep carousel stable.
+    @allure.title("Test multiple swipes right at first position remain stable")
+    def test_multiple_swipes_right_at_first_position_stays_stable(self, carousel_page: CarouselPage) -> None:
+        """Verify that multiple right swipes at first position keep carousel stable.
 
         Test scenario:
         1. Navigate to first carousel item (1 / 3)
-        2. Perform multiple left swipes
+        2. Perform multiple right swipes
         3. Verify carousel always remains at first position
 
         Expected:
-            - Carousel ID remains "1 / 3" after multiple left swipes
+            - Carousel ID remains "1 / 3" after multiple right swipes
         """
         # Arrange - navigate to first item
         carousel_page.navigate_to_first_position()
 
-        # Act - perform multiple left swipes and collect positions
-        carousel_page.fling_on_carousel_item(direction="left")
+        # Act - perform multiple right swipes and collect positions
+        carousel_page.fling_on_carousel_item(direction="right")
         position_1 = carousel_page.carousel_id
-        carousel_page.fling_on_carousel_item(direction="left")
+        carousel_page.fling_on_carousel_item(direction="right")
         position_2 = carousel_page.carousel_id
-        carousel_page.fling_on_carousel_item(direction="left")
+        carousel_page.fling_on_carousel_item(direction="right")
         position_3 = carousel_page.carousel_id
 
         # Assert
@@ -168,27 +168,27 @@ class TestCarouselEdgeCases:
 
     @pytest.mark.tcid("TC-CAROUSEL-EDGE-06")
     @allure.severity(allure.severity_level.NORMAL)
-    @allure.title("Test multiple swipes right at last position remain stable")
-    def test_multiple_swipes_right_at_last_position_stays_stable(self, carousel_page: CarouselPage) -> None:
-        """Verify that multiple right swipes at last position keep carousel stable.
+    @allure.title("Test multiple swipes left at last position remain stable")
+    def test_multiple_swipes_left_at_last_position_stays_stable(self, carousel_page: CarouselPage) -> None:
+        """Verify that multiple left swipes at last position keep carousel stable.
 
         Test scenario:
         1. Navigate to last carousel item (3 / 3)
-        2. Perform multiple right swipes
+        2. Perform multiple left swipes
         3. Verify carousel always remains at last position
 
         Expected:
-            - Carousel ID remains "3 / 3" after multiple right swipes
+            - Carousel ID remains "3 / 3" after multiple left swipes
         """
         # Arrange - navigate to last item
         carousel_page.navigate_to_last_position()
 
-        # Act - perform multiple right swipes and collect positions
-        carousel_page.fling_on_carousel_item(direction="right")
+        # Act - perform multiple left swipes and collect positions
+        carousel_page.fling_on_carousel_item(direction="left")
         position_1 = carousel_page.carousel_id
-        carousel_page.fling_on_carousel_item(direction="right")
+        carousel_page.fling_on_carousel_item(direction="left")
         position_2 = carousel_page.carousel_id
-        carousel_page.fling_on_carousel_item(direction="right")
+        carousel_page.fling_on_carousel_item(direction="left")
         position_3 = carousel_page.carousel_id
 
         # Assert
@@ -224,23 +224,23 @@ class TestCarouselEdgeCases:
         start_position = carousel_page.carousel_id
 
         # Act - traverse forward to last (4 swipes to ensure we reach 3/3 and test boundary)
-        carousel_page.fling_on_carousel_item(direction="right")
+        carousel_page.fling_on_carousel_item(direction="left")
         position_forward_1 = carousel_page.carousel_id
-        carousel_page.fling_on_carousel_item(direction="right")
+        carousel_page.fling_on_carousel_item(direction="left")
         position_forward_2 = carousel_page.carousel_id
-        carousel_page.fling_on_carousel_item(direction="right")
+        carousel_page.fling_on_carousel_item(direction="left")
         position_forward_3 = carousel_page.carousel_id
-        carousel_page.fling_on_carousel_item(direction="right")
+        carousel_page.fling_on_carousel_item(direction="left")
         position_forward_4 = carousel_page.carousel_id
 
         # Act - traverse backward to first (4 swipes to ensure we reach 1/3 and test boundary)
-        carousel_page.fling_on_carousel_item(direction="left")
+        carousel_page.fling_on_carousel_item(direction="right")
         position_backward_1 = carousel_page.carousel_id
-        carousel_page.fling_on_carousel_item(direction="left")
+        carousel_page.fling_on_carousel_item(direction="right")
         position_backward_2 = carousel_page.carousel_id
-        carousel_page.fling_on_carousel_item(direction="left")
+        carousel_page.fling_on_carousel_item(direction="right")
         position_backward_3 = carousel_page.carousel_id
-        carousel_page.fling_on_carousel_item(direction="left")
+        carousel_page.fling_on_carousel_item(direction="right")
         position_backward_4 = carousel_page.carousel_id
 
         forward_positions = [
