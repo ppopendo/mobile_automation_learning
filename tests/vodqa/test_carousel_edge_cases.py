@@ -6,6 +6,7 @@ verifying behavior when swiping past the first or last item.
 
 import allure
 import pytest
+
 from pages.vodqa.carousel_page import CarouselPage
 
 
