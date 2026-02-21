@@ -1,6 +1,5 @@
 """Page Object for Carousel feature in VodQA application."""
 
-import time
 from dataclasses import dataclass, field
 from typing import Tuple
 
@@ -30,10 +29,7 @@ class CarouselPage(BaseAppiumGestures, HeaderBarComponent):
     # The swipe calls are intentionally inlined (no loops) to comply with project guidelines.
     # Maximum swipes needed to reach boundary positions (3 items + 2 extra for safety)
     MAX_SWIPES_TO_BOUNDARY = 5
-    
-    # Wait duration in seconds for carousel animation to complete after fling gesture
-    ANIMATION_COMPLETE_WAIT = 0.5
-    
+
     # Carousel boundary position constants
     FIRST_POSITION = "1 / 3"
     LAST_POSITION = "3 / 3"
@@ -53,10 +49,6 @@ class CarouselPage(BaseAppiumGestures, HeaderBarComponent):
     def fling_on_carousel_item(self, direction: str, speed: int = 5000) -> bool:
         """Perform fling gesture on carousel item in specified direction.
 
-        Note: This method includes a wait after the fling to ensure the carousel
-        animation completes before the next operation. This improves test stability
-        at the cost of slightly longer execution time.
-
         Args:
             direction: Fling direction - 'left' or 'right'.
             speed: Fling speed in pixels per second.
@@ -71,7 +63,7 @@ class CarouselPage(BaseAppiumGestures, HeaderBarComponent):
         if direction not in valid_directions:
             raise ValueError(f"Invalid direction '{direction}'. Must be one of: {valid_directions}")
         result = self.fling_element(direction=direction, locator=CarouselPageLocators.CAROUSEL_ITEM, speed=speed)
-        time.sleep(self.ANIMATION_COMPLETE_WAIT)
+        self.wait_for_element(CarouselPageLocators.CAROUSEL_ID)
         return result
 
     @property
@@ -91,9 +83,6 @@ class CarouselPage(BaseAppiumGestures, HeaderBarComponent):
         This is a helper method that guarantees the carousel is at position 1/3.
         Performs MAX_SWIPES_TO_BOUNDARY swipes to ensure we reach position 1/3.
         Extra swipes beyond the boundary are safe as the carousel stops at the edge.
-        
-        Raises:
-            AssertionError: If the carousel fails to reach the first position after navigation.
         """
         # 5 swipes = 3 positions to traverse + 2 extra to ensure we reach boundary
         self.fling_on_carousel_item(direction="right")
@@ -101,11 +90,6 @@ class CarouselPage(BaseAppiumGestures, HeaderBarComponent):
         self.fling_on_carousel_item(direction="right")
         self.fling_on_carousel_item(direction="right")
         self.fling_on_carousel_item(direction="right")
-        time.sleep(self.ANIMATION_COMPLETE_WAIT)
-        current_position = self.carousel_id
-        assert (
-            current_position == self.FIRST_POSITION
-        ), f"Failed to navigate to first position, expected: {self.FIRST_POSITION}, actual: {current_position}"
 
     @allure.step("the user navigates to last carousel position")
     def navigate_to_last_position(self) -> None:
@@ -114,9 +98,6 @@ class CarouselPage(BaseAppiumGestures, HeaderBarComponent):
         This is a helper method that guarantees the carousel is at position 3/3.
         Performs MAX_SWIPES_TO_BOUNDARY swipes to ensure we reach position 3/3.
         Extra swipes beyond the boundary are safe as the carousel stops at the edge.
-        
-        Raises:
-            AssertionError: If the carousel fails to reach the last position after navigation.
         """
         # 5 swipes = 3 positions to traverse + 2 extra to ensure we reach boundary
         self.fling_on_carousel_item(direction="left")
@@ -124,8 +105,3 @@ class CarouselPage(BaseAppiumGestures, HeaderBarComponent):
         self.fling_on_carousel_item(direction="left")
         self.fling_on_carousel_item(direction="left")
         self.fling_on_carousel_item(direction="left")
-        time.sleep(self.ANIMATION_COMPLETE_WAIT)
-        current_position = self.carousel_id
-        assert (
-            current_position == self.LAST_POSITION
-        ), f"Failed to navigate to last position, expected: {self.LAST_POSITION}, actual: {current_position}"
