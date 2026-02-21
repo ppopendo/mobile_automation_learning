@@ -20,7 +20,7 @@ This document tracks remaining tasks, improvements, and technical debt for the m
 - [x] **Pan Gestures**: Implement and test pan gestures in multiple directions (Up/Down/Left/Right).
 
 ### Carousel Feature
-- [ ] **Edge Cases**: Add tests for boundary conditions (swiping past first/last item).
+- [x] **Edge Cases**: Add tests for boundary conditions (swiping past first/last item).
 
 ### General
 - [ ] **Wait Strategy Audit**: Review all `time.sleep()` usages (if any remain) and replace with explicit waits.
